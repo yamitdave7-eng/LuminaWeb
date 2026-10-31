@@ -39,9 +39,9 @@
     </div>
 
     <div class="hero-subtext">
-      <span class="check-pill">✓ Secure Student Accounts</span>
-      <span class="check-pill">✓ Private SQLite Database</span>
-      <span class="check-pill">✓ Habify-Inspired Balance</span>
+      <span class="check-pill">✓ Mindful Student Workspace</span>
+      <span class="check-pill">✓ Personal Study Vault</span>
+      <span class="check-pill">✓ Habify 40/30/30 Balance</span>
       <span class="check-pill">✓ Study Streaks & Analytics</span>
     </div>
   </section>
@@ -85,11 +85,11 @@
       </div>
 
       <div class="lumina-card pillar-card">
-        <div class="pillar-icon-box green">🔒</div>
-        <h3>Private Database Vault</h3>
+        <div class="pillar-icon-box green">🌸</div>
+        <h3>Personal Study Sanctuary</h3>
         <p>
-          Your study notes, lecture summaries, and private course files are securely stored 
-          in a personal authenticated database partition with end-to-end user isolation.
+          Your study notes, lecture summaries, and private learning materials are organized 
+          in your serene workspace, always synchronized and accessible whenever you need them.
         </p>
       </div>
     </div>
@@ -151,7 +151,17 @@
             </div>
           </div>
 
-          <button type="button" class="button soft pill full" id="previewRewardBtn">
+          <!-- Quick Log Actions Row -->
+          <div class="quick-log-actions" style="margin-top: 8px;">
+            <span class="quick-log-title">Quick Log:</span>
+            <div class="quick-log-btns">
+              <button type="button" class="quick-add-chip study" data-log-type="study" data-log-mins="30">+30m Study</button>
+              <button type="button" class="quick-add-chip mind" data-log-type="mind" data-log-mins="15">+15m Mind</button>
+              <button type="button" class="quick-add-chip body" data-log-type="body" data-log-mins="20">+20m Body</button>
+            </div>
+          </div>
+
+          <button type="button" class="button soft pill full" id="previewRewardBtn" style="margin-top: 10px;">
             <span>Unlock Daily Reward 🎁</span>
           </button>
         </div>
@@ -284,65 +294,7 @@
 <!-- Inline script for interactive preview on landing page -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Interactive Preview Goals Checklist
-  const goalsList = document.getElementById('previewGoalsList');
-  const badge = document.getElementById('previewGoalsBadge');
-  const addInput = document.getElementById('previewAddGoalInput');
-  const studyRing = document.getElementById('previewStudyRing');
-
-  function updatePreviewStats() {
-    if (!goalsList || !badge) return;
-    const total = goalsList.querySelectorAll('.preview-goal-item').length;
-    const done = goalsList.querySelectorAll('.preview-goal-item.completed').length;
-    badge.textContent = `${done}/${total} Done`;
-
-    if (studyRing && total > 0) {
-      const offset = Math.round(264 * (1 - (done / total) * 0.85));
-      studyRing.style.strokeDashoffset = String(offset);
-    }
-  }
-
-  if (goalsList) {
-    goalsList.addEventListener('change', (e) => {
-      if (e.target.type === 'checkbox') {
-        const item = e.target.closest('.preview-goal-item');
-        if (item) {
-          item.classList.toggle('completed', e.target.checked);
-          updatePreviewStats();
-          if (e.target.checked) triggerPreviewConfetti();
-        }
-      }
-    });
-  }
-
-  if (addInput) {
-    addInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && addInput.value.trim()) {
-        const li = document.createElement('li');
-        li.className = 'preview-goal-item';
-        li.innerHTML = `
-          <label class="custom-chk">
-            <input type="checkbox">
-            <span class="chk-box">✓</span>
-            <span class="chk-label">${addInput.value.trim()}</span>
-          </label>
-          <span class="tag-pill">Custom</span>
-        `;
-        goalsList.appendChild(li);
-        addInput.value = '';
-        updatePreviewStats();
-      }
-    });
-  }
-
-  // 2. Unlock Reward Confetti
-  const rewardBtn = document.getElementById('previewRewardBtn');
-  if (rewardBtn) {
-    rewardBtn.addEventListener('click', () => {
-      triggerPreviewConfetti();
-      alert('🎁 Daily Reward Unlocked! Great job maintaining your balance today.');
-    });
-  }
+  // Mini Focus Timer for Landing Page Preview
 
   // 3. Mini Focus Timer
   const timerDigits = document.getElementById('previewTimerDigits');

@@ -239,15 +239,40 @@
 
               <!-- Metrics Legends -->
               <div class="balance-legends">
-                <span class="legend-pill pill-mind">Mind · 40%</span>
-                <span class="legend-pill pill-body">Body · 30%</span>
-                <span class="legend-pill pill-study">Study · 30%</span>
+                <span class="legend-pill pill-study" id="dashPillStudy">Study · 0m (0%)</span>
+                <span class="legend-pill pill-mind" id="dashPillMind">Mind · 0m (0%)</span>
+                <span class="legend-pill pill-body" id="dashPillBody">Body · 0m (0%)</span>
+              </div>
+            </div>
+
+            <!-- Quick Log Actions Row -->
+            <div class="quick-log-actions">
+              <span class="quick-log-title">Quick Log Time:</span>
+              <div class="quick-log-btns">
+                <button type="button" class="quick-add-chip study" data-log-type="study" data-log-mins="30">+30m Study</button>
+                <button type="button" class="quick-add-chip mind" data-log-type="mind" data-log-mins="15">+15m Mind</button>
+                <button type="button" class="quick-add-chip body" data-log-type="body" data-log-mins="20">+20m Body</button>
+                <button type="button" class="quick-add-chip custom" id="openCustomLogBtn">✏️ Custom</button>
+              </div>
+            </div>
+
+            <!-- Custom Drawer -->
+            <div class="custom-log-drawer" id="customLogDrawer" style="display: none;">
+              <div class="custom-log-row">
+                <select id="customLogCategory" class="clean-select">
+                  <option value="study">📚 Study</option>
+                  <option value="mind">🧘 Mind</option>
+                  <option value="body">🏃 Body</option>
+                </select>
+                <input type="number" id="customLogMinutes" placeholder="Mins" min="5" max="360" class="clean-num-input">
+                <button type="button" class="button primary pill small" id="submitCustomLogBtn">Log</button>
+                <button type="button" class="button quiet pill small" id="closeCustomLogBtn">✕</button>
               </div>
             </div>
 
             <div class="card-footer">
               <button type="button" class="button soft pill full" id="unlockRewardBtn">
-                <span>Unlock Daily Reward 🎁</span>
+                <span>Claim Daily Streak Reward 🎁</span>
               </button>
             </div>
           </div>
@@ -618,6 +643,18 @@
           </div>
         </div>
 
+        <!-- Add Custom Habit Input Row -->
+        <div class="add-habit-bar">
+          <input type="text" id="newHabitNameInput" placeholder="Add a custom daily habit (e.g. Read 20 pages, Hydrate, Yoga)..." class="habit-input">
+          <select id="newHabitCategorySelect" class="clean-select habit-select">
+            <option value="🧘 Mind">🧘 Mind</option>
+            <option value="🏃 Body">🏃 Body</option>
+            <option value="📚 Study">📚 Study</option>
+            <option value="🌸 Wellness">🌸 Wellness</option>
+          </select>
+          <button type="button" class="button primary pill small" id="submitNewHabitBtn">+ Add Habit</button>
+        </div>
+
         <!-- Weekly Habit Matrix Table -->
         <div class="habit-matrix-wrap">
           <table class="habit-matrix-table">
@@ -626,6 +663,7 @@
                 <th class="habit-col-th">Habit Activity</th>
                 <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
                 <th>Streak</th>
+                <th style="width: 44px; text-align: center;">✕</th>
               </tr>
             </thead>
             <tbody id="habitMatrixTableBody">

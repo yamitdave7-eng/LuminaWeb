@@ -235,6 +235,23 @@
         }
       }
 
+      // Render Mini Upcoming Deadlines on Dashboard if present
+      const dashUpcomingList = document.getElementById('dashUpcomingList');
+      if (dashUpcomingList) {
+        if (events.length === 0) {
+          dashUpcomingList.innerHTML = `<div class="empty-upcoming">No deadlines scheduled. Click ⤢ to add one!</div>`;
+        } else {
+          const sorted = [...events].sort((a, b) => (a.date > b.date ? 1 : -1)).slice(0, 3);
+          dashUpcomingList.innerHTML = sorted.map((e) => `
+            <div class="event-chip-row ${e.type}">
+              <span class="chip-dot"></span>
+              <strong>${e.title}</strong>
+              <small>${e.date} · ${e.time}</small>
+            </div>
+          `).join('');
+        }
+      }
+
       const dayEvents = events.filter((e) => e.date === selectedCalDateStr);
       const selDateObj = new Date(selectedCalDateStr);
       renderDayTimeline(selectedCalDateStr, `${monthNames[selDateObj.getMonth()]} ${selDateObj.getDate()}, ${selDateObj.getFullYear()}`, dayEvents);
@@ -329,7 +346,10 @@
     function getStoredHabits() {
       try {
         const saved = localStorage.getItem('lumina_habits_matrix_v2');
-        if (saved) return JSON.parse(saved);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
       } catch (e) {}
       return defaultHabits;
     }
@@ -340,11 +360,23 @@
       } catch (e) {}
     }
 
+    function calcConsecutiveStreak(days) {
+      let streak = 0;
+      for (let i = days.length - 1; i >= 0; i--) {
+        if (days[i]) streak++;
+        else break;
+      }
+      return `${streak}d`;
+    }
+
     function renderHabitTracker() {
       const habitMatrixTableBody = document.getElementById('habitMatrixTableBody');
       const heatmapGrid = document.getElementById('heatmapGrid');
       const trackerRateEl = document.getElementById('trackerCompletionRate');
       const dashConsistencyBadge = document.getElementById('dashConsistencyBadge');
+      const trackerStreakEl = document.getElementById('trackerCurrentStreak');
+      const bannerStreakEl = document.getElementById('bannerStreakCount');
+      const dashStreakBadge = document.getElementById('dashStreakBadge');
 
       const habits = getStoredHabits();
 
@@ -352,9 +384,13 @@
         habitMatrixTableBody.innerHTML = '';
         let totalChecks = 0;
         let checkedCount = 0;
+        let maxStreak = 0;
 
         habits.forEach((habit, hIdx) => {
-          const row = document.createElement('tr');
+          const streakStr = habit.streak || calcConsecutiveStreak(habit.days);
+          const streakNum = parseInt(streakStr, 10) || 0;
+          if (streakNum > maxStreak) maxStreak = streakNum;
+
           const daysHtml = habit.days.map((checked, dIdx) => {
             totalChecks++;
             if (checked) checkedCount++;
@@ -367,10 +403,14 @@
             `;
           }).join('');
 
+          const row = document.createElement('tr');
           row.innerHTML = `
             <td class="habit-name-cell"><strong>${habit.name}</strong></td>
             ${daysHtml}
-            <td class="streak-cell"><span class="streak-pill">🔥 ${habit.streak}</span></td>
+            <td class="streak-cell"><span class="streak-pill">🔥 ${streakStr}</span></td>
+            <td class="action-cell">
+              <button type="button" class="habit-del-btn" data-del-hidx="${hIdx}" title="Delete habit">✕</button>
+            </td>
           `;
 
           habitMatrixTableBody.appendChild(row);
@@ -379,6 +419,9 @@
         const rate = totalChecks > 0 ? Math.round((checkedCount / totalChecks) * 100) : 86;
         if (trackerRateEl) trackerRateEl.textContent = `${rate}%`;
         if (dashConsistencyBadge) dashConsistencyBadge.textContent = `${rate}% Consistent`;
+        if (trackerStreakEl) trackerStreakEl.textContent = `${maxStreak || 7} Days`;
+        if (bannerStreakEl) bannerStreakEl.textContent = `${maxStreak || 7} Days`;
+        if (dashStreakBadge) dashStreakBadge.textContent = `🔥 ${maxStreak || 7}-Day Streak`;
 
         // Checkbox toggle handler
         habitMatrixTableBody.querySelectorAll('.habit-check-btn').forEach((btn) => {
@@ -386,11 +429,59 @@
             const hIdx = parseInt(btn.dataset.hidx, 10);
             const dIdx = parseInt(btn.dataset.didx, 10);
             habits[hIdx].days[dIdx] = !habits[hIdx].days[dIdx];
+            habits[hIdx].streak = calcConsecutiveStreak(habits[hIdx].days);
             saveStoredHabits(habits);
             renderHabitTracker();
             if (habits[hIdx].days[dIdx]) triggerDashConfetti();
           });
         });
+
+        // Delete habit handler
+        habitMatrixTableBody.querySelectorAll('.habit-del-btn').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const delIdx = parseInt(btn.dataset.delHidx, 10);
+            if (!isNaN(delIdx)) {
+              habits.splice(delIdx, 1);
+              saveStoredHabits(habits);
+              renderHabitTracker();
+            }
+          });
+        });
+      }
+
+      // Add custom habit form
+      const submitHabitBtn = document.getElementById('submitNewHabitBtn');
+      const habitNameInput = document.getElementById('newHabitNameInput');
+      const habitCatSelect = document.getElementById('newHabitCategorySelect');
+
+      if (submitHabitBtn && !submitHabitBtn._bound) {
+        submitHabitBtn._bound = true;
+        const addHabit = () => {
+          if (!habitNameInput || !habitNameInput.value.trim()) return;
+          const text = habitNameInput.value.trim();
+          const cat = habitCatSelect ? habitCatSelect.value : '🧘 Mind';
+          const habits = getStoredHabits();
+          habits.push({
+            id: 'h_' + Date.now(),
+            name: `${cat.split(' ')[0]} ${text}`,
+            days: [false, false, false, false, false, false, false],
+            streak: '0d'
+          });
+          saveStoredHabits(habits);
+          habitNameInput.value = '';
+          renderHabitTracker();
+          triggerDashConfetti();
+        };
+        submitHabitBtn.addEventListener('click', addHabit);
+        if (habitNameInput) {
+          habitNameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              addHabit();
+            }
+          });
+        }
       }
 
       // Heatmap squares
@@ -1793,7 +1884,9 @@
               zenStartBtn.textContent = 'Start Focus';
               if (zenSessionTag) zenSessionTag.textContent = 'Session Complete! Amazing discipline! 🎉';
               triggerDashConfetti();
-              alert('🎉 Focus Interval Complete! Take a well-deserved break.');
+              const completedMins = Math.round(zenTotalSeconds / 60);
+              logCompletedFocusSession(completedMins);
+              alert(`🎉 Focus Session Finished (${completedMins} mins)! Logged to Daily Balance & Weekly Study Momentum.`);
             }
             renderZenClock();
           }, 1000);
@@ -1910,11 +2003,531 @@
       });
     }
 
+    // ========================================================================
+    // 7. GOALS & INTENTIONS ENGINE (Persistent, Interactive, Deletable)
+    // ========================================================================
+    const defaultGoals = [
+      { id: 'g1', text: '10 min morning focus & intentions', tag: 'Mind', completed: true },
+      { id: 'g2', text: 'Review lecture notes & flashcards', tag: 'Study', completed: true },
+      { id: 'g3', text: 'Complete weekly coding practice', tag: 'Study', completed: true },
+      { id: 'g4', text: 'Walk 8,000 steps & stay hydrated', tag: 'Body', completed: false },
+      { id: 'g5', text: 'Serene wind-down without screens', tag: 'Wellness', completed: false }
+    ];
+
+    function getStoredGoals() {
+      try {
+        const saved = localStorage.getItem('lumina_today_goals_v2');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {}
+      return defaultGoals;
+    }
+
+    function saveStoredGoals(goals) {
+      try {
+        localStorage.setItem('lumina_today_goals_v2', JSON.stringify(goals));
+      } catch (e) {}
+    }
+
+    function renderGoals() {
+      const goals = getStoredGoals();
+      const listEl = document.getElementById('dashboardGoalsList');
+      const badgeEl = document.getElementById('dashboardGoalsBadge');
+      const bannerEl = document.getElementById('bannerGoalsDone');
+      const previewList = document.getElementById('previewGoalsList');
+      const previewBadge = document.getElementById('previewGoalsBadge');
+
+      const total = goals.length;
+      const done = goals.filter(g => g.completed).length;
+
+      if (badgeEl) badgeEl.textContent = `${done}/${total} Done`;
+      if (bannerEl) bannerEl.textContent = `${done} / ${total} Done`;
+      if (previewBadge) previewBadge.textContent = `${done}/${total} Done`;
+
+      function buildListHtml(targetList, isPreview = false) {
+        if (!targetList) return;
+        if (goals.length === 0) {
+          targetList.innerHTML = `<li class="empty-goals-msg">All clear! Add a new intention below to start your rhythm ✨</li>`;
+          return;
+        }
+        targetList.innerHTML = goals.map((g, idx) => `
+          <li class="${isPreview ? 'preview-goal-item' : 'goal-item'} ${g.completed ? 'completed' : ''}" data-idx="${idx}">
+            <label class="${isPreview ? 'custom-chk' : 'custom-checkbox-wrap'}">
+              <input type="checkbox" ${g.completed ? 'checked' : ''} data-toggle-idx="${idx}">
+              <span class="${isPreview ? 'chk-box' : 'checkbox-box'}">
+                ${isPreview ? '✓' : '<svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>'}
+              </span>
+              <span class="${isPreview ? 'chk-label' : 'goal-label'}">${g.text}</span>
+            </label>
+            <div class="goal-item-actions">
+              <span class="${isPreview ? 'tag-pill' : 'goal-tag'} tag-${(g.tag || 'Study').toLowerCase()}">${g.tag || 'Study'}</span>
+              <button type="button" class="goal-del-btn" data-del-idx="${idx}" title="Delete goal" aria-label="Delete goal">×</button>
+            </div>
+          </li>
+        `).join('');
+
+        targetList.querySelectorAll('input[type="checkbox"]').forEach(input => {
+          input.addEventListener('change', (e) => {
+            const idx = parseInt(e.target.dataset.toggleIdx, 10);
+            if (!isNaN(idx) && goals[idx]) {
+              goals[idx].completed = e.target.checked;
+              saveStoredGoals(goals);
+              renderGoals();
+              if (e.target.checked) triggerDashConfetti();
+            }
+          });
+        });
+
+        targetList.querySelectorAll('.goal-del-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const idx = parseInt(btn.dataset.delIdx, 10);
+            if (!isNaN(idx)) {
+              goals.splice(idx, 1);
+              saveStoredGoals(goals);
+              renderGoals();
+            }
+          });
+        });
+      }
+
+      buildListHtml(listEl, false);
+      buildListHtml(previewList, true);
+    }
+
+    function initGoalsSystem() {
+      const addInput = document.getElementById('dashboardAddGoalInput');
+      const addBtn = document.getElementById('dashboardAddGoalBtn');
+      const tagSelect = document.getElementById('dashboardGoalTagSelect');
+      const previewAddInput = document.getElementById('previewAddGoalInput');
+
+      function handleAdd(inputEl, isPreview = false) {
+        if (!inputEl || !inputEl.value.trim()) return;
+        const text = inputEl.value.trim();
+        const tag = (!isPreview && tagSelect) ? tagSelect.value : 'Study';
+        const goals = getStoredGoals();
+        goals.push({
+          id: 'g_' + Date.now(),
+          text,
+          tag,
+          completed: false
+        });
+        saveStoredGoals(goals);
+        inputEl.value = '';
+        renderGoals();
+        triggerDashConfetti();
+      }
+
+      if (addBtn && addInput) {
+        addBtn.addEventListener('click', () => handleAdd(addInput, false));
+        addInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleAdd(addInput, false);
+          }
+        });
+      }
+
+      if (previewAddInput) {
+        previewAddInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleAdd(previewAddInput, true);
+          }
+        });
+      }
+
+      renderGoals();
+    }
+
+    // ========================================================================
+    // 8. DAILY BALANCE LOGGER (Habify 40/30/30 Rings with User Input)
+    // ========================================================================
+    function getTodayDateString() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function getStoredBalance() {
+      const today = getTodayDateString();
+      const defaultBalance = {
+        date: today,
+        studyMins: 45,
+        mindMins: 30,
+        bodyMins: 20,
+        targets: { study: 120, mind: 45, body: 45 },
+        rewardClaimed: false
+      };
+      try {
+        const saved = localStorage.getItem('lumina_daily_balance_v2');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.date === today) return parsed;
+          return {
+            ...defaultBalance,
+            targets: parsed.targets || defaultBalance.targets
+          };
+        }
+      } catch (e) {}
+      return defaultBalance;
+    }
+
+    function saveStoredBalance(bal) {
+      try {
+        localStorage.setItem('lumina_daily_balance_v2', JSON.stringify(bal));
+      } catch (e) {}
+    }
+
+    function updateDailyBalanceUI() {
+      const bal = getStoredBalance();
+      const studyMins = bal.studyMins || 0;
+      const mindMins = bal.mindMins || 0;
+      const bodyMins = bal.bodyMins || 0;
+      const targets = bal.targets || { study: 120, mind: 45, body: 45 };
+
+      const studyPct = Math.min(100, Math.round((studyMins / targets.study) * 100));
+      const mindPct = Math.min(100, Math.round((mindMins / targets.mind) * 100));
+      const bodyPct = Math.min(100, Math.round((bodyMins / targets.body) * 100));
+
+      const pillStudy = document.getElementById('dashPillStudy');
+      const pillMind = document.getElementById('dashPillMind');
+      const pillBody = document.getElementById('dashPillBody');
+      if (pillStudy) pillStudy.textContent = `Study · ${studyMins}m (${studyPct}%)`;
+      if (pillMind) pillMind.textContent = `Mind · ${mindMins}m (${mindPct}%)`;
+      if (pillBody) pillBody.textContent = `Body · ${bodyMins}m (${bodyPct}%)`;
+
+      const ringMind = document.getElementById('dashRingMind') || document.querySelector('.balance-wheel-svg .ring-mind');
+      const ringBody = document.getElementById('dashRingBody') || document.querySelector('.balance-wheel-svg .ring-body');
+      const ringStudy = document.getElementById('dashboardStudyRing');
+
+      if (ringMind) ringMind.style.strokeDashoffset = String(Math.round(465 * (1 - (mindPct / 100))));
+      if (ringBody) ringBody.style.strokeDashoffset = String(Math.round(390 * (1 - (bodyPct / 100))));
+      if (ringStudy) ringStudy.style.strokeDashoffset = String(Math.round(314 * (1 - (studyPct / 100))));
+
+      const prevRingStudy = document.getElementById('previewStudyRing');
+      if (prevRingStudy) prevRingStudy.style.strokeDashoffset = String(Math.round(264 * (1 - (studyPct / 100))));
+
+      const flower = document.getElementById('dashFlowerCenter');
+      if (flower) {
+        if (studyPct >= 100 && mindPct >= 100 && bodyPct >= 100) {
+          flower.classList.add('blooming');
+        } else {
+          flower.classList.remove('blooming');
+        }
+      }
+    }
+
+    function logActivityMinutes(category, mins) {
+      const bal = getStoredBalance();
+      mins = parseInt(mins, 10);
+      if (isNaN(mins) || mins <= 0) return;
+
+      if (category === 'study') bal.studyMins = (bal.studyMins || 0) + mins;
+      else if (category === 'mind') bal.mindMins = (bal.mindMins || 0) + mins;
+      else if (category === 'body') bal.bodyMins = (bal.bodyMins || 0) + mins;
+
+      saveStoredBalance(bal);
+      updateDailyBalanceUI();
+      triggerDashConfetti();
+
+      if (category === 'study') {
+        addStudyHoursToToday(mins / 60);
+      }
+    }
+
+    function initDailyBalanceSystem() {
+      document.querySelectorAll('.quick-add-chip[data-log-type]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const type = btn.dataset.logType;
+          const mins = parseInt(btn.dataset.logMins, 10) || 15;
+          logActivityMinutes(type, mins);
+        });
+      });
+
+      const customDrawer = document.getElementById('customLogDrawer');
+      const openCustomBtn = document.getElementById('openCustomLogBtn');
+      const closeCustomBtn = document.getElementById('closeCustomLogBtn');
+      const submitCustomBtn = document.getElementById('submitCustomLogBtn');
+      const customCategory = document.getElementById('customLogCategory');
+      const customMinutes = document.getElementById('customLogMinutes');
+
+      if (openCustomBtn && customDrawer) {
+        openCustomBtn.addEventListener('click', () => {
+          const isHidden = customDrawer.style.display === 'none';
+          customDrawer.style.display = isHidden ? 'block' : 'none';
+          if (isHidden && customMinutes) customMinutes.focus();
+        });
+      }
+
+      if (closeCustomBtn && customDrawer) {
+        closeCustomBtn.addEventListener('click', () => {
+          customDrawer.style.display = 'none';
+        });
+      }
+
+      if (submitCustomBtn && customMinutes) {
+        submitCustomBtn.addEventListener('click', () => {
+          const val = parseInt(customMinutes.value, 10);
+          const cat = customCategory ? customCategory.value : 'study';
+          if (val > 0) {
+            logActivityMinutes(cat, val);
+            customMinutes.value = '';
+            if (customDrawer) customDrawer.style.display = 'none';
+          }
+        });
+        customMinutes.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            submitCustomBtn.click();
+          }
+        });
+      }
+
+      const rewardBtn = document.getElementById('dashboardRewardBtn') || document.getElementById('previewRewardBtn');
+      if (rewardBtn) {
+        rewardBtn.addEventListener('click', () => {
+          triggerDashConfetti();
+          const bal = getStoredBalance();
+          bal.rewardClaimed = true;
+          saveStoredBalance(bal);
+          alert('🎁 Daily Streak Reward Claimed! +50 XP bonus awarded to your student profile.');
+        });
+      }
+
+      updateDailyBalanceUI();
+    }
+
+    // ========================================================================
+    // 9. WEEKLY RHYTHM & 7-DAY STUDY BAR CHART (Interactive Day Logging)
+    // ========================================================================
+    const defaultWeeklyHours = [
+      { day: 'Mon', short: 'M', hours: 3.5 },
+      { day: 'Tue', short: 'T', hours: 4.2 },
+      { day: 'Wed', short: 'W', hours: 5.0 },
+      { day: 'Thu', short: 'T', hours: 4.8 },
+      { day: 'Fri', short: 'F', hours: 6.0 },
+      { day: 'Sat', short: 'S', hours: 3.0 },
+      { day: 'Sun', short: 'S', hours: 4.5 }
+    ];
+
+    function getStoredWeeklyHours() {
+      try {
+        const saved = localStorage.getItem('lumina_weekly_hours_v2');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length === 7) return parsed;
+        }
+      } catch (e) {}
+      return defaultWeeklyHours;
+    }
+
+    function saveStoredWeeklyHours(data) {
+      try {
+        localStorage.setItem('lumina_weekly_hours_v2', JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    let activeLoggingDayIdx = 2; // Default to Wednesday
+
+    function renderWeeklyBarChart() {
+      const chartEl = document.getElementById('dashboardBarChart');
+      const totalHoursEl = document.getElementById('dashTotalHoursEl');
+      const consistencyBadge = document.getElementById('dashConsistencyBadge');
+      if (!chartEl) return;
+
+      const weekData = getStoredWeeklyHours();
+      const currentDayIdx = (new Date().getDay() + 6) % 7;
+
+      let total = 0;
+      let maxHours = 6.0;
+      let daysWith2Hours = 0;
+
+      weekData.forEach(d => {
+        total += d.hours;
+        if (d.hours > maxHours) maxHours = d.hours;
+        if (d.hours >= 2.0) daysWith2Hours++;
+      });
+
+      if (totalHoursEl) totalHoursEl.innerHTML = `${total.toFixed(1)} <small>hrs this week</small>`;
+      const consistencyPct = Math.round((daysWith2Hours / 7) * 100);
+      if (consistencyBadge) consistencyBadge.textContent = `${consistencyPct}% Consistency`;
+
+      chartEl.innerHTML = weekData.map((d, idx) => {
+        const heightPct = Math.max(12, Math.min(100, Math.round((d.hours / maxHours) * 100)));
+        const isActive = (idx === currentDayIdx);
+        return `
+          <div class="chart-bar-group" data-day-idx="${idx}" title="${d.day}: ${d.hours.toFixed(1)} hrs">
+            <div class="bar-fill ${isActive ? 'active' : ''}" style="height: ${heightPct}%;"></div>
+            <span class="bar-day">${d.short}</span>
+          </div>
+        `;
+      }).join('');
+
+      chartEl.querySelectorAll('.chart-bar-group').forEach(group => {
+        group.addEventListener('click', () => {
+          const idx = parseInt(group.dataset.dayIdx, 10);
+          openDayLogger(idx);
+        });
+      });
+    }
+
+    function openDayLogger(idx) {
+      activeLoggingDayIdx = idx;
+      const weekData = getStoredWeeklyHours();
+      const d = weekData[idx];
+      const popup = document.getElementById('dashDayLogPopup');
+      const label = document.getElementById('dashLogDayLabel');
+      const input = document.getElementById('dashCustomDayHours');
+
+      if (label) label.textContent = `Log study time for ${d.day} (Current: ${d.hours.toFixed(1)}h):`;
+      if (input) input.value = '';
+      if (popup) popup.style.display = 'block';
+    }
+
+    function addStudyHoursToToday(addedHours) {
+      const weekData = getStoredWeeklyHours();
+      const currentDayIdx = (new Date().getDay() + 6) % 7;
+      if (weekData[currentDayIdx]) {
+        weekData[currentDayIdx].hours = Math.round((weekData[currentDayIdx].hours + addedHours) * 10) / 10;
+        saveStoredWeeklyHours(weekData);
+        renderWeeklyBarChart();
+      }
+    }
+
+    function initWeeklyRhythmSystem() {
+      const popup = document.getElementById('dashDayLogPopup');
+      const closeBtn = document.getElementById('closeDayLogPopup');
+      const submitBtn = document.getElementById('submitDayHoursBtn');
+      const customHoursInput = document.getElementById('dashCustomDayHours');
+
+      if (closeBtn && popup) {
+        closeBtn.addEventListener('click', () => {
+          popup.style.display = 'none';
+        });
+      }
+
+      document.querySelectorAll('.quick-hour-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const add = parseFloat(chip.dataset.hrs) || 1.0;
+          const weekData = getStoredWeeklyHours();
+          if (weekData[activeLoggingDayIdx]) {
+            weekData[activeLoggingDayIdx].hours = Math.round((weekData[activeLoggingDayIdx].hours + add) * 10) / 10;
+            saveStoredWeeklyHours(weekData);
+            renderWeeklyBarChart();
+            triggerDashConfetti();
+          }
+        });
+      });
+
+      if (submitBtn && customHoursInput) {
+        submitBtn.addEventListener('click', () => {
+          const val = parseFloat(customHoursInput.value);
+          if (!isNaN(val) && val >= 0) {
+            const weekData = getStoredWeeklyHours();
+            if (weekData[activeLoggingDayIdx]) {
+              weekData[activeLoggingDayIdx].hours = val;
+              saveStoredWeeklyHours(weekData);
+              renderWeeklyBarChart();
+              triggerDashConfetti();
+              if (popup) popup.style.display = 'none';
+            }
+          }
+        });
+      }
+
+      renderWeeklyBarChart();
+    }
+
+    // ========================================================================
+    // 10. MINI FOCUS TIMER (Auto-logs into Daily Balance & Weekly Rhythm)
+    // ========================================================================
+    function logCompletedFocusSession(completedMins) {
+      logActivityMinutes('study', completedMins);
+      const bannerBlock = document.getElementById('bannerFocusBlock');
+      if (bannerBlock) bannerBlock.textContent = `${completedMins} Min`;
+    }
+
+    function initMiniTimer() {
+      const display = document.getElementById('dashTimerDisplay');
+      const startBtn = document.getElementById('dashTimerStartBtn');
+      const resetBtn = document.getElementById('dashTimerResetBtn');
+      let timerId = null;
+      let totalSeconds = 25 * 60;
+      let remaining = totalSeconds;
+      let isRunning = false;
+
+      function renderMiniDisplay() {
+        if (!display) return;
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        display.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+
+      if (startBtn) {
+        startBtn.addEventListener('click', () => {
+          if (isRunning) {
+            clearInterval(timerId);
+            isRunning = false;
+            startBtn.textContent = 'Resume Focus';
+          } else {
+            isRunning = true;
+            startBtn.textContent = 'Pause Focus';
+            timerId = setInterval(() => {
+              remaining--;
+              if (remaining <= 0) {
+                clearInterval(timerId);
+                isRunning = false;
+                const completedMins = Math.round(totalSeconds / 60);
+                remaining = totalSeconds;
+                startBtn.textContent = 'Start Focus';
+                triggerDashConfetti();
+                logCompletedFocusSession(completedMins);
+                alert(`🎉 Focus Session Finished (${completedMins} mins)! Auto-recorded to Study Balance & Weekly Rhythm.`);
+              }
+              renderMiniDisplay();
+            }, 1000);
+          }
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          clearInterval(timerId);
+          isRunning = false;
+          remaining = totalSeconds;
+          if (startBtn) startBtn.textContent = 'Start Focus';
+          renderMiniDisplay();
+        });
+      }
+
+      document.querySelectorAll('.preset-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const mins = parseInt(pill.dataset.mins, 10) || 25;
+          clearInterval(timerId);
+          isRunning = false;
+          totalSeconds = mins * 60;
+          remaining = totalSeconds;
+          if (startBtn) startBtn.textContent = 'Start Focus';
+          renderMiniDisplay();
+        });
+      });
+
+      renderMiniDisplay();
+    }
+
     // Initial renders
     renderFullCalendar();
     renderHabitTracker();
     initQuiz();
     renderZenClock();
+    initGoalsSystem();
+    initDailyBalanceSystem();
+    initWeeklyRhythmSystem();
+    initMiniTimer();
   }
 
   // Safe self-executing invocation (works whether script is loaded sync, async, deferred, or late)

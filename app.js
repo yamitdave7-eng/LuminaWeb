@@ -244,6 +244,20 @@ class GoalsManager {
         this.input.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     }
+
+    // Delete goal click listener
+    this.list.addEventListener('click', (e) => {
+      const delBtn = e.target.closest('.goal-del-btn');
+      if (delBtn) {
+        e.preventDefault();
+        const item = delBtn.closest('.goal-item');
+        if (item) {
+          item.remove();
+          this.updateStats();
+          this.save();
+        }
+      }
+    });
   }
 
   addGoalFromInput() {
@@ -262,7 +276,10 @@ class GoalsManager {
         </span>
         <span class="goal-label">${escapeHtml(text)}</span>
       </label>
-      <span class="goal-tag">Custom</span>
+      <div class="goal-item-actions">
+        <span class="goal-tag">Custom</span>
+        <button type="button" class="goal-del-btn" title="Delete goal">×</button>
+      </div>
     `;
 
     this.list.appendChild(li);
@@ -322,7 +339,10 @@ class GoalsManager {
                 </span>
                 <span class="goal-label">${escapeHtml(it.text)}</span>
               </label>
-              <span class="goal-tag">${escapeHtml(it.tag)}</span>
+              <div class="goal-item-actions">
+                <span class="goal-tag">${escapeHtml(it.tag)}</span>
+                <button type="button" class="goal-del-btn" title="Delete goal">×</button>
+              </div>
             `;
             this.list.appendChild(li);
           });
@@ -343,25 +363,128 @@ class BalanceWheel {
     this.mindRing = document.querySelector('.ring-mind');
     this.bodyRing = document.querySelector('.ring-body');
     this.studyRing = document.querySelector('.ring-study');
+    this.pillStudy = document.getElementById('dashPillStudy');
+    this.pillMind = document.getElementById('dashPillMind');
+    this.pillBody = document.getElementById('dashPillBody');
 
+    this.storageKey = 'lumina_daily_balance_v2';
     this.init();
   }
 
+  getTodayKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  getBalance() {
+    const today = this.getTodayKey();
+    const defaults = { date: today, studyMins: 45, mindMins: 30, bodyMins: 20, targets: { study: 120, mind: 45, body: 45 } };
+    try {
+      const saved = localStorage.getItem(this.storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.date === today) return parsed;
+        return { ...defaults, targets: parsed.targets || defaults.targets };
+      }
+    } catch (e) {}
+    return defaults;
+  }
+
+  saveBalance(b) {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(b));
+    } catch (e) {}
+  }
+
   init() {
+    document.querySelectorAll('.quick-add-chip[data-log-type]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const type = btn.dataset.logType;
+        const mins = parseInt(btn.dataset.logMins, 10) || 15;
+        this.logMins(type, mins);
+      });
+    });
+
+    const drawer = document.getElementById('customLogDrawer');
+    const openBtn = document.getElementById('openCustomLogBtn');
+    const closeBtn = document.getElementById('closeCustomLogBtn');
+    const submitBtn = document.getElementById('submitCustomLogBtn');
+    const minsInput = document.getElementById('customLogMinutes');
+    const catSelect = document.getElementById('customLogCategory');
+
+    if (openBtn && drawer) {
+      openBtn.addEventListener('click', () => {
+        const isHidden = (drawer.style.display === 'none' || !drawer.style.display);
+        drawer.style.display = isHidden ? 'block' : 'none';
+        if (isHidden && minsInput) minsInput.focus();
+      });
+    }
+
+    if (closeBtn && drawer) {
+      closeBtn.addEventListener('click', () => { drawer.style.display = 'none'; });
+    }
+
+    if (submitBtn && minsInput) {
+      submitBtn.addEventListener('click', () => {
+        const m = parseInt(minsInput.value, 10);
+        const cat = catSelect ? catSelect.value : 'study';
+        if (m > 0) {
+          this.logMins(cat, m);
+          minsInput.value = '';
+          if (drawer) drawer.style.display = 'none';
+        }
+      });
+      minsInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          submitBtn.click();
+        }
+      });
+    }
+
     if (this.rewardBtn) {
       this.rewardBtn.addEventListener('click', () => {
         confetti.fire(80);
         toast.show('Reward Unlocked! 🌟', 'Daily streak bonus: +50 XP and focus flower badge awarded!', '🎁');
       });
     }
+
+    this.render();
+  }
+
+  logMins(cat, mins) {
+    const bal = this.getBalance();
+    mins = parseInt(mins, 10);
+    if (isNaN(mins) || mins <= 0) return;
+
+    if (cat === 'study') bal.studyMins = (bal.studyMins || 0) + mins;
+    else if (cat === 'mind') bal.mindMins = (bal.mindMins || 0) + mins;
+    else if (cat === 'body') bal.bodyMins = (bal.bodyMins || 0) + mins;
+
+    this.saveBalance(bal);
+    this.render();
+    confetti.fire(35);
+    toast.show('Activity Logged! ✨', `+${mins}m added to ${cat.toUpperCase()}`, '⏱');
+  }
+
+  render() {
+    const bal = this.getBalance();
+    const targets = bal.targets || { study: 120, mind: 45, body: 45 };
+    const studyPct = Math.min(100, Math.round((bal.studyMins / targets.study) * 100));
+    const mindPct = Math.min(100, Math.round((bal.mindMins / targets.mind) * 100));
+    const bodyPct = Math.min(100, Math.round((bal.bodyMins / targets.body) * 100));
+
+    if (this.pillStudy) this.pillStudy.textContent = `Study · ${bal.studyMins}m (${studyPct}%)`;
+    if (this.pillMind) this.pillMind.textContent = `Mind · ${bal.mindMins}m (${mindPct}%)`;
+    if (this.pillBody) this.pillBody.textContent = `Body · ${bal.bodyMins}m (${bodyPct}%)`;
+
+    if (this.mindRing) this.mindRing.style.strokeDashoffset = String(Math.round(515 * (1 - mindPct / 100)));
+    if (this.bodyRing) this.bodyRing.style.strokeDashoffset = String(Math.round(440 * (1 - bodyPct / 100)));
+    if (this.studyRing) this.studyRing.style.strokeDashoffset = String(Math.round(364 * (1 - studyPct / 100)));
   }
 
   updateFromStats(done, total) {
-    if (!this.studyRing || total === 0) return;
-    const ratio = done / total;
-    // Study circle circumference = 2 * PI * 58 ≈ 364
-    const studyOffset = Math.round(364 * (1 - ratio * 0.85));
-    this.studyRing.style.strokeDashoffset = String(studyOffset);
+    if (total === 0) return;
   }
 }
 
@@ -1312,9 +1435,56 @@ class MaximizedSuiteManager {
         <td class="habit-name-cell">${habit.name}</td>
         ${daysHtml}
         <td class="habit-streak-cell"><span class="badge-streak">${habit.streak}</span></td>
+        <td class="action-cell">
+          <button type="button" class="habit-del-btn" data-del-hidx="${hIdx}" title="Delete habit">✕</button>
+        </td>
       `;
       tbody.appendChild(tr);
     });
+
+    tbody.querySelectorAll('.habit-del-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const delIdx = parseInt(btn.dataset.delHidx, 10);
+        if (!isNaN(delIdx)) {
+          habits.splice(delIdx, 1);
+          this.saveStoredHabits(habits);
+          this.renderHabitTracker();
+        }
+      });
+    });
+
+    const submitBtn = document.getElementById('submitNewHabitBtn');
+    const inputEl = document.getElementById('newHabitNameInput');
+    const catSelect = document.getElementById('newHabitCategorySelect');
+    if (submitBtn && !submitBtn._bound) {
+      submitBtn._bound = true;
+      const addH = () => {
+        if (!inputEl || !inputEl.value.trim()) return;
+        const text = inputEl.value.trim();
+        const cat = catSelect ? catSelect.value : '🧘 Mind';
+        const hList = this.getStoredHabits();
+        hList.push({
+          id: 'h_' + Date.now(),
+          name: `${cat.split(' ')[0]} ${text}`,
+          days: [false, false, false, false, false, false, false],
+          streak: '0d'
+        });
+        this.saveStoredHabits(hList);
+        inputEl.value = '';
+        this.renderHabitTracker();
+        if (this.confetti) this.confetti.fire();
+      };
+      submitBtn.addEventListener('click', addH);
+      if (inputEl) {
+        inputEl.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            addH();
+          }
+        });
+      }
+    }
 
     if (rateEl && totalChecks > 0) {
       rateEl.textContent = `${Math.round((checkedCount / totalChecks) * 100)}%`;

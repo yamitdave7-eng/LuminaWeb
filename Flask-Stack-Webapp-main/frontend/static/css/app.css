@@ -4998,3 +4998,408 @@ button.nav-item.nav-tool-btn:hover {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   COZY, AESTHETIC & INTERACTIVE STUDENT TOOLS ADDITIONS
+   ========================================================================== */
+
+/* Subtitle under card titles */
+.mod-subtitle {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.serene-quote-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(243, 232, 255, 0.7);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(221, 214, 254, 0.6);
+}
+
+/* 1. Quick Log Activity Row on Daily Balance */
+.quick-log-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0 6px;
+  padding: 10px 12px;
+  background: rgba(248, 246, 255, 0.7);
+  border: 1px solid rgba(221, 214, 254, 0.45);
+  border-radius: 12px;
+}
+
+.quick-log-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.quick-log-btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.quick-add-chip {
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  background: white;
+}
+
+.quick-add-chip.study {
+  color: #7c3aed;
+  border-color: rgba(124, 58, 237, 0.25);
+}
+.quick-add-chip.study:hover {
+  background: #7c3aed;
+  color: white;
+}
+
+.quick-add-chip.mind {
+  color: #ec4899;
+  border-color: rgba(236, 72, 153, 0.25);
+}
+.quick-add-chip.mind:hover {
+  background: #ec4899;
+  color: white;
+}
+
+.quick-add-chip.body {
+  color: #0891b2;
+  border-color: rgba(6, 182, 212, 0.25);
+}
+.quick-add-chip.body:hover {
+  background: #0891b2;
+  color: white;
+}
+
+.quick-add-chip.custom {
+  color: var(--ink);
+  background: rgba(243, 232, 255, 0.6);
+  border-color: rgba(221, 214, 254, 0.5);
+}
+.quick-add-chip.custom:hover {
+  background: var(--ink);
+  color: white;
+}
+
+/* Custom log drawer */
+.custom-log-drawer {
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 14px rgba(124, 92, 252, 0.08);
+}
+
+.custom-log-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.clean-select,
+.clean-num-input {
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  border: 1px solid rgba(221, 214, 254, 0.6);
+  border-radius: 8px;
+  background: white;
+  color: var(--ink);
+  outline: none;
+  font-family: inherit;
+}
+
+.clean-select:focus,
+.clean-num-input:focus {
+  border-color: var(--accent);
+}
+
+.clean-num-input {
+  width: 80px;
+}
+.clean-num-input.small {
+  width: 60px;
+}
+
+/* Flower blooming pulse animation when 100% completed */
+.wheel-center-flower.blooming {
+  animation: gentleBloom 2s infinite ease-in-out;
+}
+@keyframes gentleBloom {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(236, 72, 153, 0.3)); }
+  50% { transform: scale(1.15); filter: drop-shadow(0 0 14px rgba(236, 72, 153, 0.7)); }
+}
+
+/* 2. Goal item delete button & empty state */
+.goal-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.goal-del-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 4px;
+  border-radius: 4px;
+  opacity: 0.45;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.goal-item:hover .goal-del-btn,
+.goal-del-btn:hover {
+  opacity: 1;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.empty-goals-msg {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* 3. Day log popup on Weekly Rhythm */
+.chart-hint {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.day-log-popup {
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(124, 92, 252, 0.08);
+}
+
+.popup-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.mini-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 2px 4px;
+}
+.mini-close-btn:hover {
+  color: var(--ink);
+}
+
+.popup-actions-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.quick-hour-chip {
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  background: rgba(245, 240, 255, 0.7);
+  color: #7c3aed;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.quick-hour-chip:hover {
+  background: #7c3aed;
+  color: white;
+}
+
+/* 4. Mini timer presets on Card 6 */
+.timer-preset-pills {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 10px 0 14px;
+}
+
+.preset-pill {
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: 1px solid rgba(221, 214, 254, 0.6);
+  background: white;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-pill:hover,
+.preset-pill.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+/* 5. Add custom habit bar in Modal */
+.add-habit-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(248, 246, 255, 0.8);
+  border: 1px solid rgba(221, 214, 254, 0.5);
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+.habit-input {
+  flex: 1;
+  padding: 8px 14px;
+  font-size: 0.84rem;
+  border: 1px solid rgba(221, 214, 254, 0.7);
+  border-radius: 10px;
+  background: white;
+  color: var(--ink);
+  outline: none;
+}
+.habit-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(124, 92, 252, 0.15);
+}
+
+.habit-del-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+.habit-del-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* 6. Comprehensive Mobile & Tablet Optimizations */
+@media (max-width: 900px) {
+  .lumina-dashboard-view {
+    padding: 12px;
+  }
+  .dashboard-welcome-banner {
+    padding: 20px 18px;
+    border-radius: 16px;
+    gap: 16px;
+  }
+  .banner-title {
+    font-size: 1.45rem;
+  }
+  .banner-desc {
+    font-size: 0.82rem;
+  }
+  .banner-right {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+  .banner-stat-chip {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .banner-stat-chip .chip-icon {
+    font-size: 1.2rem;
+  }
+  .banner-stat-chip strong {
+    font-size: 0.85rem;
+  }
+  .interactive-dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+  .dashboard-mod-card {
+    min-height: auto;
+    padding: 18px;
+    border-radius: 16px;
+  }
+  .full-modal-backdrop {
+    padding: 12px 8px;
+  }
+  .full-modal-dialog {
+    width: 96vw !important;
+    max-width: 96vw !important;
+    max-height: 94vh !important;
+    border-radius: 18px;
+  }
+  .full-modal-header {
+    padding: 14px 18px;
+  }
+  .full-modal-header h2 {
+    font-size: 1.1rem;
+  }
+  .add-habit-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .habit-matrix-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .habit-matrix-table {
+    min-width: 580px;
+  }
+  .habit-check-btn {
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
+
+@media (max-width: 500px) {
+  .banner-right {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .custom-log-row {
+    flex-wrap: wrap;
+  }
+  .custom-log-row .clean-select {
+    width: 100%;
+  }
+}

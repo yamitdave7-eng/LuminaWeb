@@ -99,6 +99,18 @@
         </div>
       </div>
 
+      <!-- Add Custom Habit Input Row -->
+      <div class="add-habit-bar">
+        <input type="text" id="newHabitNameInput" placeholder="Add a custom daily habit (e.g. Read 20 pages, Hydrate, Yoga)..." class="habit-input">
+        <select id="newHabitCategorySelect" class="clean-select habit-select">
+          <option value="🧘 Mind">🧘 Mind</option>
+          <option value="🏃 Body">🏃 Body</option>
+          <option value="📚 Study">📚 Study</option>
+          <option value="🌸 Wellness">🌸 Wellness</option>
+        </select>
+        <button type="button" class="button primary pill small" id="submitNewHabitBtn">+ Add Habit</button>
+      </div>
+
       <!-- Weekly Habit Matrix Table -->
       <div class="habit-matrix-wrap">
         <table class="habit-matrix-table">
@@ -107,6 +119,7 @@
               <th class="habit-col-th">Habit Activity</th>
               <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
               <th>Streak</th>
+              <th style="width: 44px; text-align: center;">✕</th>
             </tr>
           </thead>
           <tbody id="habitMatrixTableBody">
