@@ -1,0 +1,556 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · LuminaEdu{% endblock %}
+{% block content %}
+<div class="lumina-dashboard-view">
+
+  <!-- 1. SLEEK WELCOME & QUICK METRIC BANNER (Aesthetic & Purposeful) -->
+  <section class="dashboard-welcome-banner lumina-card">
+    <div class="banner-left">
+      <div class="banner-status-pill">
+        <span class="sparkle-icon">✨</span>
+        <span>STUDENT PRODUCTIVITY WORKSPACE · FALL 2026</span>
+      </div>
+      <h1 class="banner-title">Welcome back, <span class="gradient-text">{{ current_user.display_name.split(' ')[0] }}</span>!</h1>
+      <p class="banner-desc">Everything you need to balance deep study, mindfulness, habit streaks, and deadlines in one serene environment.</p>
+    </div>
+
+    <div class="banner-right">
+      <div class="banner-stat-chip">
+        <span class="chip-icon">🔥</span>
+        <div class="chip-text">
+          <strong id="bannerStreakCount">7 Days</strong>
+          <small>Active Streak</small>
+        </div>
+      </div>
+      <div class="banner-stat-chip">
+        <span class="chip-icon">🎯</span>
+        <div class="chip-text">
+          <strong id="bannerGoalsDone">3 / 5 Done</strong>
+          <small>Today's Target</small>
+        </div>
+      </div>
+      <div class="banner-stat-chip">
+        <span class="chip-icon">⏳</span>
+        <div class="chip-text">
+          <strong>25 Min</strong>
+          <small>Deep Focus Block</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. PRIMARY FOCUS SUITE (Balanced Symmetrical 3x2 Grid) -->
+  <section class="interactive-modules-section">
+    <div class="section-title-row">
+      <div class="title-left">
+        <div class="pill-eyebrow">DAILY STUDENT TOOLS</div>
+        <h2>Focus, Rhythm & Active Learning Suite</h2>
+      </div>
+      <div class="title-right">
+        <span class="hint-pill">Click ⤢ on any card to maximize for full experience</span>
+      </div>
+    </div>
+
+    <div class="interactive-dashboard-grid">
+
+      <!-- CARD 1: DAILY BALANCE WHEEL (Habify Inspired) -->
+      <div class="lumina-card dashboard-mod-card">
+        <div class="card-mod-header">
+          <div class="mod-title-group">
+            <span class="mod-icon">⏱</span>
+            <h3>Daily Balance</h3>
+          </div>
+          <div class="header-action-group">
+            <span class="mod-status-tag">Today</span>
+            <button type="button" class="icon-expand-btn highlight" data-open-modal="tracker" title="Maximize Habit Tracker">⤢ Full View</button>
+          </div>
+        </div>
+
+        <div class="wheel-container">
+          <div class="balance-wheel-svg-wrap">
+            <svg class="balance-wheel-svg" viewBox="0 0 180 180">
+              <circle class="ring-bg" cx="90" cy="90" r="74"/>
+              <circle class="ring-mind" cx="90" cy="90" r="74" stroke-dasharray="465" stroke-dashoffset="279"/>
+              <circle class="ring-body" cx="90" cy="90" r="62" stroke-dasharray="390" stroke-dashoffset="273"/>
+              <circle class="ring-study" id="dashboardStudyRing" cx="90" cy="90" r="50" stroke-dasharray="314" stroke-dashoffset="125"/>
+            </svg>
+            <div class="wheel-center-flower">
+              <img src="{{ url_for('static', filename='images/lumina-flower.svg') }}" alt="Focus Flower" class="flower-icon">
+            </div>
+          </div>
+
+          <div class="balance-legends">
+            <span class="legend-pill pill-mind">Mind · 40%</span>
+            <span class="legend-pill pill-body">Body · 30%</span>
+            <span class="legend-pill pill-study">Study · 30%</span>
+          </div>
+        </div>
+
+        <button type="button" class="button soft pill full glow-btn" id="dashboardRewardBtn">
+          <span>Unlock Daily Reward 🎁</span>
+        </button>
+      </div>
+
+      <!-- CARD 2: TODAY'S GOALS CHECKLIST -->
+      <div class="lumina-card dashboard-mod-card">
+        <div class="card-mod-header">
+          <div class="mod-title-group">
+            <span class="mod-icon">🎯</span>
+            <h3>Today's Goals</h3>
+          </div>
+          <div class="header-action-group">
+            <span class="card-progress-counter" id="dashboardGoalsBadge">3/5 Done</span>
+            <button type="button" class="icon-expand-btn highlight" data-open-modal="tracker" title="Maximize Tracker">⤢ Full View</button>
+          </div>
+        </div>
+
+        <ul class="goals-checklist" id="dashboardGoalsList">
+          <li class="goal-item completed">
+            <label class="custom-checkbox-wrap">
+              <input type="checkbox" checked>
+              <span class="checkbox-box">
+                <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+              </span>
+              <span class="goal-label">10 min meditation & study prep</span>
+            </label>
+            <span class="goal-tag">Wellness</span>
+          </li>
+          <li class="goal-item completed">
+            <label class="custom-checkbox-wrap">
+              <input type="checkbox" checked>
+              <span class="checkbox-box">
+                <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+              </span>
+              <span class="goal-label">Review Computer Science Module 3</span>
+            </label>
+            <span class="goal-tag">Study</span>
+          </li>
+          <li class="goal-item completed">
+            <label class="custom-checkbox-wrap">
+              <input type="checkbox" checked>
+              <span class="checkbox-box">
+                <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+              </span>
+              <span class="goal-label">Complete Python data structures exercise</span>
+            </label>
+            <span class="goal-tag">Code</span>
+          </li>
+          <li class="goal-item">
+            <label class="custom-checkbox-wrap">
+              <input type="checkbox">
+              <span class="checkbox-box">
+                <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+              </span>
+              <span class="goal-label">Walk 8,000 steps & stay hydrated</span>
+            </label>
+            <span class="goal-tag">Health</span>
+          </li>
+          <li class="goal-item">
+            <label class="custom-checkbox-wrap">
+              <input type="checkbox">
+              <span class="checkbox-box">
+                <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+              </span>
+              <span class="goal-label">No phone screen 45 min before sleep</span>
+            </label>
+            <span class="goal-tag">Habit</span>
+          </li>
+        </ul>
+
+        <div class="add-goal-row">
+          <input type="text" id="dashboardAddGoalInput" placeholder="Add a new goal or task..." autocomplete="off">
+          <button type="button" class="button primary pill small" id="dashboardAddGoalBtn">Add</button>
+        </div>
+      </div>
+
+      <!-- CARD 3: WEEKLY RHYTHM & STREAK ANALYTICS -->
+      <div class="lumina-card dashboard-mod-card">
+        <div class="card-mod-header">
+          <div class="mod-title-group">
+            <span class="mod-icon">🔥</span>
+            <h3>Weekly Rhythm</h3>
+          </div>
+          <div class="header-action-group">
+            <span class="streak-tag-badge">🔥 7-Day Streak</span>
+            <button type="button" class="icon-expand-btn highlight" data-open-modal="tracker" title="Maximize Rhythm Tracker">⤢ Full View</button>
+          </div>
+        </div>
+
+        <div class="streak-bar-chart-wrap">
+          <div class="chart-metric-header">
+            <div>
+              <span class="chart-eyebrow">DAILY STUDY HOURS</span>
+              <strong class="chart-big-metric">28.0 <small>hrs logged</small></strong>
+            </div>
+            <span class="consistency-rate-badge" id="dashConsistencyBadge">86% Consistency</span>
+          </div>
+
+          <div class="weekly-bar-chart" id="dashboardBarChart">
+            <div class="chart-bar-group" data-day="Mon" data-hours="3.5h" title="Mon: 3.5 hrs">
+              <div class="bar-fill" style="height: 58%;"></div>
+              <span class="bar-day">M</span>
+            </div>
+            <div class="chart-bar-group" data-day="Tue" data-hours="4.2h" title="Tue: 4.2 hrs">
+              <div class="bar-fill" style="height: 70%;"></div>
+              <span class="bar-day">T</span>
+            </div>
+            <div class="chart-bar-group" data-day="Wed" data-hours="5.0h" title="Wed: 5.0 hrs">
+              <div class="bar-fill active" style="height: 85%;"></div>
+              <span class="bar-day">W</span>
+            </div>
+            <div class="chart-bar-group" data-day="Thu" data-hours="4.8h" title="Thu: 4.8 hrs">
+              <div class="bar-fill" style="height: 80%;"></div>
+              <span class="bar-day">T</span>
+            </div>
+            <div class="chart-bar-group" data-day="Fri" data-hours="6.0h" title="Fri: 6.0 hrs">
+              <div class="bar-fill" style="height: 100%;"></div>
+              <span class="bar-day">F</span>
+            </div>
+            <div class="chart-bar-group" data-day="Sat" data-hours="3.0h" title="Sat: 3.0 hrs">
+              <div class="bar-fill" style="height: 50%;"></div>
+              <span class="bar-day">S</span>
+            </div>
+            <div class="chart-bar-group" data-day="Sun" data-hours="4.5h" title="Sun: 4.5 hrs">
+              <div class="bar-fill" style="height: 75%;"></div>
+              <span class="bar-day">S</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rhythm-insights-row">
+          <div class="insight-item">
+            <span class="insight-label">Tasks Done</span>
+            <strong class="insight-val">5.7 / 10</strong>
+          </div>
+          <div class="insight-item">
+            <span class="insight-label">Peak Energy</span>
+            <strong class="insight-val">6 PM – 9 PM</strong>
+          </div>
+        </div>
+
+        <button type="button" class="button soft pill full" data-open-modal="tracker">
+          <span>Open Habit & Consistency Matrix ⤢</span>
+        </button>
+      </div>
+
+      <!-- CARD 4: ACADEMIC CALENDAR & DEADLINES -->
+      <div class="lumina-card dashboard-mod-card">
+        <div class="card-mod-header">
+          <div class="mod-title-group">
+            <span class="mod-icon">📅</span>
+            <h3>Calendar & Events</h3>
+          </div>
+          <div class="header-action-group">
+            <button type="button" class="icon-expand-btn highlight" data-open-modal="calendar" title="Maximize Calendar">⤢ Full View</button>
+          </div>
+        </div>
+
+        <div class="mini-cal-header-row">
+          <span class="mini-cal-month" id="dashCalMonthLabel">October 2026</span>
+          <span class="mini-cal-badge">Click date to view</span>
+        </div>
+
+        <div class="mini-cal-grid" id="dashCalGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="mini-upcoming-list">
+          <div class="event-chip-row violet">
+            <span class="chip-dot"></span>
+            <strong>UI/UX Design Review</strong>
+            <small>Tomorrow · 9:00 AM</small>
+          </div>
+          <div class="event-chip-row blue">
+            <span class="chip-dot"></span>
+            <strong>Python Lab Submission</strong>
+            <small>Friday · 11:00 PM</small>
+          </div>
+        </div>
+
+        <button type="button" class="button soft pill full" data-open-modal="calendar">
+          <span>Open Full Calendar & Planner ⤢</span>
+        </button>
+      </div>
+
+      <!-- CARD 5: ACTIVE RECALL QUIZ & FLASHCARDS -->
+      <div class="lumina-card dashboard-mod-card">
+        <div class="card-mod-header">
+          <div class="mod-title-group">
+            <span class="mod-icon">🧠</span>
+            <h3>Study Quiz & Recall</h3>
+          </div>
+          <div class="header-action-group">
+            <span class="mod-status-tag">Spaced Recall</span>
+            <button type="button" class="icon-expand-btn highlight" data-open-modal="quiz" title="Maximize Quiz">⤢ Full View</button>
+          </div>
+        </div>
+
+        <div class="quiz-teaser-card">
+          <span class="quiz-eyebrow">TODAY'S FLASHCARD TOPIC</span>
+          <h4>Computer Science & Study Skills</h4>
+          <p>Reinforce your memory with quick calibrated questions and 3D flashcards.</p>
+          <div class="quiz-stat-pill-row">
+            <span class="stat-pill green">✓ 5 Questions Ready</span>
+            <span class="stat-pill violet">🔥 +30 XP Streak</span>
+          </div>
+        </div>
+
+        <button type="button" class="button primary pill full glow-btn" data-open-modal="quiz">
+          <span>Launch Study Quiz 🧠</span>
+        </button>
+      </div>
+
+      <!-- CARD 6: ZEN FOCUS TIMER & AMBIENT CHAMBER -->
+      <div class="lumina-card dashboard-mod-card">
+        <div class="card-mod-header">
+          <div class="mod-title-group">
+            <span class="mod-icon">⏳</span>
+            <h3>Zen Focus Timer</h3>
+          </div>
+          <div class="header-action-group">
+            <span class="mod-status-tag">Pomodoro</span>
+            <button type="button" class="icon-expand-btn highlight" data-open-modal="timer" title="Maximize Timer">⤢ Full View</button>
+          </div>
+        </div>
+
+        <div class="mini-timer-center">
+          <div class="dash-timer-time" id="dashTimerDisplay">25:00</div>
+          <span class="dash-timer-tag">Deep Study Session</span>
+          <div class="dash-timer-controls">
+            <button type="button" class="button primary pill small glow-btn" id="dashTimerStartBtn">Start Focus</button>
+            <button type="button" class="button quiet pill small" id="dashTimerResetBtn">Reset</button>
+          </div>
+        </div>
+
+        <button type="button" class="button soft pill full" data-open-modal="timer">
+          <span>Maximize Zen Full Screen ⤢</span>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. WORKSPACE DATA & RECENT ACTIVITY (Neat 2-Column Section) -->
+  <section class="dashboard-bottom-grid">
+
+    <!-- LEFT: MY NOTES & WORKSPACE DATA -->
+    <div class="lumina-card workspace-resources-panel">
+      <div class="panel-header-row">
+        <div class="panel-title-group">
+          <span class="panel-icon">📚</span>
+          <div>
+            <h3>My Study Notes & Resources</h3>
+            <small>Stored securely in your private SQLite database</small>
+          </div>
+        </div>
+        {% if cards %}
+          <a class="button primary pill small glow-btn" href="{{ url_for(cards[0].resource.key + '.create_page') }}">
+            + Add New {{ cards[0].resource.singular }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="resource-kpi-cards">
+        {% for card in cards %}
+          <a class="resource-tile" href="{{ url_for(card.resource.key + '.index') }}">
+            <div class="tile-icon">📝</div>
+            <div class="tile-info">
+              <strong class="tile-number">{{ card.total }}</strong>
+              <span class="tile-label">{{ card.resource.label }}</span>
+            </div>
+            <span class="tile-arrow">→</span>
+          </a>
+        {% endfor %}
+
+        <a class="resource-tile" href="{{ url_for('files.index') }}">
+          <div class="tile-icon">🖼️</div>
+          <div class="tile-info">
+            <strong class="tile-number">{{ file_count }}</strong>
+            <span class="tile-label">Private Files</span>
+          </div>
+          <span class="tile-arrow">→</span>
+        </a>
+
+        <a class="resource-tile" href="{{ url_for('account.profile') }}">
+          <div class="tile-icon">💾</div>
+          <div class="tile-info">
+            <strong class="tile-number">{{ '%.1f'|format(current_user.storage_bytes / 1048576) }} MB</strong>
+            <span class="tile-label">Storage Used</span>
+          </div>
+          <span class="tile-arrow">⚙️</span>
+        </a>
+      </div>
+
+      <div class="storage-bar-compact">
+        <div class="storage-label-row">
+          <span>Storage Allocation</span>
+          <span>{{ '%.1f'|format(current_user.storage_bytes / 1048576) }} / 20.0 MiB</span>
+        </div>
+        <div class="stepped-bar">
+          <div class="stepped-fill" style="width: {{ [((current_user.storage_bytes / 20971520) * 100)|round, 100]|min }}%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: RECENT ACTIVITY AUDIT TRAIL -->
+    <div class="lumina-card activity-panel">
+      <div class="panel-header-row">
+        <div class="panel-title-group">
+          <span class="panel-icon">🕒</span>
+          <div>
+            <h3>Recent Activity</h3>
+            <small>Live security & change audit trail</small>
+          </div>
+
+
+<!-- Dashboard-Specific Card Interactions -->
+<script>
+(function() {
+  function initDashboardCards() {
+    // 1. DASHBOARD GOALS CHECKLIST
+    const goalsList = document.getElementById('dashboardGoalsList');
+    const badge = document.getElementById('dashboardGoalsBadge');
+    const bannerGoals = document.getElementById('bannerGoalsDone');
+    const addInput = document.getElementById('dashboardAddGoalInput');
+    const addBtn = document.getElementById('dashboardAddGoalBtn');
+    const studyRing = document.getElementById('dashboardStudyRing');
+
+    function updateDashboardGoals() {
+      if (!goalsList || !badge) return;
+      const total = goalsList.querySelectorAll('.goal-item').length;
+      const done = goalsList.querySelectorAll('.goal-item.completed').length;
+      badge.textContent = `${done}/${total} Done`;
+      if (bannerGoals) bannerGoals.textContent = `${done} / ${total} Done`;
+
+      if (studyRing && total > 0) {
+        const offset = Math.round(314 * (1 - (done / total) * 0.85));
+        studyRing.style.strokeDashoffset = String(offset);
+      }
+    }
+
+    if (goalsList) {
+      goalsList.addEventListener('change', (e) => {
+        if (e.target.type === 'checkbox') {
+          const item = e.target.closest('.goal-item');
+          if (item) {
+            item.classList.toggle('completed', e.target.checked);
+            updateDashboardGoals();
+            if (e.target.checked && typeof window.triggerDashConfetti === 'function') {
+              window.triggerDashConfetti();
+            }
+          }
+        }
+      });
+    }
+
+    function addGoal() {
+      if (!addInput || !addInput.value.trim()) return;
+      const li = document.createElement('li');
+      li.className = 'goal-item';
+      li.innerHTML = `
+        <label class="custom-checkbox-wrap">
+          <input type="checkbox">
+          <span class="checkbox-box">
+            <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+          </span>
+          <span class="goal-label">${addInput.value.trim()}</span>
+        </label>
+        <span class="goal-tag">Custom</span>
+      `;
+      goalsList.appendChild(li);
+      addInput.value = '';
+      updateDashboardGoals();
+      if (typeof window.triggerDashConfetti === 'function') {
+        window.triggerDashConfetti();
+      }
+    }
+
+    if (addBtn) addBtn.addEventListener('click', addGoal);
+    if (addInput) {
+      addInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addGoal();
+        }
+      });
+    }
+
+    const rewardBtn = document.getElementById('dashboardRewardBtn');
+    if (rewardBtn) {
+      rewardBtn.addEventListener('click', () => {
+        if (typeof window.triggerDashConfetti === 'function') {
+          window.triggerDashConfetti();
+        }
+        alert('🎁 Daily Reward Claimed! +50 XP bonus added to your student profile.');
+      });
+    }
+
+    // Bar chart interaction
+    document.querySelectorAll('#dashboardBarChart .chart-bar-group').forEach(group => {
+      group.addEventListener('click', () => {
+        const day = group.dataset.day;
+        const hrs = group.dataset.hours;
+        alert(`📊 ${day} Study Log: ${hrs} of focused deep work recorded.`);
+      });
+    });
+
+    // Dashboard Mini Timer
+    const dashTimerDisplay = document.getElementById('dashTimerDisplay');
+    const dashTimerStartBtn = document.getElementById('dashTimerStartBtn');
+    const dashTimerResetBtn = document.getElementById('dashTimerResetBtn');
+    let dashTimerId = null;
+    let dashRemaining = 25 * 60;
+    let isDashRunning = false;
+
+    function renderDashTimer() {
+      if (!dashTimerDisplay) return;
+      const m = Math.floor(dashRemaining / 60);
+      const s = dashRemaining % 60;
+      dashTimerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    if (dashTimerStartBtn) {
+      dashTimerStartBtn.addEventListener('click', () => {
+        if (isDashRunning) {
+          clearInterval(dashTimerId);
+          isDashRunning = false;
+          dashTimerStartBtn.textContent = 'Resume';
+        } else {
+          isDashRunning = true;
+          dashTimerStartBtn.textContent = 'Pause';
+          dashTimerId = setInterval(() => {
+            dashRemaining--;
+            if (dashRemaining <= 0) {
+              clearInterval(dashTimerId);
+              isDashRunning = false;
+              dashRemaining = 25 * 60;
+              dashTimerStartBtn.textContent = 'Start Focus';
+              if (typeof window.triggerDashConfetti === 'function') {
+                window.triggerDashConfetti();
+              }
+            }
+            renderDashTimer();
+          }, 1000);
+        }
+      });
+    }
+
+    if (dashTimerResetBtn) {
+      dashTimerResetBtn.addEventListener('click', () => {
+        clearInterval(dashTimerId);
+        isDashRunning = false;
+        dashRemaining = 25 * 60;
+        if (dashTimerStartBtn) dashTimerStartBtn.textContent = 'Start Focus';
+        renderDashTimer();
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDashboardCards);
+  } else {
+    initDashboardCards();
+  }
+})();
+</script>
+{% endblock %}

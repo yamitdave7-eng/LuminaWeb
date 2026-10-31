@@ -1,0 +1,445 @@
+{% extends "base.html" %}
+{% block title %}Student Learning & Daily Rhythm Portal{% endblock %}
+{% block content %}
+<div class="lumina-landing-view">
+
+  <!-- HERO SECTION -->
+  <section class="landing-hero-lumina">
+    <div class="hero-badge">
+      <span class="sparkle">✨</span>
+      <span>A Fresh Start · LuminaEdu Workspace</span>
+    </div>
+
+    <h1 class="hero-title">
+      Organize Your Studies.<br>
+      <span class="gradient-text">Master Your Daily Rhythm.</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      {{ app_tagline }} LuminaEdu combines mindful daily habit balance, live course deadlines, 
+      study streak tracking, and secure notes in one serene pastel lavender sanctuary.
+    </p>
+
+    <div class="hero-actions">
+      {% if current_user.is_authenticated %}
+        <a class="button primary pill large glow-btn" href="{{ url_for('dashboard.index') }}">
+          Go to Your Workspace ({{ current_user.display_name }}) →
+        </a>
+      {% else %}
+        <a class="button primary pill large glow-btn" href="{{ url_for('auth.login_page') }}">
+          Sign In to LuminaEdu →
+        </a>
+        <a class="button quiet pill large" href="{{ url_for('auth.register_page') }}">
+          Create Free Account
+        </a>
+      {% endif %}
+      <a class="button quiet pill large" href="#how-it-works">
+        Explore Preview ↓
+      </a>
+    </div>
+
+    <div class="hero-subtext">
+      <span class="check-pill">✓ Secure Student Accounts</span>
+      <span class="check-pill">✓ Private SQLite Database</span>
+      <span class="check-pill">✓ Habify-Inspired Balance</span>
+      <span class="check-pill">✓ Study Streaks & Analytics</span>
+    </div>
+  </section>
+
+  <!-- ABOUT THE WEBSITE SECTION -->
+  <section class="about-section" id="about">
+    <div class="section-badge">ABOUT THE PLATFORM</div>
+    <h2 class="section-heading">Why Students Choose LuminaEdu</h2>
+    <p class="section-subtext">
+      Traditional student tools are cluttered and stressful. LuminaEdu is crafted with calming pastel hues, 
+      gentle micro-interactions, and psychological balance principles so you can study with clarity and joy.
+    </p>
+
+    <div class="about-pillars-grid">
+      <div class="lumina-card pillar-card">
+        <div class="pillar-icon-box pink">🌸</div>
+        <h3>Mindful Daily Balance</h3>
+        <p>
+          Inspired by holistic wellness principles, Lumina balances your daily life across 
+          <strong>Study (40%)</strong>, <strong>Mind (30%)</strong>, and <strong>Body (30%)</strong>. 
+          Prevent burnout while keeping academic performance at its peak.
+        </p>
+      </div>
+
+      <div class="lumina-card pillar-card">
+        <div class="pillar-icon-box violet">🎯</div>
+        <h3>Daily Goals & Checklists</h3>
+        <p>
+          Transform daunting course syllabi into bite-sized daily achievements. Check off tasks, 
+          watch your daily progress ring animate, and unlock confetti rewards upon milestone completion.
+        </p>
+      </div>
+
+      <div class="lumina-card pillar-card">
+        <div class="pillar-icon-box cyan">🔥</div>
+        <h3>Streaks & Study Analytics</h3>
+        <p>
+          Consistency is the secret to mastery. Monitor your weekly learning activity charts, 
+          track uninterrupted study streaks, and optimize your schedule around your peak energy hours.
+        </p>
+      </div>
+
+      <div class="lumina-card pillar-card">
+        <div class="pillar-icon-box green">🔒</div>
+        <h3>Private Database Vault</h3>
+        <p>
+          Your study notes, lecture summaries, and private course files are securely stored 
+          in a personal authenticated database partition with end-to-end user isolation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE INTERACTIVE PREVIEW: HOW THE WEBSITE WORKS -->
+  <section class="preview-section" id="how-it-works">
+    <div class="section-header-center">
+      <div class="section-badge">LIVE INTERACTIVE SHOWCASE</div>
+      <h2 class="section-heading">How LuminaEdu Works</h2>
+      <p class="section-subtext">
+        Try the real interactive modules below right now! Check off goals, view your balance ring, 
+        and start the focus timer to preview your daily workspace.
+      </p>
+    </div>
+
+    <!-- Live Interactive Preview Canvas -->
+    <div class="lumina-card preview-canvas-box">
+      <div class="preview-canvas-header">
+        <div class="preview-title-wrap">
+          <span class="preview-dot green"></span>
+          <span class="preview-mode-tag">LIVE INTERACTIVE PREVIEW · TRY IT OUT</span>
+        </div>
+        <div class="preview-actions">
+          <a class="button primary pill small" href="{{ url_for('auth.login_page') }}">
+            Sign In to Save Data →
+          </a>
+        </div>
+      </div>
+
+      <!-- Preview 3-Column Mini Dashboard -->
+      <div class="preview-grid">
+
+        <!-- PREVIEW COL 1: DAILY BALANCE WHEEL (Habify Inspired) -->
+        <div class="preview-module-card">
+          <div class="mod-header">
+            <span class="mod-icon">⏱</span>
+            <h4>Daily Balance Wheel</h4>
+            <span class="mod-tag">Habify Ring</span>
+          </div>
+
+          <div class="wheel-preview-box">
+            <div class="wheel-svg-wrap">
+              <svg class="preview-svg-ring" viewBox="0 0 160 160">
+                <circle class="ring-bg" cx="80" cy="80" r="66"/>
+                <circle class="ring-mind" cx="80" cy="80" r="66" stroke-dasharray="414" stroke-dashoffset="248"/>
+                <circle class="ring-body" cx="80" cy="80" r="54" stroke-dasharray="339" stroke-dashoffset="237"/>
+                <circle class="ring-study" id="previewStudyRing" cx="80" cy="80" r="42" stroke-dasharray="264" stroke-dashoffset="105"/>
+              </svg>
+              <div class="wheel-center-flower">
+                <img src="{{ url_for('static', filename='images/lumina-flower.svg') }}" alt="Flower" class="flower-icon">
+              </div>
+            </div>
+
+            <div class="balance-legends-preview">
+              <span class="legend-chip pink">Mind · 40%</span>
+              <span class="legend-chip cyan">Body · 30%</span>
+              <span class="legend-chip violet">Study · 30%</span>
+            </div>
+          </div>
+
+          <button type="button" class="button soft pill full" id="previewRewardBtn">
+            <span>Unlock Daily Reward 🎁</span>
+          </button>
+        </div>
+
+        <!-- PREVIEW COL 2: INTERACTIVE GOALS CHECKLIST -->
+        <div class="preview-module-card">
+          <div class="mod-header">
+            <span class="mod-icon">🎯</span>
+            <h4>Today's Goals Checklist</h4>
+            <span class="counter-badge" id="previewGoalsBadge">2/4 Done</span>
+          </div>
+
+          <p class="preview-hint">Click checkboxes below to test interactive completion:</p>
+
+          <ul class="preview-goals-list" id="previewGoalsList">
+            <li class="preview-goal-item completed">
+              <label class="custom-chk">
+                <input type="checkbox" checked>
+                <span class="chk-box">✓</span>
+                <span class="chk-label">10 min morning focus & hydration</span>
+              </label>
+              <span class="tag-pill">Mind</span>
+            </li>
+            <li class="preview-goal-item completed">
+              <label class="custom-chk">
+                <input type="checkbox" checked>
+                <span class="chk-box">✓</span>
+                <span class="chk-label">Review Computer Science Module 3</span>
+              </label>
+              <span class="tag-pill">Study</span>
+            </li>
+            <li class="preview-goal-item">
+              <label class="custom-chk">
+                <input type="checkbox">
+                <span class="chk-box">✓</span>
+                <span class="chk-label">Complete Python Lab Assignment</span>
+              </label>
+              <span class="tag-pill">Study</span>
+            </li>
+            <li class="preview-goal-item">
+              <label class="custom-chk">
+                <input type="checkbox">
+                <span class="chk-box">✓</span>
+                <span class="chk-label">Take evening walk (8,000 steps)</span>
+              </label>
+              <span class="tag-pill">Body</span>
+            </li>
+          </ul>
+
+          <div class="preview-add-row">
+            <input type="text" id="previewAddGoalInput" placeholder="Type a new goal and press enter...">
+          </div>
+        </div>
+
+        <!-- PREVIEW COL 3: STREAKS & POMODORO TIMER -->
+        <div class="preview-module-card">
+          <div class="mod-header">
+            <span class="mod-icon">🔥</span>
+            <h4>Streak & Focus Timer</h4>
+            <span class="mod-tag">Realtime</span>
+          </div>
+
+          <!-- Streak Pill -->
+          <div class="preview-streak-box">
+            <span class="flame-icon">🔥</span>
+            <div>
+              <strong>7 Days Active Streak</strong>
+              <small>Consistency multiplier active</small>
+            </div>
+          </div>
+
+          <!-- Focus Timer Widget -->
+          <div class="preview-timer-box">
+            <span class="timer-tag">POMODORO SESSION</span>
+            <div class="preview-timer-digits" id="previewTimerDigits">25:00</div>
+            <div class="timer-btn-row">
+              <button type="button" class="button primary pill small" id="previewTimerStartBtn">Start Focus</button>
+              <button type="button" class="button quiet pill small" id="previewTimerResetBtn">Reset</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY ANNOUNCEMENTS & CMS PAGES -->
+  {% if pages %}
+    <section class="public-content">
+      <header class="page-heading">
+        <div>
+          <p class="eyebrow">COMMUNITY & CAMPUS UPDATES</p>
+          <h2>Explore Announcements & Guides</h2>
+        </div>
+      </header>
+      <div class="content-grid">
+        {% for page in pages %}
+          <a class="lumina-card content-card" href="{{ url_for('public.page', slug=page.slug) }}">
+            <small class="page-date">{{ page.updated_at|date_label }}</small>
+            <h2>{{ page.title }}</h2>
+            <p>{{ page.body|truncate(150) }}</p>
+            <span class="read-link">Read guide →</span>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- BOTTOM CALL TO ACTION BANNER -->
+  <section class="cta-banner-lumina">
+    <div class="cta-content">
+      <h2>Ready to Illuminate Your Learning?</h2>
+      <p>Join hundreds of students maintaining daily study rhythm, organized notes, and balanced habits.</p>
+      <div class="cta-buttons">
+        <a class="button primary pill large glow-btn" href="{{ url_for('auth.login_page') }}">
+          Sign In Now →
+        </a>
+        <a class="button quiet pill large" href="{{ url_for('auth.register_page') }}">
+          Create Account Free
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Confetti Canvas for Interactive Celebration -->
+<canvas id="previewConfettiCanvas" class="preview-confetti-canvas"></canvas>
+
+<!-- Inline script for interactive preview on landing page -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Interactive Preview Goals Checklist
+  const goalsList = document.getElementById('previewGoalsList');
+  const badge = document.getElementById('previewGoalsBadge');
+  const addInput = document.getElementById('previewAddGoalInput');
+  const studyRing = document.getElementById('previewStudyRing');
+
+  function updatePreviewStats() {
+    if (!goalsList || !badge) return;
+    const total = goalsList.querySelectorAll('.preview-goal-item').length;
+    const done = goalsList.querySelectorAll('.preview-goal-item.completed').length;
+    badge.textContent = `${done}/${total} Done`;
+
+    if (studyRing && total > 0) {
+      const offset = Math.round(264 * (1 - (done / total) * 0.85));
+      studyRing.style.strokeDashoffset = String(offset);
+    }
+  }
+
+  if (goalsList) {
+    goalsList.addEventListener('change', (e) => {
+      if (e.target.type === 'checkbox') {
+        const item = e.target.closest('.preview-goal-item');
+        if (item) {
+          item.classList.toggle('completed', e.target.checked);
+          updatePreviewStats();
+          if (e.target.checked) triggerPreviewConfetti();
+        }
+      }
+    });
+  }
+
+  if (addInput) {
+    addInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && addInput.value.trim()) {
+        const li = document.createElement('li');
+        li.className = 'preview-goal-item';
+        li.innerHTML = `
+          <label class="custom-chk">
+            <input type="checkbox">
+            <span class="chk-box">✓</span>
+            <span class="chk-label">${addInput.value.trim()}</span>
+          </label>
+          <span class="tag-pill">Custom</span>
+        `;
+        goalsList.appendChild(li);
+        addInput.value = '';
+        updatePreviewStats();
+      }
+    });
+  }
+
+  // 2. Unlock Reward Confetti
+  const rewardBtn = document.getElementById('previewRewardBtn');
+  if (rewardBtn) {
+    rewardBtn.addEventListener('click', () => {
+      triggerPreviewConfetti();
+      alert('🎁 Daily Reward Unlocked! Great job maintaining your balance today.');
+    });
+  }
+
+  // 3. Mini Focus Timer
+  const timerDigits = document.getElementById('previewTimerDigits');
+  const timerStartBtn = document.getElementById('previewTimerStartBtn');
+  const timerResetBtn = document.getElementById('previewTimerResetBtn');
+  let timerId = null;
+  let remaining = 25 * 60;
+  let isRunning = false;
+
+  function renderTimer() {
+    if (!timerDigits) return;
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    timerDigits.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+
+  if (timerStartBtn) {
+    timerStartBtn.addEventListener('click', () => {
+      if (isRunning) {
+        clearInterval(timerId);
+        isRunning = false;
+        timerStartBtn.textContent = 'Resume';
+      } else {
+        isRunning = true;
+        timerStartBtn.textContent = 'Pause';
+        timerId = setInterval(() => {
+          remaining--;
+          if (remaining <= 0) {
+            clearInterval(timerId);
+            isRunning = false;
+            remaining = 25 * 60;
+            timerStartBtn.textContent = 'Start Focus';
+            triggerPreviewConfetti();
+            alert('🎉 25-Minute Focus Session Completed!');
+          }
+          renderTimer();
+        }, 1000);
+      }
+    });
+  }
+
+  if (timerResetBtn) {
+    timerResetBtn.addEventListener('click', () => {
+      clearInterval(timerId);
+      isRunning = false;
+      remaining = 25 * 60;
+      if (timerStartBtn) timerStartBtn.textContent = 'Start Focus';
+      renderTimer();
+    });
+  }
+
+  // 4. Confetti helper
+  function triggerPreviewConfetti() {
+    const canvas = document.getElementById('previewConfettiCanvas');
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext('2d');
+    const colors = ['#7c3aed', '#a78bfa', '#06b6d4', '#ec4899', '#f59e0b', '#10b981'];
+    const particles = [];
+
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: window.innerWidth * 0.5 + (Math.random() - 0.5) * 300,
+        y: window.innerHeight * 0.5,
+        vx: (Math.random() - 0.5) * 12,
+        vy: -Math.random() * 10 - 4,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        alpha: 1.0,
+        decay: 0.015 + Math.random() * 0.015
+      });
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.3;
+        p.alpha -= p.decay;
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size * 0.7);
+        ctx.restore();
+      }
+      if (particles.length > 0) requestAnimationFrame(loop);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    requestAnimationFrame(loop);
+  }
+});
+</script>
+{% endblock %}

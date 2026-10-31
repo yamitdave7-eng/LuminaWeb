@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" fill="none" opacity="0.45">
+  <defs>
+    <filter id="bokehBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="35"/>
+    </filter>
+    <filter id="petalBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+    <linearGradient id="lavenderStem" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#A78BFA" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Ambient bokeh spheres across the edges -->
+  <g filter="url(#bokehBlur)">
+    <!-- Top Left -->
+    <circle cx="120" cy="140" r="140" fill="#DDD6FE"/>
+    <circle cx="280" cy="80" r="180" fill="#C4B5FD" opacity="0.7"/>
+    <!-- Top Right -->
+    <circle cx="1780" cy="160" r="200" fill="#DDD6FE"/>
+    <circle cx="1620" cy="90" r="150" fill="#C4B5FD" opacity="0.6"/>
+    <!-- Bottom Left (Lavender field effect) -->
+    <circle cx="180" cy="960" r="220" fill="#A78BFA" opacity="0.6"/>
+    <circle cx="420" cy="990" r="190" fill="#8B5CF6" opacity="0.4"/>
+    <circle cx="80" cy="880" r="160" fill="#C4B5FD" opacity="0.7"/>
+    <!-- Bottom Right (Lavender field effect) -->
+    <circle cx="1740" cy="940" r="230" fill="#8B5CF6" opacity="0.45"/>
+    <circle cx="1520" cy="980" r="200" fill="#A78BFA" opacity="0.5"/>
+    <circle cx="1880" cy="860" r="170" fill="#C4B5FD" opacity="0.6"/>
+    <!-- Center soft glow -->
+    <circle cx="960" cy="540" r="320" fill="#EDE9FE" opacity="0.8"/>
+  </g>
+
+  <!-- Soft out-of-focus lavender spires / blossoms along the bottom edges -->
+  <g filter="url(#petalBlur)" opacity="0.65">
+    <!-- Bottom left spires -->
+    <path d="M 60 1100 Q 80 920 100 820 Q 110 780 120 740" stroke="url(#lavenderStem)" stroke-width="12" stroke-linecap="round"/>
+    <ellipse cx="120" cy="740" rx="22" ry="34" fill="#8B5CF6"/>
+    <ellipse cx="110" cy="790" rx="20" ry="30" fill="#7C3AED"/>
+    <ellipse cx="130" cy="830" rx="24" ry="32" fill="#A78BFA"/>
+
+    <path d="M 160 1100 Q 180 960 210 860 Q 220 810 230 760" stroke="url(#lavenderStem)" stroke-width="10" stroke-linecap="round"/>
+    <ellipse cx="230" cy="760" rx="18" ry="28" fill="#9333EA"/>
+    <ellipse cx="220" cy="810" rx="22" ry="30" fill="#A855F7"/>
+
+    <!-- Bottom right spires -->
+    <path d="M 1860 1100 Q 1830 930 1800 810 Q 1790 770 1780 730" stroke="url(#lavenderStem)" stroke-width="12" stroke-linecap="round"/>
+    <ellipse cx="1780" cy="730" rx="24" ry="36" fill="#8B5CF6"/>
+    <ellipse cx="1790" cy="780" rx="22" ry="32" fill="#7C3AED"/>
+    <ellipse cx="1770" cy="830" rx="26" ry="34" fill="#A78BFA"/>
+
+    <path d="M 1720 1100 Q 1700 950 1670 850 Q 1660 800 1650 750" stroke="url(#lavenderStem)" stroke-width="10" stroke-linecap="round"/>
+    <ellipse cx="1650" cy="750" rx="20" ry="28" fill="#9333EA"/>
+    <ellipse cx="1660" cy="800" rx="24" ry="32" fill="#A855F7"/>
+  </g>
+</svg>

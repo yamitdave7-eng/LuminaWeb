@@ -1,0 +1,55 @@
+/* Lumina Design Tokens — Ethereal Lavender, Soft Glassmorphism & Claymorphism */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --font: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Lumina Brand Violet / Lavender */
+  --accent: #7c5cfc;
+  --accent-hover: #6c4af5;
+  --accent-light: #9384f9;
+  --accent-soft: #f1edff;
+  --accent-soft-2: #e8e2fe;
+  --accent-gradient: linear-gradient(135deg, #8e7df7 0%, #6c5ce7 100%);
+  --accent-glow: 0 8px 24px rgba(124, 92, 252, 0.32);
+  
+  /* Text / Inks */
+  --ink: #1e1b4b;
+  --ink-secondary: #3b3765;
+  --muted: #747196;
+  --muted-light: #9a97bc;
+  
+  /* Surfaces & Glassmorphism */
+  --paper: #ece8fa;
+  --surface: #ffffff;
+  --surface-glass: rgba(255, 255, 255, 0.88);
+  --surface-glass-subtle: rgba(255, 255, 255, 0.65);
+  --surface-inset: #f8f7ff;
+  --line: #e6e2f5;
+  --line-glass: rgba(255, 255, 255, 0.7);
+  --sidebar: #ffffff;
+  
+  /* Functional Accents */
+  --success: #10b981;
+  --success-soft: #d1fae5;
+  --danger: #f43f5e;
+  --danger-soft: #ffe4e6;
+  --warning: #f59e0b;
+  --warning-soft: #fef3c7;
+  --info: #0ea5e9;
+  --info-soft: #e0f2fe;
+  
+  /* Shadows & Elevation */
+  --shadow-sm: 0 2px 8px rgba(108, 92, 231, 0.05);
+  --shadow-md: 0 10px 28px -6px rgba(108, 92, 231, 0.09), 0 2px 6px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 20px 48px -12px rgba(108, 92, 231, 0.16);
+  --shadow-floating: 0 25px 70px -15px rgba(98, 80, 204, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  
+  /* Radii */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 30px;
+  --radius-pill: 9999px;
+}

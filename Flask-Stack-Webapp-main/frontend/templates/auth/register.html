@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from 'components/forms.html' import field %}
+{% block title %}Create Account · LuminaEdu{% endblock %}
+{% block content %}
+<div class="auth-showcase-container">
+  
+  <!-- LEFT: ABOUT THE WEBSITE & PREVIEW -->
+  <div class="auth-showcase-info">
+    <div class="showcase-brand-header">
+      <img src="{{ url_for('static', filename='images/lumina-logo-full.png') }}" alt="LuminaEdu" class="auth-brand-logo">
+      <span class="auth-status-pill">Join LuminaEdu</span>
+    </div>
+
+    <div class="showcase-about-block">
+      <h2>Start Your Balanced Study Journey</h2>
+      <p>
+        Create your free personal student account. Track daily habits, keep persistent lecture notes, 
+        and monitor your learning streaks with zero distractions.
+      </p>
+    </div>
+
+    <div class="showcase-steps-block">
+      <h3>What You Get</h3>
+      
+      <div class="preview-step-card">
+        <div class="step-num-badge">✓</div>
+        <div class="step-content">
+          <h4>Private Account Isolation</h4>
+          <p>Your notes and uploaded files remain 100% private in your SQLite database space.</p>
+        </div>
+      </div>
+
+      <div class="preview-step-card">
+        <div class="step-num-badge">✓</div>
+        <div class="step-content">
+          <h4>Habify-Inspired Daily Balance</h4>
+          <p>Visual target arcs for Study, Mind, and Body wellness.</p>
+        </div>
+      </div>
+
+      <div class="preview-step-card">
+        <div class="step-num-badge">✓</div>
+        <div class="step-content">
+          <h4>Learning Streaks & Pomodoro Timer</h4>
+          <p>Built-in 25-minute deep focus timer with celebratory completion rewards.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: REAL WORKING REGISTRATION FORM -->
+  <div class="auth-form-card lumina-card">
+    <div class="auth-form-header">
+      <span class="pill-eyebrow">GET STARTED FREE</span>
+      <h2>Create Student Account</h2>
+      <p class="auth-sub">Set up your profile to start tracking your daily study rhythm.</p>
+    </div>
+
+    <form class="form-stack lumina-form" method="post" autocomplete="on">
+      {{ form.hidden_tag() }}
+      {{ field(form.display_name, autocomplete='name') }}
+      {{ field(form.email, autocomplete='email') }}
+      {{ field(form.password, help='Use 12–128 characters.', autocomplete='new-password') }}
+      {{ field(form.confirm, autocomplete='new-password') }}
+
+      <div class="form-submit-row">
+        {{ form.submit(class_='button primary pill full large glow-btn', value='Create Account →') }}
+      </div>
+
+      <div class="auth-links-row">
+        <p class="hint">Already have an account? <a class="text-link font-bold" href="{{ url_for('auth.login_page') }}">Sign in here</a>.</p>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

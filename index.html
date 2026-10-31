@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LuminaEdu · Student Learning & Productivity Portal</title>
+  <meta name="description" content="LuminaEdu: Modern student productivity workspace with daily goal tracking, learning streak analysis, study notes, and smart academic schedule.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Lavender & Lilac Animated Backdrop -->
+  <div class="ambient-backdrop" aria-hidden="true">
+    <div class="ambient-pattern"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+  </div>
+
+  <!-- Main Floating Dashboard Canvas Frame -->
+  <div class="app-canvas-container">
+    <div class="app-card-frame">
+
+      <!-- Left Sidebar Navigation -->
+      <aside class="dashboard-sidebar">
+        <div class="sidebar-brand">
+          <img src="images/lumina-logo-full.png" alt="LuminaEdu" class="brand-logo-img">
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Sidebar Navigation">
+          <button type="button" class="nav-item active" data-view="dashboard">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="2"/>
+              <rect x="14" y="3" width="7" height="7" rx="2"/>
+              <rect x="14" y="14" width="7" height="7" rx="2"/>
+              <rect x="3" y="14" width="7" height="7" rx="2"/>
+            </svg>
+            <span>Dashboard</span>
+            <span class="active-indicator"></span>
+          </button>
+
+          <button type="button" class="nav-item" data-view="learning">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            <span>Learning & Tasks</span>
+            <span class="badge-count" id="sidebarTaskBadge">5</span>
+          </button>
+
+          <button type="button" class="nav-item" data-view="notes">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span>Study Notes</span>
+          </button>
+
+          <button type="button" class="nav-item" data-view="schedule">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span>Schedule</span>
+          </button>
+
+          <button type="button" class="nav-item" data-view="timer">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>Focus Timer</span>
+          </button>
+
+          <div class="sidebar-divider" style="margin: 14px 0 8px; border-top: 1px solid rgba(221, 214, 254, 0.4);"></div>
+          <span style="font-size: 0.65rem; font-weight: 800; color: var(--text-muted); padding: 0 12px 6px; display: block; letter-spacing: 0.05em;">STUDENT TOOLS</span>
+
+          <button type="button" class="nav-item nav-tool-btn" data-open-modal="calendar">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span>Full Calendar</span>
+            <span class="tool-tag">⤢</span>
+          </button>
+
+          <button type="button" class="nav-item nav-tool-btn" data-open-modal="tracker">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 14 14"/>
+            </svg>
+            <span>Habit Tracker</span>
+            <span class="tool-tag">⤢</span>
+          </button>
+
+          <button type="button" class="nav-item nav-tool-btn" data-open-modal="quiz">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span>Active Quiz</span>
+            <span class="tool-tag">🧠</span>
+          </button>
+
+          <button type="button" class="nav-item nav-tool-btn" data-open-modal="timer">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="9"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>Zen Timer</span>
+            <span class="tool-tag">⏳</span>
+          </button>
+        </nav>
+
+        <!-- Sidebar Bottom User Profile Card -->
+        <div class="sidebar-footer">
+          <div class="user-pill-card">
+            <div class="user-avatar-wrap">
+              <div class="user-avatar-initials">G</div>
+              <span class="avatar-status-dot" title="Online"></span>
+            </div>
+            <div class="user-info">
+              <span class="user-name">Gwapo</span>
+              <span class="user-role">Student Pro</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Workspace Center Canvas -->
+      <main class="dashboard-main">
+
+        <!-- Top Header Navigation Bar -->
+        <header class="topbar">
+          <div class="topbar-search">
+            <button type="button" class="search-trigger-btn" id="openCommandPaletteBtn" title="Press ⌘K or Ctrl+K to search">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <span class="search-placeholder">Search courses, goals, notes...</span>
+              <kbd class="search-shortcut"><abbr title="Command">⌘</abbr>K</kbd>
+            </button>
+          </div>
+
+          <div class="topbar-right">
+            <!-- Dynamic Live Clock & Date Badge -->
+            <div class="live-clock-card">
+              <span class="clock-time" id="liveClockDisplay">08:48 AM</span>
+              <span class="clock-date" id="liveDateDisplay">WED | 29 OCT</span>
+            </div>
+
+            <!-- Add Task Quick Action Button -->
+            <button type="button" class="button primary pill glow-btn" id="quickAddTaskBtn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <span>Add Goal</span>
+            </button>
+
+            <!-- Notifications Icon -->
+            <button type="button" class="icon-circle-btn" id="notificationBtn" title="Notifications">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span class="notif-badge">3</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Dynamic Greeting & Status Banner -->
+        <section class="welcome-banner">
+          <div class="welcome-text-group">
+            <span class="welcome-salutation" id="timeGreetingText">Good Morning, Gwapo! ✨</span>
+            <h1 class="welcome-headline">Ready to Learn Today?</h1>
+            <p class="welcome-subtext">Pick up where you left off and keep your momentum growing.</p>
+          </div>
+
+          <div class="banner-quick-stats">
+            <div class="stat-bubble">
+              <span class="stat-number text-violet" id="tasksPlanCount">5</span>
+              <span class="stat-label">Today's Plan</span>
+            </div>
+            <div class="stat-bubble">
+              <span class="stat-number text-cyan" id="tasksInProgressCount">2</span>
+              <span class="stat-label">In Progress</span>
+            </div>
+            <div class="stat-bubble">
+              <span class="stat-number text-green" id="tasksCompletedCount">3</span>
+              <span class="stat-label">Completed</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dashboard Grid of Modules -->
+        <div class="dashboard-grid">
+
+          <!-- CARD 1: DAILY BALANCE & FOCUS WHEEL (Habify Inspired) -->
+          <div class="grid-card balance-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon-pill">⏱</span>
+                <h3>Daily Balance</h3>
+              </div>
+              <span class="card-tag">Today</span>
+            </div>
+
+            <div class="wheel-container">
+              <div class="balance-wheel-svg-wrap">
+                <!-- Circular SVG Progress Ring with Center Flower -->
+                <svg class="balance-wheel-svg" viewBox="0 0 200 200">
+                  <circle class="ring-bg" cx="100" cy="100" r="82"/>
+                  <!-- Mind Arc (Pink/Lilac) -->
+                  <circle class="ring-mind" cx="100" cy="100" r="82" stroke-dasharray="515" stroke-dashoffset="309"/>
+                  <!-- Body Arc (Cyan) -->
+                  <circle class="ring-body" cx="100" cy="100" r="70" stroke-dasharray="440" stroke-dashoffset="308"/>
+                  <!-- Study Arc (Violet) -->
+                  <circle class="ring-study" cx="100" cy="100" r="58" stroke-dasharray="364" stroke-dashoffset="145"/>
+                </svg>
+
+                <!-- Centered Glowing Flower Emblem -->
+                <div class="wheel-center-flower">
+                  <img src="images/lumina-flower.svg" alt="Focus Flower" class="flower-icon">
+                </div>
+              </div>
+
+              <!-- Metrics Legends -->
+              <div class="balance-legends">
+                <span class="legend-pill pill-mind">Mind · 40%</span>
+                <span class="legend-pill pill-body">Body · 30%</span>
+                <span class="legend-pill pill-study">Study · 30%</span>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button type="button" class="button soft pill full" id="unlockRewardBtn">
+                <span>Unlock Daily Reward 🎁</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- CARD 2: TODAY'S GOALS CHECKLIST (Interactive Habit Tracker) -->
+          <div class="grid-card goals-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon-pill">🎯</span>
+                <h3>Today's Goals</h3>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="card-progress-counter" id="goalsCounterBadge">3/5 Done</span>
+                <button type="button" class="icon-expand-btn" data-open-modal="tracker" title="Maximize Habit Tracker">⤢ Full View</button>
+              </div>
+            </div>
+
+            <!-- Interactive Checklist Items -->
+            <ul class="goals-checklist" id="goalsChecklist">
+              <li class="goal-item completed" data-id="goal-1">
+                <label class="custom-checkbox-wrap">
+                  <input type="checkbox" checked>
+                  <span class="checkbox-box">
+                    <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+                  </span>
+                  <span class="goal-label">10 min mindfulness & focus prep</span>
+                </label>
+                <span class="goal-tag">Wellness</span>
+              </li>
+
+              <li class="goal-item completed" data-id="goal-2">
+                <label class="custom-checkbox-wrap">
+                  <input type="checkbox" checked>
+                  <span class="checkbox-box">
+                    <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+                  </span>
+                  <span class="goal-label">Review Computer Science Module 3 notes</span>
+                </label>
+                <span class="goal-tag">Study</span>
+              </li>
+
+              <li class="goal-item completed" data-id="goal-3">
+                <label class="custom-checkbox-wrap">
+                  <input type="checkbox" checked>
+                  <span class="checkbox-box">
+                    <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+                  </span>
+                  <span class="goal-label">Complete Python data structures exercise</span>
+                </label>
+                <span class="goal-tag">Code</span>
+              </li>
+
+              <li class="goal-item" data-id="goal-4">
+                <label class="custom-checkbox-wrap">
+                  <input type="checkbox">
+                  <span class="checkbox-box">
+                    <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+                  </span>
+                  <span class="goal-label">Walk 8,000 steps & stay hydrated</span>
+                </label>
+                <span class="goal-tag">Health</span>
+              </li>
+
+              <li class="goal-item" data-id="goal-5">
+                <label class="custom-checkbox-wrap">
+                  <input type="checkbox">
+                  <span class="checkbox-box">
+                    <svg viewBox="0 0 12 10"><polyline points="1.5 5 4.5 8 10.5 2"/></svg>
+                  </span>
+                  <span class="goal-label">No phone screen 45 min before sleep</span>
+                </label>
+                <span class="goal-tag">Habit</span>
+              </li>
+            </ul>
+
+            <div class="card-footer add-goal-row">
+              <input type="text" id="newGoalInput" placeholder="Add a new goal or task..." autocomplete="off">
+              <button type="button" class="button primary pill small" id="submitNewGoalBtn">Add</button>
+            </div>
+          </div>
+
+          <!-- CARD 3: LEARNING PROGRESS & STREAK (Inspo #2 Inspired) -->
+          <div class="grid-card progress-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon-pill">🔥</span>
+                <h3>Your Progress</h3>
+              </div>
+              <span class="card-tag">Weekly Stats</span>
+            </div>
+
+            <!-- Current Streak Hero Banner -->
+            <div class="streak-banner">
+              <div class="streak-icon-wrap">
+                <span class="streak-flame">🔥</span>
+              </div>
+              <div class="streak-info">
+                <span class="streak-count">7 Days Streak</span>
+                <span class="streak-desc">You're doing amazing, keep it up!</span>
+              </div>
+            </div>
+
+            <!-- Weekly Learning Activity Bar Chart -->
+            <div class="chart-section">
+              <div class="chart-header">
+                <span class="chart-title">Weekly Study Activity</span>
+                <span class="chart-sub">Avg 4.2 hours / day</span>
+              </div>
+
+              <div class="weekly-bar-chart" id="weeklyBarChart">
+                <div class="chart-bar-group">
+                  <div class="bar-fill" style="height: 55%;" data-day="Mon" data-hours="3.5h"></div>
+                  <span class="bar-day">M</span>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="bar-fill" style="height: 75%;" data-day="Tue" data-hours="4.8h"></div>
+                  <span class="bar-day">T</span>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="bar-fill" style="height: 45%;" data-day="Wed" data-hours="2.9h"></div>
+                  <span class="bar-day">W</span>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="bar-fill active" style="height: 95%;" data-day="Thu" data-hours="6.2h"></div>
+                  <span class="bar-day">T</span>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="bar-fill" style="height: 65%;" data-day="Fri" data-hours="4.1h"></div>
+                  <span class="bar-day">F</span>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="bar-fill" style="height: 35%;" data-day="Sat" data-hours="2.0h"></div>
+                  <span class="bar-day">S</span>
+                </div>
+                <div class="chart-bar-group">
+                  <div class="bar-fill" style="height: 25%;" data-day="Sun" data-hours="1.5h"></div>
+                  <span class="bar-day">S</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="progress-footer-stats">
+              <div class="progress-stat-item">
+                <span class="stat-sub">Course Completion</span>
+                <strong class="stat-main">5.7 <small>/ 10 Completed</small></strong>
+              </div>
+              <div class="progress-stat-item">
+                <span class="stat-sub">Focus Insights</span>
+                <strong class="stat-main">Best: 6 PM – 9 PM</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 4: MINI CALENDAR & UPCOMING SCHEDULE (Inspo #1 & #3) -->
+          <div class="grid-card calendar-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon-pill">📅</span>
+                <h3>Calendar & Events</h3>
+              </div>
+              <div class="calendar-nav-buttons">
+                <button type="button" class="mini-nav-btn" id="prevMonthBtn" title="Previous Month">‹</button>
+                <span class="calendar-month-label" id="calendarMonthLabel">October 2026</span>
+                <button type="button" class="mini-nav-btn" id="nextMonthBtn" title="Next Month">›</button>
+                <button type="button" class="icon-expand-btn" data-open-modal="calendar" title="Maximize Calendar" style="margin-left: 6px;">⤢ Full View</button>
+              </div>
+            </div>
+
+            <!-- Mini Month Calendar Grid -->
+            <div class="mini-calendar-wrap">
+              <div class="calendar-weekdays">
+                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+              </div>
+              <div class="calendar-days-grid" id="calendarDaysGrid">
+                <!-- Dynamically populated by app.js -->
+              </div>
+            </div>
+
+            <!-- Upcoming Events List -->
+            <div class="upcoming-events-section">
+              <h4 class="sub-heading">Upcoming Deadlines</h4>
+              <div class="event-item">
+                <div class="event-indicator dot-violet"></div>
+                <div class="event-info">
+                  <span class="event-title">UI/UX Design Review</span>
+                  <span class="event-time">Tomorrow · 9:00 AM – 10:00 AM</span>
+                </div>
+              </div>
+              <div class="event-item">
+                <div class="event-indicator dot-blue"></div>
+                <div class="event-info">
+                  <span class="event-title">Python Final Assignment Submission</span>
+                  <span class="event-time">Friday · 11:00 PM</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 5: ACTIVE RECALL QUIZ & FLASHCARDS -->
+          <div class="grid-card quiz-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon-pill">🧠</span>
+                <h3>Study Quiz & Recall</h3>
+              </div>
+              <button type="button" class="icon-expand-btn" data-open-modal="quiz" title="Maximize Active Quiz">⤢ Full View</button>
+            </div>
+
+            <div class="quiz-teaser-card" style="margin-top: 4px; padding: 14px; background: rgba(243, 232, 255, 0.45); border: 1px solid rgba(221, 214, 254, 0.5); border-radius: 14px;">
+              <span class="quiz-eyebrow" style="font-size: 0.65rem; font-weight: 800; color: var(--color-violet-600, #7c3aed); text-transform: uppercase; display: block; margin-bottom: 4px;">TODAY'S FLASHCARD TOPIC</span>
+              <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Computer Science & Study Skills</h4>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">Calibrated recall questions with instant feedback and 3D flashcards.</p>
+              <div class="quiz-stat-pill-row" style="display: flex; gap: 6px;">
+                <span class="stat-pill green" style="font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 9999px; background: rgba(16, 185, 129, 0.12); color: #059669;">✓ 5 Questions</span>
+                <span class="stat-pill violet" style="font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 9999px; background: rgba(124, 92, 252, 0.12); color: var(--color-violet-600, #7c3aed);">🔥 +30 XP</span>
+              </div>
+            </div>
+
+            <button type="button" class="button primary pill full glow-btn" data-open-modal="quiz" style="margin-top: 10px;">
+              <span>Launch Study Quiz 🧠</span>
+            </button>
+          </div>
+
+          <!-- CARD 6: FOCUS POMODORO TIMER -->
+          <div class="grid-card timer-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon-pill">⏳</span>
+                <h3>Focus Timer</h3>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="card-tag">Pomodoro</span>
+                <button type="button" class="icon-expand-btn" data-open-modal="timer" title="Maximize Zen Focus Chamber">⤢ Full View</button>
+              </div>
+            </div>
+
+            <div class="timer-display-wrap">
+              <div class="timer-countdown" id="timerDisplay">25:00</div>
+              <span class="timer-mode-label" id="timerModeLabel">Deep Study Session</span>
+            </div>
+
+            <div class="timer-controls">
+              <button type="button" class="button primary pill glow-btn" id="startTimerBtn">Start Focus</button>
+              <button type="button" class="button quiet pill" id="resetTimerBtn">Reset</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BOTTOM WORKSPACE SECTION: STUDY NOTES & KNOWLEDGE LOG -->
+        <section class="dashboard-bottom-grid" style="margin-top: 24px;">
+          <div class="grid-card notes-card" style="margin: 0; padding: 24px;">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon-pill">📝</span>
+                <h3>Study Notes & Knowledge Log</h3>
+              </div>
+              <button type="button" class="button small primary pill glow-btn" id="newNoteBtn">+ New Note</button>
+            </div>
+
+            <div class="notes-container" id="notesList" style="margin-top: 12px;">
+              <!-- Dynamically populated from localStorage -->
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       FULL MAXIMIZED MODALS (Full Experience)
+       ======================================================================== -->
+
+  <!-- 1. FULL MAXIMIZED CALENDAR & PLANNER MODAL -->
+  <div class="full-modal-backdrop" id="fullCalendarModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="full-modal-dialog calendar-dialog">
+      <div class="full-modal-header">
+        <div class="header-title-block">
+          <span class="modal-eyebrow">ACADEMIC PLANNER</span>
+          <h2>Full Calendar & Daily Schedule</h2>
+        </div>
+        <div class="header-controls">
+          <div class="cal-nav-group">
+            <button type="button" class="button quiet pill small" id="fullCalPrevBtn">‹ Prev</button>
+            <span class="full-cal-month-title" id="fullCalMonthTitle">October 2026</span>
+            <button type="button" class="button quiet pill small" id="fullCalNextBtn">Next ›</button>
+            <button type="button" class="button primary pill small" id="fullCalTodayBtn">Today</button>
+          </div>
+          <button type="button" class="close-modal-icon-btn" data-close-modal="calendar" aria-label="Close">×</button>
+        </div>
+      </div>
+
+      <div class="full-modal-body calendar-body-grid">
+        <!-- Left: Large 7-Day Month Grid -->
+        <div class="calendar-large-container">
+          <div class="full-weekdays-row">
+            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <div class="full-month-days-grid" id="fullMonthDaysGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Right: Day Schedule / Hourly Planner -->
+        <div class="day-schedule-sidebar">
+          <div class="schedule-sidebar-header">
+            <h3 id="selectedDateTitle">Schedule for Today</h3>
+            <span class="date-chip" id="selectedDateSub">Oct 29, 2026</span>
+          </div>
+
+          <div class="add-event-form">
+            <input type="text" id="newEventTitleInput" placeholder="Add study block / deadline..." class="event-input">
+            <div class="event-form-row">
+              <select id="newEventTypeSelect" class="event-select">
+                <option value="violet">📚 Study / Lecture</option>
+                <option value="blue">💻 Assignment</option>
+                <option value="pink">🎯 Exam / Quiz</option>
+                <option value="green">🧘 Habit / Wellness</option>
+              </select>
+              <input type="time" id="newEventTimeInput" value="14:00" class="event-time-input">
+              <button type="button" class="button primary pill small" id="submitNewEventBtn">+ Add</button>
+            </div>
+          </div>
+
+          <div class="day-timeline-list" id="dayTimelineList">
+            <!-- Populated with events -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. FULL MAXIMIZED HABIT & RHYTHM TRACKER MODAL -->
+  <div class="full-modal-backdrop" id="fullTrackerModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="full-modal-dialog tracker-dialog">
+      <div class="full-modal-header">
+        <div class="header-title-block">
+          <span class="modal-eyebrow">HABIFY RHYTHM SUITE</span>
+          <h2>Weekly Habit Matrix & Consistency Tracker</h2>
+        </div>
+        <button type="button" class="close-modal-icon-btn" data-close-modal="tracker" aria-label="Close">×</button>
+      </div>
+
+      <div class="full-modal-body tracker-body">
+        <!-- Top Metrics Row -->
+        <div class="tracker-kpi-row">
+          <div class="kpi-card">
+            <span class="kpi-icon">🔥</span>
+            <div class="kpi-data">
+              <strong>7 Days</strong>
+              <small>Current Streak</small>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-icon">🎯</span>
+            <div class="kpi-data">
+              <strong id="trackerCompletionRate">86%</strong>
+              <small>Weekly Consistency</small>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-icon">🌸</span>
+            <div class="kpi-data">
+              <strong>40 / 30 / 30</strong>
+              <small>Study · Mind · Body</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weekly Habit Matrix Table -->
+        <div class="habit-matrix-wrap">
+          <table class="habit-matrix-table">
+            <thead>
+              <tr>
+                <th class="habit-col-th">Habit Activity</th>
+                <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+                <th>Streak</th>
+              </tr>
+            </thead>
+            <tbody id="habitMatrixTableBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Monthly Consistency Heatmap Squares -->
+        <div class="heatmap-section">
+          <div class="heatmap-header">
+            <h4>30-Day Activity Heatmap</h4>
+            <span class="heatmap-legend">Less <span class="heat-box level-0"></span><span class="heat-box level-1"></span><span class="heat-box level-2"></span><span class="heat-box level-3"></span> More</span>
+          </div>
+          <div class="heatmap-grid" id="heatmapGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. FULL MAXIMIZED STUDY QUIZ & FLASHCARDS MODAL -->
+  <div class="full-modal-backdrop" id="fullQuizModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="full-modal-dialog quiz-dialog">
+      <div class="full-modal-header">
+        <div class="header-title-block">
+          <span class="modal-eyebrow">AI ACTIVE RECALL & CURRICULUM SUITE</span>
+          <h2>Active Study & Quiz Generator</h2>
+        </div>
+        <div class="header-controls">
+          <div class="quiz-mode-switch">
+            <button type="button" class="mode-tab active" id="quizModeBtn">🧠 Active Quiz</button>
+            <button type="button" class="mode-tab" id="flashcardModeBtn">🎴 Flashcards</button>
+            <button type="button" class="mode-tab ai-gen-tab" id="generatorModeBtn">✨ AI Lesson Generator</button>
+          </div>
+          <button type="button" class="close-modal-icon-btn" data-close-modal="quiz" aria-label="Close">×</button>
+        </div>
+      </div>
+
+      <!-- Active Deck & Score Ribbon -->
+      <div class="quiz-deck-ribbon">
+        <div class="deck-ribbon-left">
+          <span class="ribbon-icon">📚</span>
+          <strong id="activeDeckTitle">Computer Science & Study Skills</strong>
+          <span class="deck-type-tag" id="activeDeckTypeTag">Built-in Deck</span>
+        </div>
+
+        <!-- Mode Selector: Study Mode vs Timed Exam Simulation -->
+        <div class="deck-ribbon-center">
+          <div class="exam-mode-toggle" id="examModeToggle">
+            <button type="button" class="exam-toggle-btn active" id="modeStudyBtn" title="Instant feedback, points, and explanations">💡 Study Mode</button>
+            <button type="button" class="exam-toggle-btn" id="modeExamBtn" title="Timed exam simulation with flagging and full graded review">⏱️ Exam Simulation</button>
+          </div>
+          <div class="exam-timer-pill" id="examTimerPill" style="display: none;">
+            <span class="timer-clock-icon">⏳</span>
+            <span id="examTimerDisplay">20:00</span>
+          </div>
+        </div>
+
+        <div class="deck-ribbon-right">
+          <button type="button" class="button quiet pill small" id="quickUploadPillBtn">⚡ Upload New Lesson</button>
+          <div class="points-pill-badge" id="ribbonScoreBadge">
+            <span class="star-icon">⭐</span>
+            <span id="ribbonScoreVal">0 pts</span>
+            <span class="streak-sub" id="ribbonStreakVal">· 1x Streak</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="full-modal-body quiz-body">
+
+        <!-- ==================================================================
+             MODE A: INTERACTIVE QUIZ & POINT SYSTEM
+             ================================================================== -->
+        <div class="quiz-container-view" id="quizContainerView">
+          <div class="quiz-progress-bar-wrap">
+            <div class="quiz-progress-fill" id="quizProgressFill" style="width: 5%;"></div>
+          </div>
+
+          <!-- 1..20 Interactive Question Navigation Matrix -->
+          <div class="quiz-matrix-bar">
+            <div class="quiz-matrix-top">
+              <span class="matrix-title">QUESTION NAVIGATOR (1 - <span id="matrixMaxCount">20</span>)</span>
+              <div class="matrix-legend">
+                <span class="legend-chip"><span class="legend-dot active-dot"></span> Current</span>
+                <span class="legend-chip"><span class="legend-dot answered-dot"></span> Answered</span>
+                <span class="legend-chip"><span class="legend-dot flagged-dot"></span> Flagged</span>
+              </div>
+            </div>
+            <div class="quiz-matrix-grid" id="quizQuestionMatrix">
+              <!-- Populated dynamically with 1..20 pills -->
+            </div>
+          </div>
+
+          <div class="quiz-meta-row">
+            <div class="meta-left">
+              <span class="question-tracker" id="questionTracker">Question 1 of 20</span>
+              <button type="button" class="button quiet pill tiny flag-btn" id="flagQuestionBtn" title="Flag this question to review later">🚩 Flag for Review</button>
+            </div>
+            <div class="quiz-live-stats">
+              <span class="stat-pill streak-pill-live" id="liveStreakPill">🔥 Streak: 1.0x (+0 bonus)</span>
+              <span class="stat-pill score-pill-live" id="liveScorePill">🏆 0 Points</span>
+            </div>
+          </div>
+
+          <div class="quiz-question-box">
+            <h3 id="quizQuestionText">Loading question...</h3>
+            <p id="quizQuestionSub" class="quiz-subtext">Select the best answer below:</p>
+          </div>
+
+          <div class="quiz-options-list" id="quizOptionsList">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Instant Feedback & Grounded Explanation Card (Active in Study Mode) -->
+          <div class="quiz-explanation-card" id="quizExplanationCard" style="display: none;">
+            <div class="expl-header">
+              <span class="expl-icon" id="explIcon">✓</span>
+              <strong id="explTitle">Correct!</strong>
+              <span class="expl-points-tag" id="explPointsTag">+100 pts</span>
+            </div>
+            <p id="quizExplanationText" class="expl-body"></p>
+          </div>
+
+          <div class="quiz-footer-actions">
+            <div class="footer-left-actions">
+              <button type="button" class="button quiet pill" id="quizPrevBtn" style="display: none;">‹ Previous</button>
+              <span class="feedback-msg" id="quizFeedbackMsg"></span>
+            </div>
+            <div class="footer-right-actions">
+              <button type="button" class="button soft pill danger-soft" id="submitExamEarlyBtn" style="display: none;">Submit Exam Early 🏁</button>
+              <button type="button" class="button primary pill glow-btn" id="quizNextBtn">Next Question →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             QUIZ SCORE REPORT CARD & GRADED EXAM REVIEW TABLE
+             ================================================================== -->
+        <div class="quiz-summary-view" id="quizSummaryView" style="display: none;">
+          <div class="summary-hero">
+            <div class="summary-trophy">🏆</div>
+            <div class="summary-grade-badge" id="summaryGradeBadge">GRADE A+ · OUTSTANDING MASTERY</div>
+            <h3 class="summary-points-total" id="summaryTotalPoints">⭐ 2,450 Points Earned!</h3>
+            <p class="summary-subtext" id="summarySubtext">Comprehensive curriculum assessment completed with high accuracy.</p>
+          </div>
+
+          <div class="summary-stats-grid">
+            <div class="summary-stat-box">
+              <span class="stat-num" id="summaryAccuracyVal">100%</span>
+              <span class="stat-lbl">Accuracy</span>
+            </div>
+            <div class="summary-stat-box">
+              <span class="stat-num" id="summaryBasePtsVal">2000</span>
+              <span class="stat-lbl">Base Points</span>
+            </div>
+            <div class="summary-stat-box">
+              <span class="stat-num" id="summaryStreakBonusVal">+450</span>
+              <span class="stat-lbl">Streak Combos</span>
+            </div>
+            <div class="summary-stat-box">
+              <span class="stat-num" id="summaryCorrectCountVal">20 / 20</span>
+              <span class="stat-lbl">Correct Answers</span>
+            </div>
+          </div>
+
+          <!-- Comprehensive Graded Question Review Table -->
+          <div class="exam-review-section">
+            <div class="review-header-row">
+              <div class="review-title-col">
+                <h4>📋 Graded Curriculum Review Table</h4>
+                <p>Full question-by-question breakdown with chosen answers, correct answers, and textbook explanations.</p>
+              </div>
+              <div class="review-filter-tabs">
+                <button type="button" class="review-filter-btn active" data-filter="all" id="filterAllBtn">All (<span id="reviewCountAll">20</span>)</button>
+                <button type="button" class="review-filter-btn" data-filter="wrong" id="filterWrongBtn">Missed (<span id="reviewCountWrong">0</span>)</button>
+                <button type="button" class="review-filter-btn" data-filter="flagged" id="filterFlaggedBtn">Flagged (<span id="reviewCountFlagged">0</span>)</button>
+              </div>
+            </div>
+            <div class="review-table-container">
+              <table class="exam-review-table" id="examReviewTable">
+                <thead>
+                  <tr>
+                    <th style="width: 45px;">#</th>
+                    <th style="width: 32%;">Question Stem</th>
+                    <th style="width: 20%;">Your Answer</th>
+                    <th style="width: 20%;">Correct Answer</th>
+                    <th>Rationale & Explanation</th>
+                  </tr>
+                </thead>
+                <tbody id="examReviewTableBody">
+                  <!-- Dynamically generated rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="summary-actions-row">
+            <button type="button" class="button primary pill glow-btn" id="retakeQuizBtn">🔄 Retake Exam</button>
+            <button type="button" class="button soft pill print-export-btn" id="printExamBtn">🖨️ Export Printable Exam & Key</button>
+            <button type="button" class="button quiet pill" id="exportStudySetBtn">💾 Download Study Set (.json)</button>
+            <button type="button" class="button quiet pill" id="studyCardsAfterQuizBtn">🎴 Practice Flashcards</button>
+            <button type="button" class="button quiet pill" id="uploadAnotherLessonBtn">⚡ New Lesson</button>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             MODE B: 3D FLASHCARDS FLIP WITH SPACED REPETITION MASTERY
+             ================================================================== -->
+        <div class="flashcard-container-view" id="flashcardContainerView" style="display: none;">
+          <div class="flashcard-deck-header">
+            <div class="deck-header-left">
+              <span class="deck-indicator" id="flashcardDeckIndicator">Active Recall Deck</span>
+              <span class="mastery-summary-badge" id="cardMasteryLabel">0 / 20 Mastered (0%)</span>
+            </div>
+            <div class="deck-header-right">
+              <button type="button" class="button quiet pill small" id="shuffleCardsBtn">🔀 Shuffle</button>
+            </div>
+          </div>
+
+          <!-- Spaced Repetition Mastery Progress Bar -->
+          <div class="flashcard-mastery-track">
+            <div class="flashcard-mastery-fill" id="cardMasteryFill" style="width: 0%;"></div>
+          </div>
+
+          <div class="flashcard-card-scene" id="flashcardScene">
+            <div class="flashcard-card-inner" id="flashcardInner">
+              <div class="flashcard-face flashcard-front">
+                <span class="flip-hint">Click card to reveal answer 🔄</span>
+                <h3 id="cardFrontText">What is the average-case time complexity of Hash Table lookups?</h3>
+                <span class="card-tag" id="cardCategoryTag">Computer Science</span>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <span class="flip-hint">Click card to flip back 🔄</span>
+                <div class="answer-box">
+                  <strong class="answer-highlight" id="cardHighlightText">O(1) Constant Time</strong>
+                  <p id="cardExplanationText">Hash tables compute an index via hashing function, allowing immediate array indexing on average.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spaced Repetition Rating Actions -->
+          <div class="flashcard-sr-actions">
+            <button type="button" class="button quiet pill sr-btn-review" id="cardReviewAgainBtn" title="Need to review this concept again">🔄 Still Reviewing (+0 pts)</button>
+            <div class="sr-card-nav">
+              <button type="button" class="button quiet pill small" id="cardPrevBtn">‹ Prev</button>
+              <span class="card-counter" id="cardCounter">Card 1 / 20</span>
+              <button type="button" class="button quiet pill small" id="cardNextBtn">Next ›</button>
+            </div>
+            <button type="button" class="button primary pill glow-btn sr-btn-master" id="cardMasteredBtn" title="Got it memorized! Mark as mastered">👍 Mastered (+25 pts)</button>
+          </div>
+        </div>
+
+        <!-- ==================================================================
+             MODE C: AI LESSON & HANDOUT GENERATOR (UP TO 20 QUESTIONS)
+             ================================================================== -->
+        <div class="quiz-generator-view" id="quizGeneratorView" style="display: none;">
+          <div class="generator-intro-card">
+            <div class="gen-title-row">
+              <span class="gen-sparkle">✨</span>
+              <div>
+                <h3>AI Study Set & Curriculum Synthesizer</h3>
+                <p>Upload your handouts, lecture slides, syllabus, or textbooks (.pdf, .docx, .txt, .md, .json). AI analyzes the full text and synthesizes an academic curriculum with up to 20 cognitive questions, 4 domain-grounded distractors, 3D flashcards, and a printable exam with teacher answer key.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 1. Dropzone Box -->
+          <div class="lesson-dropzone-box" id="lessonDropzone">
+            <input type="file" id="lessonFileInput" class="file-input-hidden" accept=".txt,.md,.markdown,.pdf,.docx,.json,.csv,.rtf,.html,.py">
+            <div class="dropzone-content" id="dropzoneDefaultContent">
+              <div class="dropzone-icon">📁</div>
+              <strong>Drag & drop your lesson document here, or click to browse</strong>
+              <span class="dropzone-types">Production support for student PDFs, Word docs (.docx), Markdown (.md), and Text (.txt)</span>
+            </div>
+
+            <div class="selected-file-chip" id="selectedFileChip" style="display: none;">
+              <div class="file-info-col">
+                <span class="file-icon">📄</span>
+                <div>
+                  <strong id="selectedFileName">lesson_notes.txt</strong>
+                  <small id="selectedFileSize">24 KB</small>
+                </div>
+              </div>
+              <button type="button" class="remove-file-btn" id="removeFileBtn" title="Remove file">×</button>
+            </div>
+          </div>
+
+          <!-- 2. Direct Text Paste Accordion -->
+          <div class="paste-text-section">
+            <div class="paste-header-row">
+              <span class="paste-label">Or paste / edit lesson notes directly:</span>
+              <small class="text-counts" id="textCountDisplay">0 words · 0 chars</small>
+            </div>
+            <textarea id="lessonTextInput" class="lesson-textarea" rows="4" placeholder="Paste your lesson paragraphs, lecture definitions, syllabus outline, or study guide text here..."></textarea>
+          </div>
+
+          <!-- 3. Quick Sample Lessons (20-Concept Curriculums) -->
+          <div class="sample-lessons-bar">
+            <span class="sample-label">Try 20-concept rich curriculum:</span>
+            <div class="sample-chips-row">
+              <button type="button" class="chip-sample" data-sample="cs">💻 OS & Computer Systems (20 Items)</button>
+              <button type="button" class="chip-sample" data-sample="bio">🧬 Biology: Cellular & Genetics (20 Items)</button>
+              <button type="button" class="chip-sample" data-sample="physics">⚡ Physics & PRISM Optics (20 Items)</button>
+            </div>
+          </div>
+
+          <!-- 4. Options Row -->
+          <div class="gen-options-row">
+            <div class="opt-field">
+              <label for="genQuestionCount">Question & Flashcard Count:</label>
+              <select id="genQuestionCount" class="gen-select">
+                <option value="5">5 Questions (Quick Check)</option>
+                <option value="10">10 Questions (Standard Quiz)</option>
+                <option value="15">15 Questions (Deep Recall)</option>
+                <option value="20" selected>20 Questions (Comprehensive Master Exam)</option>
+              </select>
+            </div>
+
+            <div class="opt-field flex-grow">
+              <label for="genApiKeyInput">Google Gemini API Key (Optional):</label>
+              <input type="password" id="genApiKeyInput" class="gen-input" placeholder="Leave blank to use built-in Neural Curriculum Engine">
+            </div>
+          </div>
+
+          <!-- 5. Primary Generate Action & Import Tool -->
+          <div class="gen-submit-row">
+            <button type="button" class="button primary pill large full glow-btn" id="triggerGenerateBtn">
+              <span>✨ Synthesize Active Recall Study Set (Up to 20 Questions)</span>
+            </button>
+          </div>
+
+          <!-- Generating Animated Loading State -->
+          <div class="gen-loading-state" id="genLoadingState" style="display: none;">
+            <div class="gen-spinner-ring"></div>
+            <h4 id="genLoadingTitle">Analyzing study material...</h4>
+            <ul class="gen-stepper-list">
+              <li class="stepper-step active" id="step1">✓ Extracting curriculum definitions and terms</li>
+              <li class="stepper-step" id="step2">⏳ Formulating active recall flashcard pairs</li>
+              <li class="stepper-step" id="step3">⏳ Generating 4-distractor multiple choice questions</li>
+              <li class="stepper-step" id="step4">⏳ Assembling points scoring system</li>
+            </ul>
+          </div>
+
+          <!-- Generation Success Banner -->
+          <div class="gen-success-banner" id="genSuccessBanner" style="display: none;">
+            <div class="success-top-row">
+              <span class="success-badge">🎉 GENERATION COMPLETE</span>
+              <h3 id="generatedDeckTitle">Operating Systems: Kernel and Memory</h3>
+              <p>Active study set successfully generated and grounded in your provided lesson text.</p>
+            </div>
+
+            <div class="success-metrics-row">
+              <span class="metric-pill" id="genCardCountMetric">🎴 8 Flashcards</span>
+              <span class="metric-pill" id="genQuizCountMetric">🧠 8 Quiz Questions</span>
+              <span class="metric-pill" id="genMaxPtsMetric">🏆 800 Max Points</span>
+            </div>
+
+            <div class="success-action-btns">
+              <button type="button" class="button primary pill glow-btn" id="startGeneratedQuizBtn">▶ Start Quiz Now (+Points System)</button>
+              <button type="button" class="button soft pill" id="openGeneratedCardsBtn">🎴 Practice Flashcards First</button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. FULL MAXIMIZED ZEN FOCUS TIMER MODAL -->
+  <div class="full-modal-backdrop" id="fullTimerModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="full-modal-dialog timer-zen-dialog">
+      <div class="full-modal-header">
+        <div class="header-title-block">
+          <span class="modal-eyebrow">ZEN STUDY ENVIRONMENT</span>
+          <h2>Full-Screen Deep Focus Chamber</h2>
+        </div>
+        <button type="button" class="close-modal-icon-btn" data-close-modal="timer" aria-label="Close">×</button>
+      </div>
+
+      <div class="full-modal-body zen-timer-body">
+        <!-- Mode Tabs -->
+        <div class="timer-mode-selector">
+          <button type="button" class="timer-tab active" data-time="25">Pomodoro (25m)</button>
+          <button type="button" class="timer-tab" data-time="5">Short Break (5m)</button>
+          <button type="button" class="timer-tab" data-time="15">Long Break (15m)</button>
+        </div>
+
+        <!-- Giant Glowing Countdown Clock -->
+        <div class="zen-clock-display" id="zenClockDisplay">25:00</div>
+        <span class="zen-session-tag" id="zenSessionTag">Deep Focus Session Active</span>
+
+        <!-- Primary Timer Controls -->
+        <div class="zen-controls-row">
+          <button type="button" class="button primary pill large glow-btn" id="zenStartBtn">Start Focus</button>
+          <button type="button" class="button quiet pill large" id="zenResetBtn">Reset</button>
+        </div>
+
+        <!-- Focus Intention Task Input -->
+        <div class="focus-intention-box">
+          <span class="focus-label">🎯 Current Intention:</span>
+          <input type="text" id="zenTaskInput" placeholder="What are you focusing on during this session?" value="Computer Science Revision & Notes">
+        </div>
+
+        <!-- Web Audio Ambient Soundscapes Generator -->
+        <div class="ambient-sound-bar">
+          <div class="sound-title-group">
+            <span class="sound-icon">🎧</span>
+            <div class="sound-text">
+              <strong>Synthetic Ambient Noise Generator</strong>
+              <small>Calibrated white noise & gentle rain generated in browser</small>
+            </div>
+          </div>
+          <div class="sound-controls">
+            <select id="soundscapeSelect" class="sound-select">
+              <option value="rain">🌧️ Gentle Rain</option>
+              <option value="ocean">🌊 Ocean Waves</option>
+              <option value="pink">📻 Pink Focus Noise</option>
+              <option value="white">🍂 Pure White Noise</option>
+            </select>
+            <button type="button" class="button soft pill small" id="toggleSoundBtn">Play Ambient Sound 🔊</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Raycast Command Palette Modal (⌘K / Ctrl+K) -->
+  <div class="raycast-modal-backdrop" id="commandPalette" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cmdInput">
+    <div class="raycast-dialog">
+      <div class="raycast-search-header">
+        <svg class="raycast-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" id="cmdInput" class="raycast-input" placeholder="Type a command, jump to tab, or search notes..." autocomplete="off" spellcheck="false">
+        <kbd class="esc-badge" id="cmdCloseEsc">ESC</kbd>
+      </div>
+
+      <div class="raycast-results-list" id="cmdResultsList" role="listbox">
+        <!-- Dynamically rendered by app.js -->
+      </div>
+
+      <div class="raycast-footer">
+        <div class="footer-hint">
+          <span>Navigate <kbd>↑</kbd> <kbd>↓</kbd></span>
+          <span>Select <kbd>↵</kbd></span>
+          <span>Dismiss <kbd>ESC</kbd></span>
+        </div>
+        <span class="raycast-badge">Lumina Command</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Note Modal -->
+  <div class="modal-backdrop" id="noteModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Create Study Note</h3>
+        <button type="button" class="close-btn" id="closeNoteModalBtn">×</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="noteTitleInput" placeholder="Note title..." class="modal-input">
+        <textarea id="noteContentInput" placeholder="Write your study notes, key formulas, or insights..." rows="5" class="modal-textarea"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="button quiet pill" id="cancelNoteBtn">Cancel</button>
+        <button type="button" class="button primary pill" id="saveNoteBtn">Save Note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Canvas for celebration confetti -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <script src="app.js"></script>
+</body>
+</html>
