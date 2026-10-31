@@ -50,7 +50,7 @@ def create_application(overrides=None):
         app.wsgi_app = ProxyFix(app.wsgi_app, x_for=hops, x_proto=hops, x_host=hops)
     install_security(app)
     db.init_app(app)
-    from database.models import User
+    from database.models import User, Attachment, AuditEvent, Inquiry, SiteState, Page, Note
 
     login.init_app(app)
     login.session_protection = "strong"

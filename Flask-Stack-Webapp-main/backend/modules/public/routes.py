@@ -13,9 +13,12 @@ bp = Blueprint("public", __name__)
 @bp.get("/")
 def home():
     """Public landing page with About section, feature showcase, and live preview."""
-    pages = db.session.scalars(
-        db.select(Page).where(Page.published.is_(True)).order_by(Page.updated_at.desc()).limit(12)
-    ).all()
+    try:
+        pages = db.session.scalars(
+            db.select(Page).where(Page.published.is_(True)).order_by(Page.updated_at.desc()).limit(12)
+        ).all()
+    except Exception:
+        pages = []
     return render_template("public/home.html", pages=pages)
 
 
