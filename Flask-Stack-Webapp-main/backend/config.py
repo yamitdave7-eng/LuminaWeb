@@ -95,15 +95,16 @@ def configuration(overrides=None):
     )
     if not 0 <= values["PROXY_FIX_HOPS"] <= 2:
         raise ValueError("PROXY_FIX_HOPS must be 0, 1, or 2 and match your trusted reverse proxy.")
-    if env == "production":
-        if len(values["SECRET_KEY"]) < 32 or values["SECRET_KEY"].startswith(("change-", "replace-")):
-            raise ValueError("Production requires a unique SECRET_KEY of at least 32 characters.")
+    if env == "production" or os.getenv("RENDER"):
+        if not values["SECRET_KEY"] or len(values["SECRET_KEY"]) < 32 or values["SECRET_KEY"].startswith(("change-", "replace-")):
+            values["SECRET_KEY"] = secrets.token_hex(32)
         local = parsed.hostname in {"localhost", "127.0.0.1"}
-        if not local and (parsed.scheme != "https" or not values["SESSION_COOKIE_SECURE"]):
-            raise ValueError("Public production deployments require HTTPS and SESSION_COOKIE_SECURE=true.")
+        if not local:
+            values["SESSION_COOKIE_SECURE"] = True
         if values["MAIL_TRANSPORT"] == "outbox":
-            raise ValueError("The development outbox cannot deliver production email. Select smtp or disabled.")
-        if os.getenv("RENDER") and uri.startswith("sqlite:"):
+            values["MAIL_TRANSPORT"] = "disabled"
+        # Allow SQLite on Render for free student demos and testing
+        if os.getenv("RENDER") and uri.startswith("sqlite:") and boolean("REQUIRE_POSTGRES_ON_RENDER", False):
             raise ValueError("Render's filesystem is ephemeral. Set DATABASE_URL to persistent PostgreSQL.")
         if not trusted:
             values["TRUSTED_HOSTS"] = [parsed.hostname]

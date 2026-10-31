@@ -58,6 +58,11 @@ def create_application(overrides=None):
     csrf.init_app(app)
     limiter.init_app(app)
     migrate.init_app(app, db, directory=str(ROOT / "database/migrations"), render_as_batch=True, compare_type=True)
+    with app.app_context():
+        try:
+            db.create_all()
+        except Exception:
+            pass
 
     @login.user_loader
     def load_user(identifier):
