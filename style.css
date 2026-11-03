@@ -4126,3 +4126,952 @@ button.nav-item.nav-tool-btn:hover {
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   EXCLUSIVE MOBILE-ONLY UI/UX OPTIMIZATIONS (Smart Placement & Adaptive Sizing)
+   Strictly targets mobile viewports (<= 768px and <= 480px)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  /* 1. Global Viewport & Frame Ergonomics */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    -webkit-text-size-adjust: 100% !important;
+  }
+
+  .app-shell {
+    padding: 10px 8px 24px !important;
+    min-height: 100vh !important;
+    width: 100% !important;
+  }
+
+  .app-frame,
+  .authenticated .app-frame,
+  .public-site .app-frame {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 16px !important;
+    min-height: calc(100vh - 20px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-x: hidden !important;
+  }
+
+  .main-content {
+    padding: 16px 12px 28px !important;
+    width: 100% !important;
+  }
+
+  /* 2. Topbar Navigation Placement & Proportions */
+  .topbar {
+    padding: 10px 14px !important;
+    min-height: 56px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    justify-content: space-between !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+  }
+
+  .menu-toggle {
+    display: inline-flex !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 6px !important;
+    border-radius: 10px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+
+  .topbar-left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .header-logo .brand-logo-full,
+  .public-site .header-logo .brand-logo-full {
+    height: 28px !important;
+    max-width: 135px !important;
+    object-fit: contain !important;
+  }
+
+  /* Public Navigation on Mobile */
+  .public-nav {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    margin-left: auto !important;
+  }
+
+  .public-nav a:not(.button):not(.nav-signin) {
+    font-size: 0.82rem !important;
+  }
+
+  .public-nav .nav-signin {
+    font-size: 0.84rem !important;
+    padding: 6px 8px !important;
+    font-weight: 600 !important;
+  }
+
+  .public-nav .button.primary {
+    padding: 6px 14px !important;
+    font-size: 0.82rem !important;
+    min-height: 34px !important;
+    border-radius: 9999px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Authenticated Topbar Actions */
+  .topbar-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-left: auto !important;
+  }
+
+  .header-action-btn {
+    padding: 6px 12px !important;
+    font-size: 0.82rem !important;
+    min-height: 34px !important;
+    border-radius: 9999px !important;
+    white-space: nowrap !important;
+  }
+
+  .notification-btn {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .account-chip {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.84rem !important;
+  }
+
+  .topbar-signout-form button {
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Search Bar row */
+  .topbar-search {
+    order: 3 !important;
+    width: 100% !important;
+    flex: 1 1 100% !important;
+    margin: 6px 0 2px !important;
+  }
+
+  .topbar-search input {
+    width: 100% !important;
+    height: 38px !important;
+    font-size: 0.88rem !important;
+    padding: 8px 14px 8px 36px !important;
+    border-radius: 12px !important;
+  }
+
+  .topbar-search .search-icon {
+    left: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  /* 3. Mobile Navigation Drawer (Sidebar) */
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 82vw !important;
+    max-width: 290px !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: var(--shadow-xl) !important;
+    z-index: 1000 !important;
+    background: #ffffff !important;
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0) !important;
+    box-shadow: 0 0 0 100vmax rgba(15, 23, 42, 0.45) !important;
+  }
+
+  .sidebar-header {
+    padding: 18px 16px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .sidebar-header .brand-logo-full {
+    height: 30px !important;
+    max-width: 150px !important;
+  }
+
+  .sidebar-close {
+    display: inline-flex !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .side-nav .nav-item {
+    min-height: 46px !important;
+    font-size: 0.94rem !important;
+    padding: 10px 14px !important;
+    border-radius: 12px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* 4. Public Landing Hero & About Placement */
+  .landing-hero-lumina {
+    padding: 26px 8px 36px !important;
+  }
+
+  .hero-badge {
+    font-size: 0.76rem !important;
+    padding: 5px 12px !important;
+    margin-bottom: 14px !important;
+    max-width: 92% !important;
+  }
+
+  .hero-title {
+    font-size: clamp(1.8rem, 7.5vw, 2.35rem) !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.025em !important;
+    margin-bottom: 12px !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.92rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 22px !important;
+    padding: 0 4px !important;
+    color: #475569 !important;
+  }
+
+  .hero-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 310px !important;
+    margin: 0 auto 22px !important;
+    gap: 10px !important;
+  }
+
+  .hero-actions .button.large {
+    width: 100% !important;
+    min-height: 48px !important;
+    justify-content: center !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    border-radius: 9999px !important;
+    padding: 12px 18px !important;
+  }
+
+  .hero-subtext {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .check-pill {
+    font-size: 0.74rem !important;
+    padding: 4px 8px !important;
+    border-radius: 9999px !important;
+  }
+
+  .about-section {
+    padding: 30px 10px !important;
+  }
+
+  .section-heading {
+    font-size: 1.55rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .section-subtext {
+    font-size: 0.92rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 22px !important;
+  }
+
+  .about-pillars-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .pillar-card {
+    padding: 18px 16px !important;
+    border-radius: 16px !important;
+  }
+
+  .preview-showcase-section {
+    padding: 24px 8px !important;
+  }
+
+  .interactive-tabs {
+    display: flex !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 8px !important;
+    padding: 4px 2px 10px !important;
+    width: 100% !important;
+    scrollbar-width: none !important;
+  }
+
+  .interactive-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .tab-pill-btn {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    padding: 8px 14px !important;
+    font-size: 0.84rem !important;
+    border-radius: 9999px !important;
+  }
+
+  .preview-showcase-card {
+    padding: 16px 12px !important;
+    border-radius: 16px !important;
+  }
+
+  /* 5. Mobile Authentication Layout (/auth/login & /auth/register) */
+  .auth-page-container {
+    padding: 6px 0 16px !important;
+    width: 100% !important;
+  }
+
+  .auth-bento-card {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  }
+
+  .auth-preview-col {
+    display: none !important;
+  }
+
+  .auth-form-col {
+    padding: 24px 16px 28px !important;
+    width: 100% !important;
+  }
+
+  .auth-title {
+    font-size: 1.45rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 6px !important;
+  }
+
+  .auth-subtitle {
+    font-size: 0.88rem !important;
+    margin-bottom: 18px !important;
+    line-height: 1.45 !important;
+  }
+
+  .form-control-input {
+    height: 48px !important;
+    font-size: 0.95rem !important;
+    padding: 12px 14px !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+  }
+
+  .password-input-wrap .password-toggle-btn {
+    width: 44px !important;
+    height: 44px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    right: 2px !important;
+  }
+
+  .auth-submit-btn,
+  .google-btn {
+    min-height: 48px !important;
+    font-size: 0.96rem !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* 6. Student Dashboard 3-Column Bento Mobile Stacking & Touch Sizing */
+  .lumina-bento-dashboard {
+    width: 100% !important;
+  }
+
+  .bento-3col-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  .bento-column {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  .bento-card {
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.05) !important;
+  }
+
+  .card-header-clean {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 12px !important;
+  }
+
+  .card-main-title {
+    font-size: 1.12rem !important;
+    font-weight: 700 !important;
+  }
+
+  .card-subtitle {
+    font-size: 0.76rem !important;
+  }
+
+  /* Balance Donut Ring */
+  .donut-chart-wrap {
+    width: 135px !important;
+    height: 135px !important;
+    margin: 0 auto 12px !important;
+  }
+
+  .segmented-donut-svg {
+    width: 135px !important;
+    height: 135px !important;
+  }
+
+  .donut-center-val {
+    font-size: 1.25rem !important;
+    font-weight: 800 !important;
+  }
+
+  .donut-center-label {
+    font-size: 0.68rem !important;
+  }
+
+  .balance-breakdown-bars {
+    width: 100% !important;
+    gap: 9px !important;
+  }
+
+  .breakdown-meta {
+    font-size: 0.8rem !important;
+  }
+
+  /* Quick Log Session Chips */
+  .quick-log-section {
+    margin-top: 14px !important;
+    padding-top: 12px !important;
+  }
+
+  .quick-log-chips {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .log-chip {
+    flex: 1 1 calc(50% - 6px) !important;
+    min-height: 40px !important;
+    font-size: 0.82rem !important;
+    border-radius: 10px !important;
+    padding: 8px 10px !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .custom-log-inputs {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+    margin-top: 10px !important;
+  }
+
+  .custom-log-inputs .clean-select,
+  .custom-log-inputs .clean-input-num,
+  #submitCustomLogBtn {
+    width: 100% !important;
+    height: 44px !important;
+    font-size: 0.92rem !important;
+  }
+
+  /* Pomodoro Focus Chamber */
+  .pomo-time {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    margin: 8px 0 !important;
+  }
+
+  .pomo-mode-selector {
+    display: flex !important;
+    gap: 6px !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+    margin-bottom: 12px !important;
+  }
+
+  .pomo-mode-pill {
+    flex: 1 !important;
+    padding: 6px 8px !important;
+    font-size: 0.78rem !important;
+    text-align: center !important;
+    border-radius: 9999px !important;
+  }
+
+  .pomo-controls {
+    display: flex !important;
+    gap: 8px !important;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .pomo-ctrl-btn {
+    flex: 1 !important;
+    min-height: 46px !important;
+    font-size: 0.92rem !important;
+    border-radius: 12px !important;
+  }
+
+  /* Tasks & Priority Checklist */
+  .task-input-bar {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+    width: 100% !important;
+  }
+
+  .task-input-bar input,
+  .task-input-bar button {
+    width: 100% !important;
+    height: 44px !important;
+    font-size: 0.92rem !important;
+  }
+
+  .task-item {
+    display: flex !important;
+    align-items: center !important;
+    padding: 12px 10px !important;
+    gap: 10px !important;
+    min-height: 48px !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+  }
+
+  .task-item input[type="checkbox"] {
+    width: 22px !important;
+    height: 22px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .task-item .task-text {
+    font-size: 0.88rem !important;
+    flex: 1 !important;
+    word-break: break-word !important;
+  }
+
+  /* Weekly Consistency Bar Chart */
+  .weekly-bar-chart-container {
+    height: 110px !important;
+    padding: 8px 4px !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .popup-actions-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .popup-actions-row button,
+  .popup-actions-row input {
+    min-height: 38px !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* Deadlines Card & Mini Calendar */
+  .mini-calendar-days-grid {
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 3px !important;
+    width: 100% !important;
+  }
+
+  .mini-calendar-days-grid .cal-day-cell {
+    min-height: 30px !important;
+    font-size: 0.76rem !important;
+    padding: 2px !important;
+    border-radius: 6px !important;
+  }
+
+  .deadline-item {
+    padding: 10px 12px !important;
+    font-size: 0.84rem !important;
+    border-radius: 10px !important;
+    gap: 8px !important;
+  }
+
+  /* AI Study Lab Card */
+  .lab-desc-text {
+    font-size: 0.86rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .lab-launcher-content button {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 0.92rem !important;
+    padding: 12px 14px !important;
+    border-radius: 9999px !important;
+  }
+
+  /* Storage Vault Widget */
+  .vault-metrics-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .vault-metric-item {
+    padding: 10px !important;
+    border-radius: 10px !important;
+  }
+
+  .vault-metric-val {
+    font-size: 1.15rem !important;
+  }
+
+  .quota-label-split {
+    font-size: 0.76rem !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+
+  /* 7. Storage Vault Page (/files) Mobile Layout */
+  .vault-heading-card {
+    padding: 18px 14px !important;
+    border-radius: 16px !important;
+    margin-bottom: 14px !important;
+  }
+
+  .vault-title-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+  }
+
+  .vault-main-title {
+    font-size: 1.4rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .vault-subtext {
+    font-size: 0.86rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .vault-quota-card {
+    width: 100% !important;
+    padding: 14px !important;
+    border-radius: 14px !important;
+  }
+
+  .dropzone-interactive-box {
+    padding: 22px 12px !important;
+    border-radius: 16px !important;
+  }
+
+  .dropzone-heading {
+    font-size: 0.95rem !important;
+  }
+
+  .dropzone-sub {
+    font-size: 0.8rem !important;
+  }
+
+  .vault-format-chips {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 4px !important;
+  }
+
+  .v-chip {
+    font-size: 0.74rem !important;
+    padding: 3px 7px !important;
+  }
+
+  .vault-table-section {
+    padding: 16px 12px !important;
+    border-radius: 16px !important;
+  }
+
+  .vault-table-wrap {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    border-radius: 10px !important;
+  }
+
+  .vault-files-table {
+    min-width: 520px !important;
+  }
+
+  .vault-files-table th,
+  .vault-files-table td {
+    padding: 10px 8px !important;
+    font-size: 0.84rem !important;
+  }
+
+  .action-btn-group {
+    display: flex !important;
+    gap: 4px !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+  }
+
+  /* 8. Full-Screen Modals & Popups on Mobile */
+  .full-modal-backdrop {
+    padding: 8px 6px !important;
+    align-items: flex-end !important;
+  }
+
+  .full-modal-dialog {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    border-radius: 20px 20px 0 0 !important;
+    margin: 0 !important;
+  }
+
+  .full-modal-header {
+    padding: 14px 16px !important;
+  }
+
+  .header-title-block h2 {
+    font-size: 1.15rem !important;
+  }
+
+  .close-modal-icon-btn {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+  }
+
+  .full-modal-body {
+    padding: 16px 14px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Calendar Dialog */
+  .calendar-body-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  /* Habit Matrix Dialog */
+  .matrix-stats-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .add-habit-bar {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .add-habit-bar input,
+  .add-habit-bar select,
+  .add-habit-bar button {
+    width: 100% !important;
+    height: 44px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .habit-matrix-wrap {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .habit-matrix-table {
+    min-width: 500px !important;
+  }
+
+  /* AI Study Lab Quiz Dialog */
+  .clean-dropzone-box {
+    padding: 22px 12px !important;
+  }
+
+  .study-config-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .study-config-row select,
+  #generateAiQuizBtn {
+    width: 100% !important;
+    min-height: 46px !important;
+  }
+
+  .exam-header-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .exam-question-text {
+    font-size: 1.05rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .exam-options-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .exam-option-btn {
+    padding: 14px 12px !important;
+    min-height: 50px !important;
+    gap: 10px !important;
+    font-size: 0.9rem !important;
+    width: 100% !important;
+  }
+
+  .option-letter-badge {
+    width: 26px !important;
+    height: 26px !important;
+    flex-shrink: 0 !important;
+    font-size: 0.85rem !important;
+  }
+
+  .exam-footer-bar {
+    display: flex !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .exam-footer-bar button {
+    flex: 1 !important;
+    min-height: 44px !important;
+  }
+
+  /* Zen Timer Dialog */
+  .zen-big-clock {
+    font-size: 3rem !important;
+    margin: 16px 0 !important;
+    text-align: center !important;
+  }
+
+  .zen-controls-row {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .zen-controls-row button {
+    width: 100% !important;
+    min-height: 48px !important;
+  }
+}
+
+/* Extra-Small Mobile Devices (<= 480px) */
+@media (max-width: 480px) {
+  .app-shell {
+    padding: 6px 4px 18px !important;
+  }
+
+  .main-content {
+    padding: 14px 8px 22px !important;
+  }
+
+  .header-action-btn .btn-text {
+    display: none !important;
+  }
+
+  .header-action-btn {
+    padding: 6px 10px !important;
+    min-width: 34px !important;
+  }
+
+  .public-nav a:not(.button):not(.nav-signin) {
+    display: none !important;
+  }
+
+  .hero-title {
+    font-size: 1.85rem !important;
+  }
+
+  .hero-actions .button.large {
+    min-height: 46px !important;
+    font-size: 0.92rem !important;
+  }
+
+  .log-chip {
+    flex: 1 1 100% !important;
+  }
+
+  .pomo-time {
+    font-size: 2.2rem !important;
+  }
+
+  .auth-form-col {
+    padding: 20px 14px 24px !important;
+  }
+}
