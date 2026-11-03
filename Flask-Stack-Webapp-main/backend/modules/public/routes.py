@@ -46,6 +46,12 @@ def serve_images(filename):
     return send_from_directory(str(ROOT.parent / "images"), filename)
 
 
+@bp.get("/vendor/<path:filename>")
+def serve_vendor(filename):
+    """Serve vendor files for the standalone web application."""
+    return send_from_directory(str(ROOT.parent / "vendor"), filename)
+
+
 @bp.get("/lumina-portal")
 def lumina_portal():
     pages = db.session.scalars(

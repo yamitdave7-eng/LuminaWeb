@@ -7619,28 +7619,13 @@ p, .card-subtitle, .auth-subtitle, .vault-subtext {
 }
 
 
-/* Vanta Halo Interactive Background Support */
-body {
+/* ==========================================================================
+   Vanta Halo Interactive Background & Glassmorphic Viewport System
+   ========================================================================== */
+html, body {
   background: transparent !important;
 }
 
-#vanta-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.app-shell, .app-frame, main, .bento-card, .container, .app-card, .app-canvas-container, .app-card-frame {
-  position: relative;
-  z-index: 1;
-}
-
-
-/* Enhanced Vanta Halo High-Visibility Overrides */
 #vanta-bg {
   position: fixed !important;
   top: 0 !important;
@@ -7651,21 +7636,31 @@ body {
   pointer-events: none !important;
 }
 
-body {
-  background: transparent !important;
-}
-
-.ambient-backdrop {
+.ambient-backdrop, .ambient-floral-overlay, .ambient-orb {
   display: none !important;
 }
 
-.app-shell, .app-frame, main, .bento-card, .container, .app-card, .app-canvas-container, .app-card-frame {
+.app-shell {
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+}
+
+.app-frame, main, .bento-card, .container, .app-card, .app-canvas-container, .app-card-frame {
   position: relative;
   z-index: 1;
 }
 
+.public-site .app-frame {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+}
+
 .bento-card, .vault-heading-card, .vault-table-section, .auth-bento-card {
-  background: rgba(255, 255, 255, 0.90) !important;
+  background: rgba(255, 255, 255, 0.88) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
 }

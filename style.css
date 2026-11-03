@@ -45,7 +45,7 @@ body {
   --border-subtle: 1px solid rgba(226, 232, 240, 0.8) !important;
 }
 body {
-  background: #F8FAFC !important;
+  background: transparent !important;
   color: #334155 !important;
 }
 h1, h2, h3, h4, strong {

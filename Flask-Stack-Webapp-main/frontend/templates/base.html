@@ -16,7 +16,7 @@
     <a class="skip-link" href="#main">Skip to content</a>
     
     <!-- 1. Fullscreen background layer for the halo -->
-    <div id="vanta-bg" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></div>
+    <div id="vanta-bg" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;"></div>
 
     <div class="app-shell">
       <div class="app-frame">
@@ -149,28 +149,53 @@
       {% include "components/student_modals.html" %}
     {% endif %}
 
-    <!-- 2. Three.js engine -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <!-- 2. Three.js engine (local vendor + CDN fallback) -->
+    <script src="{{ url_for('static', filename='js/vendor/three.min.js') }}"></script>
+    <script>
+      if (typeof THREE === 'undefined') {
+        document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"><\/script>');
+      }
+    </script>
 
-    <!-- 3. Vanta Halo library -->
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
+    <!-- 3. Vanta Halo library (local vendor + CDN fallback) -->
+    <script src="{{ url_for('static', filename='js/vendor/vanta.halo.min.js') }}"></script>
+    <script>
+      if (typeof VANTA === 'undefined' || !VANTA.HALO) {
+        document.write('<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"><\/script>');
+      }
+    </script>
 
     <!-- 4. Start the halo animation -->
     <script>
-      window.addEventListener('DOMContentLoaded', () => {
-        if (typeof VANTA !== 'undefined' && VANTA.HALO) {
-          VANTA.HALO({
-            el: "#vanta-bg",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            baseColor: 0xd90073,
-            backgroundColor: 0xa76aa0
-          });
+      function initVantaHalo() {
+        if (window._vantaHaloEffect) return;
+        if (typeof VANTA !== 'undefined' && typeof VANTA.HALO === 'function' && typeof THREE !== 'undefined') {
+          try {
+            window._vantaHaloEffect = VANTA.HALO({
+              el: "#vanta-bg",
+              mouseControls: true,
+              touchControls: true,
+              gyroControls: false,
+              minHeight: 200.00,
+              minWidth: 200.00,
+              baseColor: 0xd90073,
+              backgroundColor: 0xa76aa0,
+              amplitudeFactor: 1.2,
+              size: 1.5
+            });
+            console.log("LuminaEdu: Vanta Halo effect active");
+          } catch (err) {
+            console.error("Vanta Halo error:", err);
+          }
         }
-      });
+      }
+
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initVantaHalo();
+      } else {
+        window.addEventListener('DOMContentLoaded', initVantaHalo);
+      }
+      window.addEventListener('load', initVantaHalo);
     </script>
   </body>
 </html>
