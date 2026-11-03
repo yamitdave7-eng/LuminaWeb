@@ -5503,6 +5503,19 @@ p, .card-subtitle, .auth-subtitle, .vault-subtext {
   color: var(--ink);
 }
 
+.header-logo .brand-logo-full {
+  height: 38px;
+  width: auto;
+  max-width: 210px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.header-logo:hover .brand-logo-full {
+  transform: scale(1.02);
+}
+
 .header-logo .logo-mark {
   display: flex;
   align-items: center;
