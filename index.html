@@ -1153,5 +1153,29 @@
   <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
 
   <script src="app.js"></script>
+  <!-- 1. Fullscreen background layer for the halo -->
+  <div id="vanta-bg" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></div>
+
+  <!-- 2. Three.js engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+
+  <!-- 3. Vanta Halo library -->
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.halo.min.js"></script>
+
+  <!-- 4. Start the halo animation -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      VANTA.HALO({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        baseColor: 0xd90073,
+        backgroundColor: 0xa76aa0
+      });
+    });
+  </script>
 </body>
 </html>

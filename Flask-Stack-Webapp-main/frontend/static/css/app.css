@@ -7617,3 +7617,24 @@ p, .card-subtitle, .auth-subtitle, .vault-subtext {
     align-items: stretch;
   }
 }
+
+
+/* Vanta Halo Interactive Background Support */
+body {
+  background: transparent !important;
+}
+
+#vanta-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.app-shell, .app-frame, main, .bento-card, .container, .app-card, .app-canvas-container, .app-card-frame {
+  position: relative;
+  z-index: 1;
+}

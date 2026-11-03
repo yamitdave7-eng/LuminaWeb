@@ -1,3 +1,23 @@
+/* 1. Make the body background transparent so the animation shows through */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: transparent !important;
+}
+
+/* 2. Make sure your main app cards sit above the animation */
+.container, .app-card, main, .app-canvas-container, .app-card-frame {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ambient backdrop transparency for Vanta Halo */
+.ambient-backdrop {
+  background: transparent !important;
+  opacity: 0.35;
+}
+
 
 :root {
   --text-primary: #0F172A !important;
