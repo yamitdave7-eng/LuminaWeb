@@ -1,4 +1,10 @@
 <aside id="sidebar" class="sidebar">
+  <!-- macOS Window Traffic Light Controls -->
+  <div class="mac-window-controls" aria-hidden="true">
+    <span class="mac-dot mac-close" title="Close"></span>
+    <span class="mac-dot mac-minimize" title="Minimize"></span>
+    <span class="mac-dot mac-zoom" title="Full Screen"></span>
+  </div>
   <div class="sidebar-header">
     <a class="sidebar-brand" href="{{ url_for('dashboard.index') }}" title="{{ app_name }}">
       <img src="{{ url_for('static', filename='images/lumina-logo-full.png') }}" alt="{{ app_name }}" class="brand-logo-full">
