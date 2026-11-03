@@ -440,7 +440,8 @@ def generate_with_curriculum_engine(study_text: str, num_questions: int = 20) ->
             "question": question_stem,
             "options": options,
             "correct_answer": correct_choice,
-            "explanation": f"Grounded directly in the study text: {term} is established as {expl[:110]}."
+            "explanation": f"Grounded directly in the study text: {term} is established as {expl[:120]}.",
+            "citation": f'Source Text Reference: "{term}: {expl[:140]}..."'
         })
 
     return {
@@ -450,13 +451,21 @@ def generate_with_curriculum_engine(study_text: str, num_questions: int = 20) ->
     }
 
 
-def generate_study_set(study_text: str, api_key: Optional[str] = None, num_questions: int = 20) -> Dict[str, Any]:
+def generate_study_set(study_text: str, api_key: Optional[str] = None, num_questions: int = 20, difficulty: str = "standard", deck_title: Optional[str] = None) -> Dict[str, Any]:
     """Unified entry point for generating study set from text."""
     effective_api_key = api_key or os.getenv("GEMINI_API_KEY") or os.getenv("AI_API_KEY")
 
     if effective_api_key:
         ai_result = generate_with_gemini(study_text, effective_api_key, num_questions=num_questions)
         if ai_result and len(ai_result.get("quiz", [])) > 0:
+            if deck_title:
+                ai_result["deck_title"] = deck_title
+            for q in ai_result.get("quiz", []):
+                if "citation" not in q:
+                    q["citation"] = f"Reference: {q.get('explanation', '')[:140]}"
             return ai_result
 
-    return generate_with_curriculum_engine(study_text, num_questions=num_questions)
+    result = generate_with_curriculum_engine(study_text, num_questions=num_questions)
+    if deck_title:
+        result["deck_title"] = deck_title
+    return result

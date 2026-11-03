@@ -1,6 +1,6 @@
 <!-- ========================================================================
      STUDENT FULL MAXIMIZED MODALS SUITE
-     (Included globally across all authenticated views)
+     High-Contrast, Production-Grade, Document-Driven Active Study Lab
      ======================================================================== -->
 
 <!-- 1. FULL MAXIMIZED CALENDAR & PLANNER MODAL -->
@@ -37,11 +37,11 @@
       <div class="day-schedule-sidebar">
         <div class="schedule-sidebar-header">
           <h3 id="selectedDateTitle">Schedule for Today</h3>
-          <span class="date-chip" id="selectedDateSub">Oct 29, 2026</span>
+          <span class="date-chip" id="selectedDateSub">Select a date</span>
         </div>
 
         <div class="add-event-form">
-          <input type="text" id="newEventTitleInput" placeholder="Add study block / deadline..." class="event-input">
+          <input type="text" id="newEventTitleInput" placeholder="Add study block, lecture, or deadline..." class="event-input">
           <div class="event-form-row">
             <select id="newEventTypeSelect" class="event-select">
               <option value="violet">📚 Study / Lecture</option>
@@ -50,12 +50,16 @@
               <option value="green">🧘 Habit / Wellness</option>
             </select>
             <input type="time" id="newEventTimeInput" value="14:00" class="event-time-input">
-            <button type="button" class="button primary pill small" id="submitNewEventBtn">+ Add</button>
+            <button type="button" class="button primary pill small" id="submitNewEventBtn">+ Add Block</button>
           </div>
         </div>
 
         <div class="day-timeline-list" id="dayTimelineList">
-          <!-- Populated with events -->
+          <!-- Populated with events from localStorage or empty state -->
+        </div>
+
+        <div class="calendar-empty-notice" id="calDayEmptyNotice" style="display: none;">
+          <p>No events scheduled for this date. Use the form above to add a study block or deadline.</p>
         </div>
       </div>
     </div>
@@ -79,19 +83,19 @@
         <div class="kpi-card">
           <span class="kpi-icon">🔥</span>
           <div class="kpi-data">
-            <strong id="trackerCurrentStreak">7 Days</strong>
-            <small>Current Streak</small>
+            <strong id="trackerCurrentStreak">0 Days</strong>
+            <small>Active Streak</small>
           </div>
         </div>
         <div class="kpi-card">
           <span class="kpi-icon">🎯</span>
           <div class="kpi-data">
-            <strong id="trackerCompletionRate">86%</strong>
+            <strong id="trackerCompletionRate">0%</strong>
             <small>Weekly Consistency</small>
           </div>
         </div>
         <div class="kpi-card">
-          <span class="kpi-icon">🌸</span>
+          <span class="kpi-icon">⏱</span>
           <div class="kpi-data">
             <strong>40 / 30 / 30</strong>
             <small>Study · Mind · Body</small>
@@ -99,456 +103,322 @@
         </div>
       </div>
 
-      <!-- Add Custom Habit Input Row -->
+      <!-- Add New Habit Inline Form -->
       <div class="add-habit-bar">
-        <input type="text" id="newHabitNameInput" placeholder="Add a custom daily habit (e.g. Read 20 pages, Hydrate, Yoga)..." class="habit-input">
-        <select id="newHabitCategorySelect" class="clean-select habit-select">
-          <option value="🧘 Mind">🧘 Mind</option>
-          <option value="🏃 Body">🏃 Body</option>
-          <option value="📚 Study">📚 Study</option>
-          <option value="🌸 Wellness">🌸 Wellness</option>
+        <input type="text" id="newHabitNameInput" placeholder="Add a new habit (e.g. Morning 20m reading, Evening stretch)..." class="habit-input">
+        <select id="newHabitCategorySelect" class="habit-category-select">
+          <option value="Study">📚 Study</option>
+          <option value="Mind">🧘 Mind</option>
+          <option value="Body">🏃 Body</option>
+          <option value="Wellness">🌱 Wellness</option>
         </select>
         <button type="button" class="button primary pill small" id="submitNewHabitBtn">+ Add Habit</button>
       </div>
 
       <!-- Weekly Habit Matrix Table -->
-      <div class="habit-matrix-wrap">
-        <table class="habit-matrix-table">
+      <div class="tracker-matrix-table-wrap">
+        <table class="tracker-matrix-table">
           <thead>
             <tr>
-              <th class="habit-col-th">Habit Activity</th>
-              <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
-              <th>Streak</th>
-              <th style="width: 44px; text-align: center;">✕</th>
+              <th class="col-habit-name">Habit & Routine</th>
+              <th class="col-day">Mon</th>
+              <th class="col-day">Tue</th>
+              <th class="col-day">Wed</th>
+              <th class="col-day">Thu</th>
+              <th class="col-day">Fri</th>
+              <th class="col-day">Sat</th>
+              <th class="col-day">Sun</th>
+              <th class="col-streak">Streak</th>
+              <th class="col-action">Action</th>
             </tr>
           </thead>
           <tbody id="habitMatrixTableBody">
             <!-- Populated by JS -->
           </tbody>
         </table>
-      </div>
 
-      <!-- Monthly Consistency Heatmap Squares -->
-      <div class="heatmap-section">
-        <div class="heatmap-header">
-          <h4>30-Day Activity Heatmap</h4>
-          <span class="heatmap-legend">Less <span class="heat-box level-0"></span><span class="heat-box level-1"></span><span class="heat-box level-2"></span><span class="heat-box level-3"></span> More</span>
-        </div>
-        <div class="heatmap-grid" id="heatmapGrid">
-          <!-- Populated by JS -->
+        <!-- Empty State Container for Habits -->
+        <div class="habit-empty-state" id="habitEmptyState" style="display: none;">
+          <p class="empty-state-text">No habits tracked yet. Click '+ Add Habit' to set up your weekly routine.</p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- 3. FULL MAXIMIZED STUDY QUIZ & FLASHCARDS MODAL -->
+<!-- 3. SIMPLIFIED ACTIVE STUDY LAB (DOCUMENT-BASED AI ONLY) -->
 <div class="full-modal-backdrop" id="fullQuizModal" aria-hidden="true" role="dialog" aria-modal="true">
   <div class="full-modal-dialog quiz-dialog">
+    
     <div class="full-modal-header">
       <div class="header-title-block">
-        <span class="modal-eyebrow">AI ACTIVE RECALL & CURRICULUM SUITE</span>
-        <h2>Active Study & Quiz Generator</h2>
+        <span class="modal-eyebrow">ACTIVE STUDY LAB</span>
+        <h2 id="studyLabHeaderTitle">Document Analysis & AI Quiz</h2>
       </div>
       <div class="header-controls">
-        <div class="quiz-mode-switch">
-          <button type="button" class="mode-tab active" id="quizModeBtn">🧠 Active Quiz</button>
-          <button type="button" class="mode-tab" id="flashcardModeBtn">🎴 Flashcards</button>
-          <button type="button" class="mode-tab ai-gen-tab" id="generatorModeBtn">✨ AI Lesson Generator</button>
-        </div>
-        <button type="button" class="close-modal-icon-btn" data-close-modal="quiz" aria-label="Close">×</button>
-      </div>
-    </div>
-
-    <!-- Active Deck & Score Ribbon -->
-    <div class="quiz-deck-ribbon">
-      <div class="deck-ribbon-left">
-        <span class="ribbon-icon">📚</span>
-        <strong id="activeDeckTitle">Computer Science & Study Skills</strong>
-        <span class="deck-type-tag" id="activeDeckTypeTag">Built-in Deck</span>
-      </div>
-
-      <!-- Mode Selector: Study Mode vs Timed Exam Simulation -->
-      <div class="deck-ribbon-center">
-        <div class="exam-mode-toggle" id="examModeToggle">
-          <button type="button" class="exam-toggle-btn active" id="modeStudyBtn" title="Instant feedback, points, and explanations">💡 Study Mode</button>
-          <button type="button" class="exam-toggle-btn" id="modeExamBtn" title="Timed exam simulation with flagging and full graded review">⏱️ Exam Simulation</button>
-        </div>
-        <div class="exam-timer-pill" id="examTimerPill" style="display: none;">
-          <span class="timer-clock-icon">⏳</span>
-          <span id="examTimerDisplay">20:00</span>
-        </div>
-      </div>
-
-      <div class="deck-ribbon-right">
-        <button type="button" class="button quiet pill small" id="quickUploadPillBtn">⚡ Upload New Lesson</button>
-        <div class="points-pill-badge" id="ribbonScoreBadge">
-          <span class="star-icon">⭐</span>
-          <span id="ribbonScoreVal">0 pts</span>
-          <span class="streak-sub" id="ribbonStreakVal">· 1x Streak</span>
-        </div>
+        <button type="button" class="button quiet pill small reset-lab-btn" id="resetLabBtn" style="display: none;">
+          📄 Upload New Document
+        </button>
+        <button type="button" class="close-modal-icon-btn" data-close-modal="quiz" aria-label="Close">✕</button>
       </div>
     </div>
 
     <div class="full-modal-body quiz-body">
 
       <!-- ==================================================================
-           MODE A: INTERACTIVE QUIZ & POINT SYSTEM
+           STEP 1: UPLOAD & CONFIGURE WORKFLOW
+           (Displayed when no quiz is active)
            ================================================================== -->
-      <div class="quiz-container-view" id="quizContainerView">
-        <div class="quiz-progress-bar-wrap">
-          <div class="quiz-progress-fill" id="quizProgressFill" style="width: 5%;"></div>
+      <div class="study-workflow-step step-upload-configure" id="stepUploadConfigureView">
+        
+        <div class="workflow-intro-card">
+          <div class="intro-icon-circle">📄</div>
+          <div class="intro-text">
+            <h3>Generate AI Study Quiz from Course Materials</h3>
+            <p>Upload your lecture slides, reading handout, textbook chapter, or paste your study notes. Lumina's AI will parse your material and synthesize an active recall exam with diagnostic explanations.</p>
+          </div>
         </div>
 
-        <!-- 1..20 Interactive Question Navigation Matrix -->
-        <div class="quiz-matrix-bar">
-          <div class="quiz-matrix-top">
-            <span class="matrix-title">QUESTION NAVIGATOR (1 - <span id="matrixMaxCount">20</span>)</span>
-            <div class="matrix-legend">
-              <span class="legend-chip"><span class="legend-dot active-dot"></span> Current</span>
-              <span class="legend-chip"><span class="legend-dot answered-dot"></span> Answered</span>
-              <span class="legend-chip"><span class="legend-dot flagged-dot"></span> Flagged</span>
+        <!-- Drag & Drop Zone -->
+        <div class="clean-dropzone-box" id="studyDocDropzone">
+          <input type="file" id="studyDocFileInput" accept=".pdf,.docx,.doc,.txt,.md,.markdown" class="sr-only-input">
+          <div class="dropzone-center-content">
+            <div class="dropzone-icon-box">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12" y2="12"/>
+                <line x1="9" y1="15" x2="15" y2="15"/>
+              </svg>
+            </div>
+            <strong class="dropzone-title">Drag & drop your lecture PDF, Word doc (.docx), Markdown (.md), or text file</strong>
+            <p class="dropzone-subtitle">or click anywhere in this box to browse files from your computer</p>
+            <div class="supported-formats-pills">
+              <span class="fmt-pill">PDF (.pdf)</span>
+              <span class="fmt-pill">Word (.docx)</span>
+              <span class="fmt-pill">Markdown (.md)</span>
+              <span class="fmt-pill">Plain Text (.txt)</span>
             </div>
           </div>
-          <div class="quiz-matrix-grid" id="quizQuestionMatrix">
-            <!-- Populated dynamically with 1..20 pills -->
-          </div>
-        </div>
 
-        <div class="quiz-meta-row">
-          <div class="meta-left">
-            <span class="question-tracker" id="questionTracker">Question 1 of 20</span>
-            <button type="button" class="button quiet pill tiny flag-btn" id="flagQuestionBtn" title="Flag this question to review later">🚩 Flag for Review</button>
-          </div>
-          <div class="quiz-live-stats">
-            <span class="stat-pill streak-pill-live" id="liveStreakPill">🔥 Streak: 1.0x (+0 bonus)</span>
-            <span class="stat-pill score-pill-live" id="liveScorePill">🏆 0 Points</span>
-          </div>
-        </div>
-
-        <div class="quiz-question-box">
-          <h3 id="quizQuestionText">Loading question...</h3>
-          <p id="quizQuestionSub" class="quiz-subtext">Select the best answer below:</p>
-        </div>
-
-        <div class="quiz-options-list" id="quizOptionsList">
-          <!-- Populated by JS -->
-        </div>
-
-        <!-- Instant Feedback & Grounded Explanation Card (Active in Study Mode) -->
-        <div class="quiz-explanation-card" id="quizExplanationCard" style="display: none;">
-          <div class="expl-header">
-            <span class="expl-icon" id="explIcon">✓</span>
-            <strong id="explTitle">Correct!</strong>
-            <span class="expl-points-tag" id="explPointsTag">+100 pts</span>
-          </div>
-          <p id="quizExplanationText" class="expl-body"></p>
-        </div>
-
-        <div class="quiz-footer-actions">
-          <div class="footer-left-actions">
-            <button type="button" class="button quiet pill" id="quizPrevBtn" style="display: none;">‹ Previous</button>
-            <span class="feedback-msg" id="quizFeedbackMsg"></span>
-          </div>
-          <div class="footer-right-actions">
-            <button type="button" class="button soft pill danger-soft" id="submitExamEarlyBtn" style="display: none;">Submit Exam Early 🏁</button>
-            <button type="button" class="button primary pill glow-btn" id="quizNextBtn">Next Question →</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ==================================================================
-           QUIZ SCORE REPORT CARD & GRADED EXAM REVIEW TABLE
-           ================================================================== -->
-      <div class="quiz-summary-view" id="quizSummaryView" style="display: none;">
-        <div class="summary-hero">
-          <div class="summary-trophy">🏆</div>
-          <div class="summary-grade-badge" id="summaryGradeBadge">GRADE A+ · OUTSTANDING MASTERY</div>
-          <h3 class="summary-points-total" id="summaryTotalPoints">⭐ 2,450 Points Earned!</h3>
-          <p class="summary-subtext" id="summarySubtext">Comprehensive curriculum assessment completed with high accuracy.</p>
-        </div>
-
-        <div class="summary-stats-grid">
-          <div class="summary-stat-box">
-            <span class="stat-num" id="summaryAccuracyVal">100%</span>
-            <span class="stat-lbl">Accuracy</span>
-          </div>
-          <div class="summary-stat-box">
-            <span class="stat-num" id="summaryBasePtsVal">2000</span>
-            <span class="stat-lbl">Base Points</span>
-          </div>
-          <div class="summary-stat-box">
-            <span class="stat-num" id="summaryStreakBonusVal">+450</span>
-            <span class="stat-lbl">Streak Combos</span>
-          </div>
-          <div class="summary-stat-box">
-            <span class="stat-num" id="summaryCorrectCountVal">20 / 20</span>
-            <span class="stat-lbl">Correct Answers</span>
-          </div>
-        </div>
-
-        <!-- Comprehensive Graded Question Review Table -->
-        <div class="exam-review-section">
-          <div class="review-header-row">
-            <div class="review-title-col">
-              <h4>📋 Graded Curriculum Review Table</h4>
-              <p>Full question-by-question breakdown with chosen answers, correct answers, and textbook explanations.</p>
-            </div>
-            <div class="review-filter-tabs">
-              <button type="button" class="review-filter-btn active" data-filter="all" id="filterAllBtn">All (<span id="reviewCountAll">20</span>)</button>
-              <button type="button" class="review-filter-btn" data-filter="wrong" id="filterWrongBtn">Missed (<span id="reviewCountWrong">0</span>)</button>
-              <button type="button" class="review-filter-btn" data-filter="flagged" id="filterFlaggedBtn">Flagged (<span id="reviewCountFlagged">0</span>)</button>
-            </div>
-          </div>
-          <div class="review-table-container">
-            <table class="exam-review-table" id="examReviewTable">
-              <thead>
-                <tr>
-                  <th style="width: 45px;">#</th>
-                  <th style="width: 32%;">Question Stem</th>
-                  <th style="width: 20%;">Your Answer</th>
-                  <th style="width: 20%;">Correct Answer</th>
-                  <th>Rationale & Explanation</th>
-                </tr>
-              </thead>
-              <tbody id="examReviewTableBody">
-                <!-- Dynamically generated rows -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="summary-actions-row">
-          <button type="button" class="button primary pill glow-btn" id="retakeQuizBtn">🔄 Retake Exam</button>
-          <button type="button" class="button soft pill print-export-btn" id="printExamBtn">🖨️ Export Printable Exam & Key</button>
-          <button type="button" class="button quiet pill" id="exportStudySetBtn">💾 Download Study Set (.json)</button>
-          <button type="button" class="button quiet pill" id="studyCardsAfterQuizBtn">🎴 Practice Flashcards</button>
-          <button type="button" class="button quiet pill" id="uploadAnotherLessonBtn">⚡ New Lesson</button>
-        </div>
-      </div>
-
-      <!-- ==================================================================
-           MODE B: 3D FLASHCARDS FLIP WITH SPACED REPETITION MASTERY
-           ================================================================== -->
-      <div class="flashcard-container-view" id="flashcardContainerView" style="display: none;">
-        <div class="flashcard-deck-header">
-          <div class="deck-header-left">
-            <span class="deck-indicator" id="flashcardDeckIndicator">Active Recall Deck</span>
-            <span class="mastery-summary-badge" id="cardMasteryLabel">0 / 20 Mastered (0%)</span>
-          </div>
-          <div class="deck-header-right">
-            <button type="button" class="button quiet pill small" id="shuffleCardsBtn">🔀 Shuffle</button>
-          </div>
-        </div>
-
-        <!-- Spaced Repetition Mastery Progress Bar -->
-        <div class="flashcard-mastery-track">
-          <div class="flashcard-mastery-fill" id="cardMasteryFill" style="width: 0%;"></div>
-        </div>
-
-        <div class="flashcard-card-scene" id="flashcardScene">
-          <div class="flashcard-card-inner" id="flashcardInner">
-            <div class="flashcard-face flashcard-front">
-              <span class="flip-hint">Click card to reveal answer 🔄</span>
-              <h3 id="cardFrontText">What is the average-case time complexity of Hash Table lookups?</h3>
-              <span class="card-tag" id="cardCategoryTag">Computer Science</span>
-            </div>
-            <div class="flashcard-face flashcard-back">
-              <span class="flip-hint">Click card to flip back 🔄</span>
-              <div class="answer-box">
-                <strong class="answer-highlight" id="cardHighlightText">O(1) Constant Time</strong>
-                <p id="cardExplanationText">Hash tables compute an index via hashing function, allowing immediate array indexing on average.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Spaced Repetition Rating Actions -->
-        <div class="flashcard-sr-actions">
-          <button type="button" class="button quiet pill sr-btn-review" id="cardReviewAgainBtn" title="Need to review this concept again">🔄 Still Reviewing (+0 pts)</button>
-          <div class="sr-card-nav">
-            <button type="button" class="button quiet pill small" id="cardPrevBtn">‹ Prev</button>
-            <span class="card-counter" id="cardCounter">Card 1 / 20</span>
-            <button type="button" class="button quiet pill small" id="cardNextBtn">Next ›</button>
-          </div>
-          <button type="button" class="button primary pill glow-btn sr-btn-master" id="cardMasteredBtn" title="Got it memorized! Mark as mastered">👍 Mastered (+25 pts)</button>
-        </div>
-      </div>
-
-      <!-- ==================================================================
-           MODE C: AI LESSON & HANDOUT GENERATOR (UP TO 20 QUESTIONS)
-           ================================================================== -->
-      <div class="quiz-generator-view" id="quizGeneratorView" style="display: none;">
-        <div class="generator-intro-card">
-          <div class="gen-title-row">
-            <span class="gen-sparkle">✨</span>
-            <div>
-              <h3>AI Study Set & Curriculum Synthesizer</h3>
-              <p>Upload your handouts, lecture slides, syllabus, or textbooks (.pdf, .docx, .txt, .md, .json). AI analyzes the full text and synthesizes an academic curriculum with up to 20 cognitive questions, 4 domain-grounded distractors, 3D flashcards, and a printable exam with teacher answer key.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 1. Dropzone Box -->
-        <div class="lesson-dropzone-box" id="lessonDropzone">
-          <input type="file" id="lessonFileInput" class="file-input-hidden" accept=".txt,.md,.markdown,.pdf,.docx,.json,.csv,.rtf,.html,.py">
-          <div class="dropzone-content" id="dropzoneDefaultContent">
-            <div class="dropzone-icon">📁</div>
-            <strong>Drag & drop your lesson document here, or click to browse</strong>
-            <span class="dropzone-types">Production support for student PDFs, Word docs (.docx), Markdown (.md), and Text (.txt)</span>
-          </div>
-
-          <div class="selected-file-chip" id="selectedFileChip" style="display: none;">
-            <div class="file-info-col">
-              <span class="file-icon">📄</span>
+          <!-- Selected File Badge -->
+          <div class="selected-file-badge" id="selectedFileBadge" style="display: none;">
+            <div class="file-info-left">
+              <span class="badge-file-icon">📎</span>
               <div>
-                <strong id="selectedFileName">lesson_notes.txt</strong>
-                <small id="selectedFileSize">24 KB</small>
+                <strong id="selectedFileName">syllabus.pdf</strong>
+                <small id="selectedFileSize">1.2 MB</small>
               </div>
             </div>
-            <button type="button" class="remove-file-btn" id="removeFileBtn" title="Remove file">×</button>
+            <button type="button" class="remove-file-btn" id="removeSelectedFileBtn" title="Remove file">✕</button>
           </div>
         </div>
 
-        <!-- 2. Direct Text Paste Accordion -->
-        <div class="paste-text-section">
-          <div class="paste-header-row">
-            <span class="paste-label">Or paste / edit lesson notes directly:</span>
-            <small class="text-counts" id="textCountDisplay">0 words · 0 chars</small>
-          </div>
-          <textarea id="lessonTextInput" class="lesson-textarea" rows="4" placeholder="Paste your lesson paragraphs, lecture definitions, syllabus outline, or study guide text here..."></textarea>
-        </div>
-
-        <!-- 3. Quick Sample Lessons (20-Concept Curriculums) -->
-        <div class="sample-lessons-bar">
-          <span class="sample-label">Try 20-concept rich curriculum:</span>
-          <div class="sample-chips-row">
-            <button type="button" class="chip-sample" data-sample="cs">💻 OS & Computer Systems (20 Items)</button>
-            <button type="button" class="chip-sample" data-sample="bio">🧬 Biology: Cellular & Genetics (20 Items)</button>
-            <button type="button" class="chip-sample" data-sample="physics">⚡ Physics & PRISM Optics (20 Items)</button>
+        <!-- Collapsible Direct Text Input Alternative -->
+        <div class="collapsible-text-option">
+          <button type="button" class="toggle-text-area-btn" id="togglePasteTextBtn">
+            <span>✏️ Or paste study notes text directly</span>
+            <span class="toggle-arrow">↓</span>
+          </button>
+          <div class="paste-text-wrapper" id="pasteTextWrapper" style="display: none;">
+            <textarea id="studyTextInput" class="study-text-textarea" placeholder="Paste your lecture notes, summaries, formulas, or syllabus text here..." rows="6"></textarea>
           </div>
         </div>
 
-        <!-- 4. Options Row -->
-        <div class="gen-options-row">
-          <div class="opt-field">
-            <label for="genQuestionCount">Question & Flashcard Count:</label>
-            <select id="genQuestionCount" class="gen-select">
-              <option value="5">5 Questions (Quick Check)</option>
-              <option value="10">10 Questions (Standard Quiz)</option>
-              <option value="15">15 Questions (Deep Recall)</option>
-              <option value="20" selected>20 Questions (Comprehensive Master Exam)</option>
-            </select>
+        <!-- Configuration Bar: Question Count & Difficulty Level -->
+        <div class="study-config-bar">
+          <div class="config-group">
+            <label class="config-label">Question Count:</label>
+            <div class="count-selector-pills">
+              <button type="button" class="count-pill active" data-count="5">5 Questions</button>
+              <button type="button" class="count-pill" data-count="10">10 Questions</button>
+              <button type="button" class="count-pill" data-count="15">15 Questions</button>
+              <button type="button" class="count-pill" data-count="20">20 Questions</button>
+            </div>
           </div>
 
-          <div class="opt-field flex-grow">
-            <label for="genApiKeyInput">Google Gemini API Key (Optional):</label>
-            <input type="password" id="genApiKeyInput" class="gen-input" placeholder="Leave blank to use built-in Neural Curriculum Engine">
+          <div class="config-group">
+            <label class="config-label">Difficulty Level:</label>
+            <div class="difficulty-selector-pills">
+              <button type="button" class="diff-pill active" data-diff="standard">Standard Recall</button>
+              <button type="button" class="diff-pill" data-diff="challenging">Challenging / Conceptual</button>
+            </div>
           </div>
         </div>
 
-        <!-- 5. Primary Generate Action & Import Tool -->
-        <div class="gen-submit-row">
-          <button type="button" class="button primary pill large full glow-btn" id="triggerGenerateBtn">
-            <span>✨ Synthesize Active Recall Study Set (Up to 20 Questions)</span>
+        <!-- Primary Action CTA -->
+        <div class="study-action-row">
+          <button type="button" class="button primary pill large full generate-quiz-cta" id="startGenerateQuizBtn">
+            <span>Generate AI Study Quiz →</span>
           </button>
         </div>
 
-        <!-- 6. Generating Animated Loading State -->
-        <div class="gen-loading-state" id="genLoadingState" style="display: none;">
-          <div class="gen-spinner-ring"></div>
-          <h4 id="genLoadingTitle">Analyzing study material...</h4>
-          <ul class="gen-stepper-list">
-            <li class="stepper-step active" id="step1">✓ Extracting curriculum definitions and terms</li>
-            <li class="stepper-step" id="step2">⏳ Formulating active recall flashcard pairs</li>
-            <li class="stepper-step" id="step3">⏳ Generating 4-distractor multiple choice questions</li>
-            <li class="stepper-step" id="step4">⏳ Assembling points scoring system</li>
-          </ul>
+        <!-- Asynchronous Progress Indicator -->
+        <div class="async-progress-card" id="asyncProgressCard" style="display: none;">
+          <div class="progress-spinner-ring"></div>
+          <div class="progress-status-content">
+            <strong class="progress-phase-text" id="progressPhaseText">Extracting text from document...</strong>
+            <p class="progress-phase-sub" id="progressPhaseSub">Parsing concepts and validating study parameters.</p>
+          </div>
         </div>
 
-        <!-- 7. Generation Success Banner -->
-        <div class="gen-success-banner" id="genSuccessBanner" style="display: none;">
-          <div class="success-top-row">
-            <span class="success-badge">🎉 GENERATION COMPLETE</span>
-            <h3 id="generatedDeckTitle">Operating Systems: Kernel and Memory</h3>
-            <p>Active study set successfully generated and grounded in your provided lesson text.</p>
+        <!-- Error Banner -->
+        <div class="study-error-banner" id="studyErrorBanner" style="display: none;">
+          <span class="error-icon">⚠️</span>
+          <span class="error-text" id="studyErrorText">Please provide a document or paste notes text to begin.</span>
+        </div>
+
+      </div>
+
+
+      <!-- ==================================================================
+           STEP 2: DISTRACTION-FREE EXAM SCREEN
+           (Active Quiz Runner)
+           ================================================================== -->
+      <div class="study-workflow-step step-quiz-runner" id="stepQuizRunnerView" style="display: none;">
+        
+        <!-- Distraction-free Top Progress Bar & Meta -->
+        <div class="exam-top-nav">
+          <div class="exam-progress-info">
+            <span class="exam-q-counter" id="examQuestionTracker">Question 1 of 5</span>
+            <div class="exam-progress-bar-track">
+              <div class="exam-progress-bar-fill" id="examProgressBarFill" style="width: 20%;"></div>
+            </div>
           </div>
 
-          <div class="success-metrics-row">
-            <span class="metric-pill" id="genCardCountMetric">🎴 8 Flashcards</span>
-            <span class="metric-pill" id="genQuizCountMetric">🧠 8 Quiz Questions</span>
-            <span class="metric-pill" id="genMaxPtsMetric">🏆 800 Max Points</span>
+          <div class="exam-top-actions">
+            <!-- Countdown Timer -->
+            <div class="exam-countdown-pill" id="examCountdownPill">
+              <span class="timer-icon">⏳</span>
+              <span id="examCountdownTimer">10:00</span>
+            </div>
+
+            <!-- Flag for Review -->
+            <button type="button" class="flag-action-btn" id="examFlagBtn" title="Flag this question to review later">
+              🚩 Flag for Review
+            </button>
+          </div>
+        </div>
+
+        <!-- Large Legible Question Card -->
+        <div class="exam-question-card">
+          <span class="question-deck-tag" id="examTopicTag">Topic: Document Synthesis</span>
+          <h3 class="exam-question-text" id="examQuestionText">Loading question stem...</h3>
+
+          <!-- Keyboard-accessible A, B, C, D Choice Buttons -->
+          <div class="exam-options-grid" id="examOptionsGrid">
+            <!-- Populated dynamically with buttons for A, B, C, D -->
+          </div>
+        </div>
+
+        <!-- Bottom Navigation Controls -->
+        <div class="exam-bottom-controls">
+          <button type="button" class="button quiet pill small" id="examPrevQBtn" disabled>
+            ← Previous Question
+          </button>
+          <div class="exam-center-hint">
+            <span>Press <strong>A</strong>, <strong>B</strong>, <strong>C</strong>, or <strong>D</strong> on your keyboard to select</span>
+          </div>
+          <button type="button" class="button primary pill small" id="examNextQBtn">
+            Next Question →
+          </button>
+        </div>
+
+      </div>
+
+
+      <!-- ==================================================================
+           STEP 3: IMMEDIATE POST-QUIZ DIAGNOSTIC ANALYSIS BREAKDOWN
+           (Displayed upon submitting the final question)
+           ================================================================== -->
+      <div class="study-workflow-step step-quiz-breakdown" id="stepQuizBreakdownView" style="display: none;">
+        
+        <!-- Diagnostic Summary Header -->
+        <div class="breakdown-header-card">
+          <div class="breakdown-score-badge">
+            <span class="score-big" id="breakdownScorePercentage">80%</span>
+            <span class="score-label">Overall Accuracy</span>
+          </div>
+          <div class="breakdown-title-info">
+            <h3 id="breakdownTopicTitle">Diagnostic Assessment Report</h3>
+            <p id="breakdownScoreSummary">You answered 4 out of 5 questions correctly.</p>
+          </div>
+          <div class="breakdown-actions">
+            <button type="button" class="button primary pill small" id="exportSummaryBtn">
+              📥 Export Summary
+            </button>
+            <button type="button" class="button quiet pill small" id="uploadNewDocBtn">
+              + Upload New Document
+            </button>
+          </div>
+        </div>
+
+        <!-- Missed Questions List with Explanations & Citations -->
+        <div class="breakdown-section">
+          <div class="section-title-bar">
+            <h4>Question Diagnostics & Citation Review</h4>
+            <div class="review-filter-pills">
+              <button type="button" class="review-pill active" data-filter="all" id="filterBreakdownAll">All Questions (<span id="countAllQ">5</span>)</button>
+              <button type="button" class="review-pill" data-filter="missed" id="filterBreakdownMissed">Missed (<span id="countMissedQ">1</span>)</button>
+              <button type="button" class="review-pill" data-filter="flagged" id="filterBreakdownFlagged">Flagged (<span id="countFlaggedQ">0</span>)</button>
+            </div>
           </div>
 
-          <div class="success-action-btns">
-            <button type="button" class="button primary pill glow-btn" id="startGeneratedQuizBtn">▶ Start Quiz Now (+Points System)</button>
-            <button type="button" class="button soft pill" id="openGeneratedCardsBtn">🎴 Practice Flashcards First</button>
+          <div class="diagnostic-cards-list" id="diagnosticCardsList">
+            <!-- Populated dynamically with detailed question reviews, user choices, correct answers, explanations and citations -->
           </div>
         </div>
 
       </div>
 
     </div>
+
   </div>
 </div>
 
 <!-- 4. FULL MAXIMIZED ZEN FOCUS TIMER MODAL -->
 <div class="full-modal-backdrop" id="fullTimerModal" aria-hidden="true" role="dialog" aria-modal="true">
-  <div class="full-modal-dialog timer-zen-dialog">
+  <div class="full-modal-dialog timer-dialog">
     <div class="full-modal-header">
       <div class="header-title-block">
         <span class="modal-eyebrow">ZEN STUDY ENVIRONMENT</span>
-        <h2>Full-Screen Deep Focus Chamber</h2>
+        <h2>Deep Work Focus Chamber</h2>
       </div>
       <button type="button" class="close-modal-icon-btn" data-close-modal="timer" aria-label="Close">×</button>
     </div>
 
-    <div class="full-modal-body zen-timer-body">
-      <!-- Mode Tabs -->
-      <div class="timer-mode-selector">
-        <button type="button" class="timer-tab active" data-time="25">Pomodoro (25m)</button>
-        <button type="button" class="timer-tab" data-time="5">Short Break (5m)</button>
-        <button type="button" class="timer-tab" data-time="15">Long Break (15m)</button>
-      </div>
-
-      <!-- Giant Glowing Countdown Clock -->
-      <div class="zen-clock-display" id="zenClockDisplay">25:00</div>
-      <span class="zen-session-tag" id="zenSessionTag">Deep Focus Session Active</span>
-
-      <!-- Primary Timer Controls -->
-      <div class="zen-controls-row">
-        <button type="button" class="button primary pill large glow-btn" id="zenStartBtn">Start Focus</button>
-        <button type="button" class="button quiet pill large" id="zenResetBtn">Reset</button>
-      </div>
-
-      <!-- Focus Intention Task Input -->
-      <div class="focus-intention-box">
-        <span class="focus-label">🎯 Current Intention:</span>
-        <input type="text" id="zenTaskInput" placeholder="What are you focusing on during this session?" value="Computer Science Revision & Notes">
-      </div>
-
-      <!-- Web Audio Ambient Soundscapes Generator -->
-      <div class="ambient-sound-bar">
-        <div class="sound-title-group">
-          <span class="sound-icon">🎧</span>
-          <div class="sound-text">
-            <strong>Synthetic Ambient Noise Generator</strong>
-            <small>Calibrated white noise & gentle rain generated in browser</small>
-          </div>
+    <div class="full-modal-body timer-body">
+      <div class="zen-display-container">
+        <!-- Giant High-Contrast Digits -->
+        <div class="zen-big-clock" id="zenClockDisplay">25:00</div>
+        
+        <div class="zen-interval-chips">
+          <button type="button" class="interval-chip active" data-mins="25">25 Min · Pomodoro</button>
+          <button type="button" class="interval-chip" data-mins="50">50 Min · Deep Sprint</button>
+          <button type="button" class="interval-chip" data-mins="90">90 Min · Flow Block</button>
+          <button type="button" class="interval-chip" data-mins="5">5 Min · Mindful Break</button>
         </div>
-        <div class="sound-controls">
-          <select id="soundscapeSelect" class="sound-select">
-            <option value="rain">🌧️ Gentle Rain</option>
-            <option value="ocean">🌊 Ocean Waves</option>
-            <option value="pink">📻 Pink Focus Noise</option>
-            <option value="white">🍂 Pure White Noise</option>
-          </select>
-          <button type="button" class="button soft pill small" id="toggleSoundBtn">Play Ambient Sound 🔊</button>
+
+        <div class="zen-primary-controls">
+          <button type="button" class="button primary pill large glow-btn" id="zenStartBtn">
+            Start Focus Session
+          </button>
+          <button type="button" class="button quiet pill large" id="zenResetBtn">
+            Reset Timer
+          </button>
+        </div>
+
+        <!-- Web Audio API Ambient Sound Synthesizer Controls -->
+        <div class="zen-sound-synthesizer">
+          <span class="sound-label">Synthesized Ambient Audio (Web Audio API):</span>
+          <div class="sound-options-row">
+            <button type="button" class="sound-chip active" data-sound="none">🔇 Silent</button>
+            <button type="button" class="sound-chip" data-sound="white">🌧️ Soft Rain (Pink Noise)</button>
+            <button type="button" class="sound-chip" data-sound="binaural">🧘 Focus Hum (Binaural Tone)</button>
+            <button type="button" class="sound-chip" data-sound="stream">🌊 Ocean Waves</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<!-- Global Confetti Canvas for Celebration -->
-<canvas id="dashboardConfettiCanvas" class="preview-confetti-canvas"></canvas>

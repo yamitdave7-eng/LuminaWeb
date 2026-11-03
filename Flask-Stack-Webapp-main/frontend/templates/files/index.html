@@ -1,40 +1,204 @@
 {% extends "base.html" %}
-{% from 'components/forms.html' import field %}
 {% from 'components/pagination.html' import pager %}
-{% block title %}My images{% endblock %}
+{% block title %}Storage Vault & Study Files · LuminaEdu{% endblock %}
 {% block content %}
-  <header class="page-heading">
-    <div>
-      <p class="eyebrow">YOUR PRIVATE FILES</p>
-      <h1>My images</h1>
-      <p>PNG, JPEG, or WebP. Up to 2 MiB per image and 20 MiB per account.</p>
+<div class="files-vault-view">
+
+  <!-- Header & Storage Quota Meter -->
+  <header class="vault-heading-card">
+    <div class="vault-title-row">
+      <div>
+        <span class="vault-kicker">PRIVATE ENCRYPTED STORAGE</span>
+        <h1 class="vault-main-title">Storage Vault & Study Files</h1>
+        <p class="vault-subtext">Secure personal storage for lecture PDFs, Word documents (.docx), markdown notes, and study materials. Up to 2 MiB per file.</p>
+      </div>
+      
+      <!-- Quota Meter Card -->
+      {% set quota_mb = current_user.storage_bytes / 1048576 %}
+      {% set quota_percent = [((current_user.storage_bytes / 20971520) * 100)|round, 100]|min %}
+      <div class="vault-quota-card">
+        <div class="quota-meta-row">
+          <span class="quota-label">Storage Usage</span>
+          <strong class="quota-numbers">{{ '%.1f'|format(quota_mb) }} / 20.0 MiB ({{ quota_percent }}%)</strong>
+        </div>
+        <div class="quota-track-large">
+          <div class="quota-fill-large {{ 'danger' if quota_percent > 85 else ('warning' if quota_percent > 60 else 'normal') }}" 
+               style="width: {{ quota_percent }}%;"></div>
+        </div>
+        <span class="quota-hint-sub">{{ 'Storage space nearly full!' if quota_percent > 85 else 'Secure encrypted quota active' }}</span>
+      </div>
     </div>
-    <span class="hint">{{ '%.1f'|format(current_user.storage_bytes / 1048576) }} MiB used</span>
   </header>
-  <form class="panel upload-form" method="post" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    {{ field(form.file,accept='image/png,image/jpeg,image/webp') }}
-    {{ form.submit(class_='button primary') }}
-  </form>
-  <section class="panel">
-    <ul class="entry-list">
-      {% for file in pagination.items %}
-        <li>
-          <div>
-            <h3>{{ file.filename }}</h3>
-            <p>{{ '%.1f'|format(file.size / 1024) }} KiB · {{ file.created_at|date_label }}</p>
-          </div>
-          <div class="actions">
-            <a href="{{ url_for('files.download',identifier=file.id) }}">Download</a>
-            <form method="post"
-                  action="{{ url_for('files.delete',identifier=file.id) }}"
-                  data-confirm="Permanently delete this image?">
-              {{ action_form.hidden_tag() }}<button class="text-button danger" type="submit">Delete</button>
-            </form>
-          </div>
-        </li>
-      {% else %}
-        <li>No images yet. Uploaded images are private to your account.</li>
-      {% endfor %}
-    </ul>
-  </section>{{ pager(pagination) }}{% endblock %}
+
+  <!-- Modern Drag-and-Drop File Upload Zone -->
+  <div class="vault-upload-container">
+    <form class="vault-dropzone-form" id="vaultUploadForm" method="post" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <input type="file" id="vaultFileInput" name="file" accept=".pdf,.docx,.doc,.txt,.md,.markdown,image/png,image/jpeg,image/webp" class="sr-only-input" required>
+      
+      <div class="dropzone-interactive-box" id="vaultDropArea">
+        <div class="dropzone-center-icon">
+          <svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <strong class="dropzone-heading">Drag & drop your study documents or images here</strong>
+        <p class="dropzone-sub">or click to browse files from your computer (PDF, Word, Text, or Markdown up to 2 MiB)</p>
+        
+        <div class="vault-format-chips">
+          <span class="v-chip">📄 .PDF</span>
+          <span class="v-chip">📝 .DOCX</span>
+          <span class="v-chip">📋 .TXT / .MD</span>
+          <span class="v-chip">🖼️ PNG / JPG / WEBP</span>
+        </div>
+
+        <div class="staged-file-indicator" id="stagedFileNotice" style="display: none;">
+          <span class="staged-icon">📎</span>
+          <span class="staged-name" id="stagedFileName">Selected file</span>
+          <button type="submit" class="button primary pill small" id="confirmUploadBtn">Upload to Vault</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Organized Files Table -->
+  <section class="vault-table-section">
+    <div class="section-top-bar">
+      <h2>Your Encrypted Files ({{ pagination.total }})</h2>
+    </div>
+
+    <div class="vault-table-wrap">
+      <table class="vault-files-table">
+        <thead>
+          <tr>
+            <th class="col-file-name">Document Name</th>
+            <th class="col-type">Type</th>
+            <th class="col-size">Size</th>
+            <th class="col-date">Uploaded Date</th>
+            <th class="col-actions text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for file in pagination.items %}
+            {% set ext = file.filename.rsplit('.', 1)[-1]|upper if '.' in file.filename else 'FILE' %}
+            <tr class="file-table-row">
+              <td class="file-name-cell">
+                <div class="file-name-group">
+                  <span class="file-type-icon {{ 'doc-pdf' if ext == 'PDF' else ('doc-word' if ext in ['DOC', 'DOCX'] else ('doc-img' if ext in ['PNG', 'JPG', 'JPEG', 'WEBP'] else 'doc-txt')) }}">
+                    {{ '📄' if ext in ['PDF', 'DOC', 'DOCX', 'TXT', 'MD'] else '🖼️' }}
+                  </span>
+                  <span class="file-title-text" title="{{ file.filename }}">{{ file.filename }}</span>
+                </div>
+              </td>
+              <td class="file-type-cell">
+                <span class="file-type-badge {{ ext|lower }}">{{ ext }}</span>
+              </td>
+              <td class="file-size-cell">
+                {% if file.size > 1048576 %}
+                  {{ '%.2f'|format(file.size / 1048576) }} MiB
+                {% else %}
+                  {{ '%.1f'|format(file.size / 1024) }} KiB
+                {% endif %}
+              </td>
+              <td class="file-date-cell">
+                {{ file.created_at|date_label }}
+              </td>
+              <td class="file-actions-cell text-right">
+                <div class="action-btn-group">
+                  {% if ext in ['PDF', 'DOCX', 'DOC', 'TXT', 'MD'] %}
+                    <a class="button primary pill tiny quiz-action-btn" 
+                       href="{{ url_for('dashboard.index') }}?generate_file_id={{ file.id }}&file_name={{ file.filename|urlencode }}"
+                       title="Generate AI Study Quiz from this document">
+                      ⚡ Generate Quiz
+                    </a>
+                  {% endif %}
+                  
+                  <a class="button quiet pill tiny" href="{{ url_for('files.download', identifier=file.id) }}">
+                    Download
+                  </a>
+
+                  <form method="post"
+                        action="{{ url_for('files.delete', identifier=file.id) }}"
+                        data-confirm="Permanently delete this file from your private vault?"
+                        style="display: inline-block;">
+                    {{ action_form.hidden_tag() }}
+                    <button class="button danger quiet pill tiny" type="submit">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="5" class="empty-table-cell">
+                <div class="vault-empty-state">
+                  <div class="empty-icon-box">📂</div>
+                  <h3>No files uploaded yet</h3>
+                  <p>Drag and drop your lecture PDFs, syllabi, or reading materials above to store them securely and generate active recall quizzes.</p>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {{ pager(pagination) }}
+  </section>
+
+</div>
+
+<!-- Drag and drop auto-submit script -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dropArea = document.getElementById('vaultDropArea');
+  const fileInput = document.getElementById('vaultFileInput');
+  const stagedNotice = document.getElementById('stagedFileNotice');
+  const stagedName = document.getElementById('stagedFileName');
+  const uploadForm = document.getElementById('vaultUploadForm');
+
+  if (!dropArea || !fileInput) return;
+
+  dropArea.addEventListener('click', () => fileInput.click());
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropArea.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.classList.add('drag-over');
+    }, false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.classList.remove('drag-over');
+    }, false);
+  });
+
+  dropArea.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    if (files.length > 0) {
+      fileInput.files = files;
+      handleSelectedFile(files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      handleSelectedFile(fileInput.files[0]);
+    }
+  });
+
+  function handleSelectedFile(file) {
+    if (stagedNotice && stagedName) {
+      stagedName.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KiB)`;
+      stagedNotice.style.display = 'flex';
+    }
+  }
+});
+</script>
+{% endblock %}

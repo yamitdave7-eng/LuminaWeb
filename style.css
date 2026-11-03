@@ -1,3 +1,23 @@
+
+:root {
+  --text-primary: #0F172A !important;
+  --text-secondary: #334155 !important;
+  --text-muted: #64748B !important;
+  --color-violet-600: #6366F1 !important;
+  --color-lavender-500: #4F46E5 !important;
+  --bg-app: #F8FAFC !important;
+  --bg-card: #FFFFFF !important;
+  --bg-canvas: #FFFFFF !important;
+  --border-subtle: 1px solid #E2E8F0 !important;
+}
+body {
+  background: #F8FAFC !important;
+  color: #334155 !important;
+}
+h1, h2, h3, h4, strong {
+  color: #0F172A !important;
+}
+
 /* ==========================================================================
    LuminaEdu · Design System & Stylesheet
    Aesthetic: Pastel Lavender & Lilac, Habify Focus Wheel, Glassmorphic Dashboard

@@ -126,14 +126,22 @@ def files_delete(identifier):
 @login_required
 @limiter.limit("60 per hour")
 def generate_study_set_api():
+    import os
     study_text = ""
+    deck_title = "Document Study Set"
     api_key = request.headers.get("X-Gemini-Key") or request.form.get("apiKey")
     num_q = request.form.get("numQuestions", type=int) or 5
+    difficulty = request.form.get("difficulty") or "standard"
 
     if "file" in request.files and request.files["file"].filename:
         file = request.files["file"]
+        ext = os.path.splitext(file.filename)[1].lower()
+        allowed_exts = {".pdf", ".docx", ".doc", ".txt", ".md", ".markdown"}
+        if ext not in allowed_exts:
+            return jsonify(error=f"Unsupported file format '{ext}'. Please upload a text document in PDF (.pdf), Word (.docx), or Text (.txt) format. Video, audio, and image files are not supported."), 400
         raw_bytes = file.read()
         study_text = extract_text_from_file_bytes(file.filename, raw_bytes)
+        deck_title = os.path.splitext(file.filename)[0].replace("_", " ").replace("-", " ").title()
     elif request.is_json:
         data = request.get_json(silent=True) or {}
         study_text = data.get("text", "")
@@ -141,13 +149,19 @@ def generate_study_set_api():
             api_key = data.get("apiKey")
         if "numQuestions" in data:
             num_q = int(data["numQuestions"])
+        if "difficulty" in data:
+            difficulty = str(data["difficulty"])
+        if "deck_title" in data:
+            deck_title = str(data["deck_title"])
     else:
         study_text = request.form.get("text", "")
+        if request.form.get("deck_title"):
+            deck_title = request.form.get("deck_title")
 
     if not study_text or len(study_text.strip()) < 10:
         return jsonify(error="Please provide study text or upload a valid lesson file."), 400
 
-    study_set = generate_study_set(study_text, api_key=api_key, num_questions=num_q)
+    study_set = generate_study_set(study_text, api_key=api_key, num_questions=num_q, difficulty=difficulty, deck_title=deck_title)
     return jsonify(data=study_set), 200
 
 

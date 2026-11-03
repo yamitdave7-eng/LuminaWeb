@@ -1255,11 +1255,7 @@ class MaximizedSuiteManager {
       const saved = localStorage.getItem('lumina_cal_events_standalone_v2');
       if (saved) return JSON.parse(saved);
     } catch(e) {}
-    return [
-      { title: 'UI/UX Design Review', time: '09:00', type: 'violet', date: '2026-10-30' },
-      { title: 'Python Assignment Submission', time: '23:00', type: 'blue', date: '2026-10-31' },
-      { title: 'Algorithm Mock Exam', time: '14:00', type: 'pink', date: '2026-11-02' }
-    ];
+    return [];
   }
 
   saveStoredEvents(events) {
@@ -1383,14 +1379,7 @@ class MaximizedSuiteManager {
       const saved = localStorage.getItem('lumina_habits_standalone_matrix_v2');
       if (saved) return JSON.parse(saved);
     } catch(e) {}
-    return [
-      { id: 'h1', name: '🧘 10 min Mindfulness & Calm', days: [true, true, true, true, false, false, false], streak: '4d' },
-      { id: 'h2', name: '💧 Drink 8 Glasses Water', days: [true, true, true, true, true, false, false], streak: '5d' },
-      { id: 'h3', name: '📚 2 Hours Deep Study Block', days: [true, true, false, true, true, false, false], streak: '2d' },
-      { id: 'h4', name: '💻 Coding / Project Practice', days: [true, true, true, true, true, false, false], streak: '5d' },
-      { id: 'h5', name: '🏃 8,000 Steps Daily Walk', days: [false, true, true, false, true, false, false], streak: '1d' },
-      { id: 'h6', name: '🌙 8 Hours Restful Sleep', days: [true, true, true, true, false, false, false], streak: '4d' }
-    ];
+    return [];
   }
 
   saveStoredHabits(habits) {

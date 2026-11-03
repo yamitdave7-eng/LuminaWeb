@@ -1,6 +1,6 @@
 from io import BytesIO
 
-from flask import Blueprint, abort, flash, redirect, render_template, request, send_file, url_for
+from flask import Blueprint, abort, flash, jsonify, redirect, render_template, request, send_file, url_for
 from flask_login import current_user, login_required
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
@@ -17,18 +17,18 @@ bp = Blueprint("files", __name__, url_prefix="/files")
 
 
 class UploadForm(FlaskForm):
-    file = FileField("Image", validators=[FileRequired()])
-    submit = SubmitField("Upload image")
+    file = FileField("Document or Image", validators=[FileRequired()])
+    submit = SubmitField("Upload to Vault")
 
 
 @bp.route("", methods=["GET", "POST"])
 @login_required
-@limiter.limit("20 per hour", methods=["POST"])
+@limiter.limit("30 per hour", methods=["POST"])
 def index():
     form = UploadForm()
     if form.validate_on_submit():
         store_image(current_user.id, form.file.data)
-        flash("Image uploaded. Only your account can download it.", "success")
+        flash("File uploaded to your private vault. Only your account can access it.", "success")
         return redirect(url_for("files.index"), code=303)
     statement = (
         db.select(Attachment)
@@ -59,11 +59,20 @@ def download(identifier):
     return response
 
 
+@bp.get("/<uuid:identifier>/text")
+@login_required
+def text_content(identifier):
+    attachment = owned_attachment(current_user.id, str(identifier))
+    from backend.modules.api.study_generator import extract_text_from_file_bytes
+    extracted = extract_text_from_file_bytes(attachment.filename, attachment.data)
+    return jsonify(filename=attachment.filename, text=extracted)
+
+
 @bp.post("/<uuid:identifier>/delete")
 @login_required
 def delete(identifier):
     if not ActionForm().validate_on_submit():
         abort(400)
     remove_image(current_user.id, str(identifier))
-    flash("Image deleted.", "success")
+    flash("File deleted from vault.", "success")
     return redirect(url_for("files.index"), code=303)

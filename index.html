@@ -191,11 +191,11 @@
 
           <div class="banner-quick-stats">
             <div class="stat-bubble">
-              <span class="stat-number text-violet" id="tasksPlanCount">5</span>
+              <span class="stat-number text-violet" id="tasksPlanCount">0</span>
               <span class="stat-label">Today's Plan</span>
             </div>
             <div class="stat-bubble">
-              <span class="stat-number text-cyan" id="tasksInProgressCount">2</span>
+              <span class="stat-number text-cyan" id="tasksInProgressCount">0</span>
               <span class="stat-label">In Progress</span>
             </div>
             <div class="stat-bubble">
@@ -691,32 +691,32 @@
     <div class="full-modal-dialog quiz-dialog">
       <div class="full-modal-header">
         <div class="header-title-block">
-          <span class="modal-eyebrow">AI ACTIVE RECALL & CURRICULUM SUITE</span>
-          <h2>Active Study & Quiz Generator</h2>
+          <span class="modal-eyebrow">STUDENT SANCTUARY</span>
+          <h2>Active Study Lab ✨</h2>
         </div>
         <div class="header-controls">
-          <div class="quiz-mode-switch">
-            <button type="button" class="mode-tab active" id="quizModeBtn">🧠 Active Quiz</button>
+          <div class="quiz-mode-switch ios-segmented-control">
+            <button type="button" class="mode-tab active" id="quizModeBtn">🧠 Quiz</button>
             <button type="button" class="mode-tab" id="flashcardModeBtn">🎴 Flashcards</button>
-            <button type="button" class="mode-tab ai-gen-tab" id="generatorModeBtn">✨ AI Lesson Generator</button>
+            <button type="button" class="mode-tab ai-gen-tab" id="generatorModeBtn">📄 Upload Handout</button>
           </div>
-          <button type="button" class="close-modal-icon-btn" data-close-modal="quiz" aria-label="Close">×</button>
+          <button type="button" class="close-modal-icon-btn" data-close-modal="quiz" aria-label="Close">✕</button>
         </div>
       </div>
 
       <!-- Active Deck & Score Ribbon -->
-      <div class="quiz-deck-ribbon">
+      <div class="quiz-deck-ribbon ios-glass-ribbon">
         <div class="deck-ribbon-left">
           <span class="ribbon-icon">📚</span>
           <strong id="activeDeckTitle">Computer Science & Study Skills</strong>
-          <span class="deck-type-tag" id="activeDeckTypeTag">Built-in Deck</span>
+          <span class="deck-type-tag" id="activeDeckTypeTag">Active Set</span>
         </div>
 
         <!-- Mode Selector: Study Mode vs Timed Exam Simulation -->
         <div class="deck-ribbon-center">
-          <div class="exam-mode-toggle" id="examModeToggle">
-            <button type="button" class="exam-toggle-btn active" id="modeStudyBtn" title="Instant feedback, points, and explanations">💡 Study Mode</button>
-            <button type="button" class="exam-toggle-btn" id="modeExamBtn" title="Timed exam simulation with flagging and full graded review">⏱️ Exam Simulation</button>
+          <div class="exam-mode-toggle ios-segmented-control small" id="examModeToggle">
+            <button type="button" class="exam-toggle-btn active" id="modeStudyBtn" title="Instant answers & explanations">💡 Practice</button>
+            <button type="button" class="exam-toggle-btn" id="modeExamBtn" title="Timed simulation">⏱️ Timed</button>
           </div>
           <div class="exam-timer-pill" id="examTimerPill" style="display: none;">
             <span class="timer-clock-icon">⏳</span>
@@ -725,11 +725,10 @@
         </div>
 
         <div class="deck-ribbon-right">
-          <button type="button" class="button quiet pill small" id="quickUploadPillBtn">⚡ Upload New Lesson</button>
           <div class="points-pill-badge" id="ribbonScoreBadge">
             <span class="star-icon">⭐</span>
             <span id="ribbonScoreVal">0 pts</span>
-            <span class="streak-sub" id="ribbonStreakVal">· 1x Streak</span>
+            <span class="streak-sub" id="ribbonStreakVal">· 1.0x</span>
           </div>
         </div>
       </div>
@@ -920,113 +919,121 @@
         </div>
 
         <!-- ==================================================================
-             MODE C: AI LESSON & HANDOUT GENERATOR (UP TO 20 QUESTIONS)
+             MODE C: HANDOUT STUDY SET GENERATOR (iOS Glass UI)
              ================================================================== -->
         <div class="quiz-generator-view" id="quizGeneratorView" style="display: none;">
-          <div class="generator-intro-card">
+          <div class="generator-intro-card ios-glass-header-card">
             <div class="gen-title-row">
               <span class="gen-sparkle">✨</span>
               <div>
-                <h3>AI Study Set & Curriculum Synthesizer</h3>
-                <p>Upload your handouts, lecture slides, syllabus, or textbooks (.pdf, .docx, .txt, .md, .json). AI analyzes the full text and synthesizes an academic curriculum with up to 20 cognitive questions, 4 domain-grounded distractors, 3D flashcards, and a printable exam with teacher answer key.</p>
+                <h3>Generate Study Set from Handout</h3>
+                <p>Upload your course handout, syllabus, or lecture slides to automatically create flashcards and multiple-choice questions.</p>
               </div>
             </div>
           </div>
 
-          <!-- 1. Dropzone Box -->
-          <div class="lesson-dropzone-box" id="lessonDropzone">
-            <input type="file" id="lessonFileInput" class="file-input-hidden" accept=".txt,.md,.markdown,.pdf,.docx,.json,.csv,.rtf,.html,.py">
-            <div class="dropzone-content" id="dropzoneDefaultContent">
-              <div class="dropzone-icon">📁</div>
-              <strong>Drag & drop your lesson document here, or click to browse</strong>
-              <span class="dropzone-types">Production support for student PDFs, Word docs (.docx), Markdown (.md), and Text (.txt)</span>
+          <!-- 1. Dropzone Box with Strict Text Validation -->
+          <div class="lesson-dropzone-box ios-glass-dropzone" id="lessonDropzone">
+            <input type="file" id="lessonFileInput" class="file-input-hidden" accept=".pdf,.docx,.doc,.txt,.md,.markdown">
+
+            <!-- Unsupported File Warning Message -->
+            <div class="ios-file-warning-card" id="unsupportedFileWarning" style="display: none;">
+              <span class="warning-icon">⚠️</span>
+              <div class="warning-text">
+                <strong id="warningTitle">Unsupported File Format</strong>
+                <p id="warningDesc">Please upload a text-based study document in PDF (.pdf), Word (.docx), or Text (.txt) format. Video, audio, and image files are not supported.</p>
+              </div>
+              <button type="button" class="close-warning-btn" id="dismissWarningBtn" title="Dismiss warning">✕</button>
             </div>
 
-            <div class="selected-file-chip" id="selectedFileChip" style="display: none;">
+            <!-- Default Dropzone Callout -->
+            <div class="dropzone-content" id="dropzoneDefaultContent">
+              <div class="dropzone-icon">📄</div>
+              <strong>Tap to choose a handout or drag & drop here</strong>
+              <span class="dropzone-types">Supported text files: PDF (.pdf), Word (.docx), Text (.txt, .md)</span>
+            </div>
+
+            <!-- Selected File Card (iPhone Glass Style) -->
+            <div class="selected-file-chip ios-glass-file-chip" id="selectedFileChip" style="display: none;">
               <div class="file-info-col">
                 <span class="file-icon">📄</span>
                 <div>
-                  <strong id="selectedFileName">lesson_notes.txt</strong>
-                  <small id="selectedFileSize">24 KB</small>
+                  <strong id="selectedFileName">handout.pdf</strong>
+                  <div class="file-meta-row">
+                    <small id="selectedFileSize">0 KB</small>
+                    <span class="file-valid-pill">✓ Ready to Study</span>
+                  </div>
                 </div>
               </div>
-              <button type="button" class="remove-file-btn" id="removeFileBtn" title="Remove file">×</button>
+              <button type="button" class="remove-file-btn ios-glass-del-btn" id="removeFileBtn" title="Remove file">✕</button>
             </div>
           </div>
 
-          <!-- 2. Direct Text Paste Accordion -->
+          <!-- 2. Direct Text Paste Option (Clean & Collapsible) -->
           <div class="paste-text-section">
-            <div class="paste-header-row">
-              <span class="paste-label">Or paste / edit lesson notes directly:</span>
-              <small class="text-counts" id="textCountDisplay">0 words · 0 chars</small>
+            <button type="button" class="ios-glass-pill-btn small" id="togglePasteBtn">✏️ Or paste lesson text directly</button>
+            <div id="pasteTextDrawer" style="display: none; margin-top: 10px;">
+              <div class="paste-header-row">
+                <span class="paste-label">Lesson Notes:</span>
+                <small class="text-counts" id="textCountDisplay">0 words · 0 chars</small>
+              </div>
+              <textarea id="lessonTextInput" class="lesson-textarea ios-glass-textarea" rows="4" placeholder="Paste your lesson paragraphs, lecture definitions, syllabus outline, or study guide text here..."></textarea>
             </div>
-            <textarea id="lessonTextInput" class="lesson-textarea" rows="4" placeholder="Paste your lesson paragraphs, lecture definitions, syllabus outline, or study guide text here..."></textarea>
           </div>
 
-          <!-- 3. Quick Sample Lessons (20-Concept Curriculums) -->
+          <!-- 3. Quick Sample Lessons -->
           <div class="sample-lessons-bar">
-            <span class="sample-label">Try 20-concept rich curriculum:</span>
+            <span class="sample-label">Quick samples:</span>
             <div class="sample-chips-row">
-              <button type="button" class="chip-sample" data-sample="cs">💻 OS & Computer Systems (20 Items)</button>
-              <button type="button" class="chip-sample" data-sample="bio">🧬 Biology: Cellular & Genetics (20 Items)</button>
-              <button type="button" class="chip-sample" data-sample="physics">⚡ Physics & PRISM Optics (20 Items)</button>
+              <button type="button" class="chip-sample ios-glass-chip" data-sample="cs">💻 Computer Systems</button>
+              <button type="button" class="chip-sample ios-glass-chip" data-sample="bio">🧬 Cellular Biology</button>
+              <button type="button" class="chip-sample ios-glass-chip" data-sample="physics">⚡ Physics & Optics</button>
             </div>
           </div>
 
-          <!-- 4. Options Row -->
-          <div class="gen-options-row">
-            <div class="opt-field">
-              <label for="genQuestionCount">Question & Flashcard Count:</label>
-              <select id="genQuestionCount" class="gen-select">
-                <option value="5">5 Questions (Quick Check)</option>
-                <option value="10">10 Questions (Standard Quiz)</option>
-                <option value="15">15 Questions (Deep Recall)</option>
-                <option value="20" selected>20 Questions (Comprehensive Master Exam)</option>
-              </select>
+          <!-- 4. Set Size Option (iOS Segmented Pills) -->
+          <div class="gen-count-row">
+            <span class="count-label">Question & Card Count:</span>
+            <div class="ios-segmented-control count-segmented" id="countSegmented">
+              <button type="button" class="count-tab" data-count="5">5 Questions</button>
+              <button type="button" class="count-tab" data-count="10">10 Questions</button>
+              <button type="button" class="count-tab active" data-count="20">20 Questions</button>
             </div>
-
-            <div class="opt-field flex-grow">
-              <label for="genApiKeyInput">Google Gemini API Key (Optional):</label>
-              <input type="password" id="genApiKeyInput" class="gen-input" placeholder="Leave blank to use built-in Neural Curriculum Engine">
-            </div>
+            <input type="hidden" id="genQuestionCount" value="20">
           </div>
 
-          <!-- 5. Primary Generate Action & Import Tool -->
+          <!-- 5. Primary Generate Action Button (iPhone Liquid Glass) -->
           <div class="gen-submit-row">
-            <button type="button" class="button primary pill large full glow-btn" id="triggerGenerateBtn">
-              <span>✨ Synthesize Active Recall Study Set (Up to 20 Questions)</span>
+            <button type="button" class="button primary pill large full glow-btn ios-glass-primary-btn" id="triggerGenerateBtn">
+              <span>✨ Generate Study Set</span>
             </button>
           </div>
 
-          <!-- Generating Animated Loading State -->
-          <div class="gen-loading-state" id="genLoadingState" style="display: none;">
-            <div class="gen-spinner-ring"></div>
-            <h4 id="genLoadingTitle">Analyzing study material...</h4>
-            <ul class="gen-stepper-list">
-              <li class="stepper-step active" id="step1">✓ Extracting curriculum definitions and terms</li>
-              <li class="stepper-step" id="step2">⏳ Formulating active recall flashcard pairs</li>
-              <li class="stepper-step" id="step3">⏳ Generating 4-distractor multiple choice questions</li>
-              <li class="stepper-step" id="step4">⏳ Assembling points scoring system</li>
-            </ul>
+          <!-- 6. iOS-Style Animated Loading State -->
+          <div class="gen-loading-state ios-glass-loading" id="genLoadingState" style="display: none;">
+            <div class="ios-spinner"></div>
+            <h4 id="genLoadingTitle">Synthesizing study set...</h4>
+            <p class="loading-sub">Analyzing concepts and generating flashcards & quiz questions</p>
+            <div class="ios-progress-bar"><div class="ios-progress-bar-fill"></div></div>
           </div>
 
-          <!-- Generation Success Banner -->
-          <div class="gen-success-banner" id="genSuccessBanner" style="display: none;">
+          <!-- 7. Generation Success Banner -->
+          <div class="gen-success-banner ios-glass-success" id="genSuccessBanner" style="display: none;">
             <div class="success-top-row">
-              <span class="success-badge">🎉 GENERATION COMPLETE</span>
-              <h3 id="generatedDeckTitle">Operating Systems: Kernel and Memory</h3>
-              <p>Active study set successfully generated and grounded in your provided lesson text.</p>
+              <span class="success-badge">🎉 STUDY SET READY</span>
+              <h3 id="generatedDeckTitle">Lesson Study Set</h3>
+              <p>Your interactive flashcards and quiz questions have been synthesized!</p>
             </div>
 
             <div class="success-metrics-row">
-              <span class="metric-pill" id="genCardCountMetric">🎴 8 Flashcards</span>
-              <span class="metric-pill" id="genQuizCountMetric">🧠 8 Quiz Questions</span>
-              <span class="metric-pill" id="genMaxPtsMetric">🏆 800 Max Points</span>
+              <span class="metric-pill" id="genCardCountMetric">🎴 20 Flashcards</span>
+              <span class="metric-pill" id="genQuizCountMetric">🧠 20 Quiz Questions</span>
+              <span class="metric-pill" id="genMaxPtsMetric">🏆 2000 Max Points</span>
             </div>
 
             <div class="success-action-btns">
-              <button type="button" class="button primary pill glow-btn" id="startGeneratedQuizBtn">▶ Start Quiz Now (+Points System)</button>
-              <button type="button" class="button soft pill" id="openGeneratedCardsBtn">🎴 Practice Flashcards First</button>
+              <button type="button" class="button primary pill glow-btn ios-glass-pill-btn primary" id="startGeneratedQuizBtn">▶ Start Quiz 🧠</button>
+              <button type="button" class="button soft pill ios-glass-pill-btn secondary" id="openGeneratedCardsBtn">🎴 Practice Flashcards</button>
             </div>
           </div>
 

@@ -1,413 +1,375 @@
 {% extends "base.html" %}
-{% block title %}Dashboard · LuminaEdu{% endblock %}
+{% block title %}Student Dashboard · LuminaEdu{% endblock %}
 {% block content %}
-<div class="lumina-dashboard-view">
+<div class="lumina-bento-dashboard">
 
-  <!-- 1. SLEEK WELCOME & QUICK METRIC BANNER -->
-  <section class="dashboard-welcome-banner lumina-card">
-    <div class="banner-left">
-      <div class="banner-status-pill">
-        <span class="sparkle-icon">✨</span>
-        <span>LUMINA SANCTUARY · SERENE LEARNING</span>
-      </div>
-      <h1 class="banner-title">Welcome back, <span class="gradient-text">{{ current_user.display_name.split(' ')[0] }}</span>! 🌸</h1>
-      <p class="banner-desc">Your cozy personal sanctuary for mindful learning, daily rhythm, and joyful progress.</p>
-    </div>
+  <!-- Confetti Canvas for Celebratory Physics -->
+  <canvas id="dashboardConfettiCanvas" class="dashboard-confetti-canvas"></canvas>
 
-    <div class="banner-right">
-      <div class="banner-stat-chip">
-        <span class="chip-icon">🔥</span>
-        <div class="chip-text">
-          <strong id="bannerStreakCount">7 Days</strong>
-          <small>Active Streak</small>
-        </div>
-      </div>
-      <div class="banner-stat-chip">
-        <span class="chip-icon">🎯</span>
-        <div class="chip-text">
-          <strong id="bannerGoalsDone">0 / 0 Done</strong>
-          <small>Today's Goals</small>
-        </div>
-      </div>
-      <div class="banner-stat-chip">
-        <span class="chip-icon">⏳</span>
-        <div class="chip-text">
-          <strong id="bannerFocusBlock">25 Min</strong>
-          <small>Focus Block</small>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Bento 3-Column Structured Layout -->
+  <div class="bento-3col-grid">
 
-  <!-- 2. PRIMARY FOCUS SUITE (Balanced 3x2 Grid) -->
-  <section class="interactive-modules-section">
-    <div class="section-title-row">
-      <div class="title-left">
-        <div class="pill-eyebrow">DAILY STUDENT SUITE</div>
-        <h2>Focus, Rhythm & Active Learning</h2>
-      </div>
-      <div class="title-right">
-        <span class="serene-quote-pill">🌱 Little by little, one day at a time</span>
-      </div>
-    </div>
-
-    <div class="interactive-dashboard-grid">
-
-      <!-- CARD 1: DAILY BALANCE WHEEL (Habify Inspired, REAL USER INPUT) -->
-      <div class="lumina-card dashboard-mod-card">
-        <div class="card-mod-header">
-          <div class="mod-title-group">
-            <span class="mod-icon">⏱</span>
+    <!-- ====================================================================
+         COLUMN 1: RHYTHM & FOCUS (Habify Balance + 1-Click Pomodoro)
+         ==================================================================== -->
+    <div class="bento-column col-focus">
+      
+      <!-- CARD 1.1: DAILY HABIFY BALANCE RING (40/30/30) -->
+      <div class="bento-card balance-card">
+        <div class="card-header-clean">
+          <div class="header-title-group">
+            <span class="card-icon-badge">⏱</span>
             <div>
-              <h3>Daily Balance</h3>
-              <small class="mod-subtitle">Study, Mind & Body Harmony</small>
+              <h2 class="card-main-title">Daily Balance</h2>
+              <p class="card-subtitle">Habify 40/30/30 Rhythm</p>
             </div>
           </div>
-          <div class="header-action-group">
-            <span class="mod-status-tag" id="balanceStatusTag">Today</span>
-            <button type="button" class="icon-expand-btn highlight" data-open-modal="tracker" title="Maximize Habit Tracker">⤢ Full View</button>
-          </div>
+          <button type="button" class="action-text-btn" data-open-modal="tracker" title="Open Rhythm Suite">
+            <span>Matrix ⤢</span>
+          </button>
         </div>
 
-        <div class="wheel-container">
-          <div class="balance-wheel-svg-wrap">
-            <svg class="balance-wheel-svg" viewBox="0 0 180 180">
-              <circle class="ring-bg" cx="90" cy="90" r="74"/>
-              <circle class="ring-mind" id="dashRingMind" cx="90" cy="90" r="74" stroke-dasharray="465" stroke-dashoffset="465"/>
-              <circle class="ring-body" id="dashRingBody" cx="90" cy="90" r="62" stroke-dasharray="390" stroke-dashoffset="390"/>
-              <circle class="ring-study" id="dashboardStudyRing" cx="90" cy="90" r="50" stroke-dasharray="314" stroke-dashoffset="314"/>
+        <!-- Clean Segmented Donut / Stacked Progress Visualization -->
+        <div class="balance-visual-container">
+          <div class="donut-chart-wrap">
+            <svg class="segmented-donut-svg" viewBox="0 0 160 160">
+              <!-- Background Track Ring -->
+              <circle class="donut-bg-track" cx="80" cy="80" r="62"/>
+              <!-- Segment 1: Study (40%) -->
+              <circle class="donut-segment segment-study" id="dashRingStudy" cx="80" cy="80" r="62" stroke-dasharray="0 390"/>
+              <!-- Segment 2: Mind (30%) -->
+              <circle class="donut-segment segment-mind" id="dashRingMind" cx="80" cy="80" r="62" stroke-dasharray="0 390"/>
+              <!-- Segment 3: Body (30%) -->
+              <circle class="donut-segment segment-body" id="dashRingBody" cx="80" cy="80" r="62" stroke-dasharray="0 390"/>
             </svg>
-            <div class="wheel-center-flower" id="dashFlowerCenter">
-              <img src="{{ url_for('static', filename='images/lumina-flower.svg') }}" alt="Focus Flower" class="flower-icon">
+            <div class="donut-center-metric">
+              <span class="donut-center-val" id="dashTotalMins">0m</span>
+              <span class="donut-center-label">Logged Today</span>
             </div>
           </div>
 
-          <div class="balance-legends">
-            <span class="legend-pill pill-study" id="dashPillStudy">Study · 0m (0%)</span>
-            <span class="legend-pill pill-mind" id="dashPillMind">Mind · 0m (0%)</span>
-            <span class="legend-pill pill-body" id="dashPillBody">Body · 0m (0%)</span>
+          <!-- Empty State / Zero State Notice -->
+          <div class="balance-empty-state" id="balanceEmptyNotice">
+            <p>No activity logged today. Log a study block or wellness break to start tracking.</p>
+          </div>
+
+          <!-- Three High-Contrast Breakdown Bars -->
+          <div class="balance-breakdown-bars">
+            <div class="breakdown-row">
+              <div class="breakdown-meta">
+                <span class="pillar-dot dot-study"></span>
+                <span class="pillar-name">Study (Target 40%)</span>
+                <strong class="pillar-time" id="dashPillStudy">0m (0%)</strong>
+              </div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill fill-study" id="dashBarStudy" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="breakdown-row">
+              <div class="breakdown-meta">
+                <span class="pillar-dot dot-mind"></span>
+                <span class="pillar-name">Mind (Target 30%)</span>
+                <strong class="pillar-time" id="dashPillMind">0m (0%)</strong>
+              </div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill fill-mind" id="dashBarMind" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="breakdown-row">
+              <div class="breakdown-meta">
+                <span class="pillar-dot dot-body"></span>
+                <span class="pillar-name">Body (Target 30%)</span>
+                <strong class="pillar-time" id="dashPillBody">0m (0%)</strong>
+              </div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill fill-body" id="dashBarBody" style="width: 0%;"></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Quick Log Actions Row (Allowing Real Input!) -->
-        <div class="quick-log-actions">
-          <span class="quick-log-title">Quick Log Time:</span>
-          <div class="quick-log-btns">
-            <button type="button" class="quick-add-chip study" data-log-type="study" data-log-mins="30" title="Log 30m Study">+30m Study</button>
-            <button type="button" class="quick-add-chip mind" data-log-type="mind" data-log-mins="15" title="Log 15m Mind">+15m Mind</button>
-            <button type="button" class="quick-add-chip body" data-log-type="body" data-log-mins="20" title="Log 20m Body">+20m Body</button>
-            <button type="button" class="quick-add-chip custom" id="openCustomLogBtn" title="Log custom minutes">✏️ Custom</button>
+        <!-- Quick Log Actions -->
+        <div class="quick-log-section">
+          <span class="quick-log-label">Quick Log Session:</span>
+          <div class="quick-log-chips">
+            <button type="button" class="log-chip chip-study" data-log-type="study" data-log-mins="30" title="Log 30m Study">+30m Study</button>
+            <button type="button" class="log-chip chip-mind" data-log-type="mind" data-log-mins="15" title="Log 15m Mind">+15m Mind</button>
+            <button type="button" class="log-chip chip-body" data-log-type="body" data-log-mins="20" title="Log 20m Body">+20m Body</button>
+            <button type="button" class="log-chip chip-custom" id="openCustomLogBtn" title="Log custom minutes">✏️ Custom</button>
           </div>
         </div>
 
         <!-- Collapsible Custom Logger Drawer -->
         <div class="custom-log-drawer" id="customLogDrawer" style="display: none;">
-          <div class="custom-log-row">
+          <div class="custom-log-inputs">
             <select id="customLogCategory" class="clean-select">
               <option value="study">📚 Study</option>
               <option value="mind">🧘 Mind</option>
               <option value="body">🏃 Body</option>
             </select>
-            <input type="number" id="customLogMinutes" placeholder="Minutes" min="5" max="360" class="clean-num-input">
-            <button type="button" class="button primary pill small" id="submitCustomLogBtn">Log</button>
+            <input type="number" id="customLogMinutes" placeholder="Minutes (e.g. 45)" min="5" max="360" class="clean-input-num">
+            <button type="button" class="button primary pill small" id="submitCustomLogBtn">Save</button>
             <button type="button" class="button quiet pill small" id="closeCustomLogBtn">✕</button>
           </div>
         </div>
-
-        <button type="button" class="button soft pill full glow-btn" id="dashboardRewardBtn">
-          <span>Claim Daily Streak Reward 🎁</span>
-        </button>
       </div>
 
-      <!-- CARD 2: TODAY'S GOALS CHECKLIST (Interactive, Persistent, Deletable) -->
-      <div class="lumina-card dashboard-mod-card">
-        <div class="card-mod-header">
-          <div class="mod-title-group">
-            <span class="mod-icon">🎯</span>
+      <!-- CARD 1.2: 1-CLICK FOCUS POMODORO WIDGET -->
+      <div class="bento-card timer-card">
+        <div class="card-header-clean">
+          <div class="header-title-group">
+            <span class="card-icon-badge">⏳</span>
             <div>
-              <h3>Today's Goals</h3>
-              <small class="mod-subtitle">Bite-sized Daily Intentions</small>
+              <h2 class="card-main-title">Focus Chamber</h2>
+              <p class="card-subtitle">Deep Work Intervals</p>
             </div>
           </div>
-          <div class="header-action-group">
-            <span class="card-progress-counter" id="dashboardGoalsBadge">0/0 Done</span>
-            <button type="button" class="icon-expand-btn highlight" data-open-modal="tracker" title="Maximize Tracker">⤢ Full View</button>
-          </div>
+          <button type="button" class="action-text-btn" data-open-modal="timer" title="Maximize Zen Chamber">
+            <span>Zen Mode ⤢</span>
+          </button>
         </div>
 
-        <ul class="goals-checklist" id="dashboardGoalsList">
-          <!-- Dynamically populated from localStorage with real user goals -->
-        </ul>
+        <div class="timer-widget-display">
+          <div class="timer-digits-large" id="dashTimerDisplay">25:00</div>
+          
+          <div class="timer-preset-row">
+            <button type="button" class="preset-chip active" data-mins="25">25m Focus</button>
+            <button type="button" class="preset-chip" data-mins="50">50m Deep</button>
+            <button type="button" class="preset-chip" data-mins="5">5m Break</button>
+          </div>
 
-        <div class="add-goal-row">
-          <select id="dashboardGoalTagSelect" class="clean-select compact-select">
+          <div class="timer-controls-row">
+            <button type="button" class="button primary pill medium focus-start-btn" id="dashTimerStartBtn">
+              Start Focus Session
+            </button>
+            <button type="button" class="button quiet pill small" id="dashTimerResetBtn">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================================
+         COLUMN 2: TASKS & HABITS (Checklist + Weekly Study Rhythm Chart)
+         ==================================================================== -->
+    <div class="bento-column col-tasks">
+      
+      <!-- CARD 2.1: PRIORITY DAILY TASKS CHECKLIST -->
+      <div class="bento-card tasks-card">
+        <div class="card-header-clean">
+          <div class="header-title-group">
+            <span class="card-icon-badge">🎯</span>
+            <div>
+              <h2 class="card-main-title">Today's Tasks</h2>
+              <p class="card-subtitle">Daily Academic Intentions</p>
+            </div>
+          </div>
+          <span class="counter-badge" id="dashboardGoalsBadge">0/0 Done</span>
+        </div>
+
+        <!-- Add Goal Input Row -->
+        <div class="add-task-form-row">
+          <select id="dashboardGoalTagSelect" class="clean-select task-tag-select">
             <option value="Study">Study</option>
             <option value="Mind">Mind</option>
             <option value="Body">Body</option>
-            <option value="Wellness">Wellness</option>
             <option value="Task">Task</option>
           </select>
-          <input type="text" id="dashboardAddGoalInput" placeholder="Add an intention or goal..." autocomplete="off">
-          <button type="button" class="button primary pill small" id="dashboardAddGoalBtn">Add</button>
+          <input type="text" 
+                 id="dashboardAddGoalInput" 
+                 class="clean-task-input" 
+                 placeholder="Add a study task or intention..." 
+                 autocomplete="off">
+          <button type="button" class="button primary pill small" id="dashboardAddGoalBtn">+ Add</button>
+        </div>
+
+        <!-- Tasks List Container with Pure User-Populated Items -->
+        <ul class="tasks-checklist-container" id="dashboardGoalsList">
+          <!-- Dynamically populated from localStorage with real user tasks -->
+        </ul>
+
+        <!-- Empty State Container -->
+        <div class="tasks-empty-state" id="tasksEmptyState" style="display: none;">
+          <p class="empty-state-text">No tasks for today. Add a task to begin.</p>
         </div>
       </div>
 
-      <!-- CARD 3: WEEKLY RHYTHM & STREAK ANALYTICS (Interactive Day Logging) -->
-      <div class="lumina-card dashboard-mod-card">
-        <div class="card-mod-header">
-          <div class="mod-title-group">
-            <span class="mod-icon">🔥</span>
+      <!-- CARD 2.2: WEEKLY STUDY RHYTHM & STREAK OVERVIEW -->
+      <div class="bento-card rhythm-card">
+        <div class="card-header-clean">
+          <div class="header-title-group">
+            <span class="card-icon-badge">🔥</span>
             <div>
-              <h3>Weekly Rhythm</h3>
-              <small class="mod-subtitle">Study Momentum & Consistency</small>
+              <h2 class="card-main-title">Weekly Consistency</h2>
+              <p class="card-subtitle">Study Hours & Rhythm</p>
             </div>
           </div>
-          <div class="header-action-group">
-            <span class="streak-tag-badge" id="dashStreakBadge">🔥 7-Day Streak</span>
-            <button type="button" class="icon-expand-btn highlight" data-open-modal="tracker" title="Maximize Rhythm Tracker">⤢ Full View</button>
+          <span class="streak-pill-counter" id="dashStreakBadge">🔥 0-Day Streak</span>
+        </div>
+
+        <div class="chart-summary-metric">
+          <div class="metric-block">
+            <span class="metric-caption">THIS WEEK'S STUDY</span>
+            <strong class="metric-big-num" id="dashTotalHoursEl">0.0 <small>hrs</small></strong>
+          </div>
+          <div class="metric-tag-chip" id="dashConsistencyBadge">
+            Start your streak today!
           </div>
         </div>
 
-        <div class="streak-bar-chart-wrap">
-          <div class="chart-metric-header">
-            <div>
-              <span class="chart-eyebrow">DAILY STUDY HOURS</span>
-              <strong class="chart-big-metric" id="dashTotalHoursEl">0.0 <small>hrs this week</small></strong>
-            </div>
-            <span class="consistency-rate-badge" id="dashConsistencyBadge">85% Consistency</span>
-          </div>
-
-          <div class="weekly-bar-chart" id="dashboardBarChart">
-            <!-- Populated dynamically with interactive bars from localStorage -->
-          </div>
-          <small class="chart-hint">Tap any day bar to log study hours for that day</small>
+        <!-- 7-Day Interactive Bar Chart -->
+        <div class="weekly-bar-chart-container" id="dashboardBarChart">
+          <!-- Populated dynamically with interactive day bars -->
         </div>
+        <span class="chart-tap-caption">Tap any day bar to log study hours</span>
 
-        <!-- Quick Log Day Hours Inline Form (Opens when a bar is clicked) -->
+        <!-- Day Hours Quick-Log Popup (Collapsible) -->
         <div class="day-log-popup" id="dashDayLogPopup" style="display: none;">
           <div class="popup-header-row">
-            <span id="dashLogDayLabel">Log study time for Wednesday:</span>
+            <span id="dashLogDayLabel">Log study time for Today:</span>
             <button type="button" class="mini-close-btn" id="closeDayLogPopup">✕</button>
           </div>
           <div class="popup-actions-row">
             <button type="button" class="quick-hour-chip" data-hrs="1.0">+1.0 hr</button>
             <button type="button" class="quick-hour-chip" data-hrs="2.0">+2.0 hrs</button>
-            <input type="number" step="0.5" min="0" max="16" id="dashCustomDayHours" placeholder="Hrs" class="clean-num-input small">
+            <input type="number" step="0.5" min="0" max="16" id="dashCustomDayHours" placeholder="Hrs" class="clean-input-num small">
             <button type="button" class="button primary pill small" id="submitDayHoursBtn">Save</button>
           </div>
         </div>
 
-        <div class="rhythm-insights-row">
-          <div class="insight-item">
-            <span class="insight-label">Goal Velocity</span>
-            <strong class="insight-val" id="dashGoalVelocity">On Track 🚀</strong>
-          </div>
-          <div class="insight-item">
-            <span class="insight-label">Peak Energy</span>
-            <strong class="insight-val">6 PM – 9 PM</strong>
-          </div>
+        <!-- Habit Tracker Shortcut -->
+        <div class="habit-tracker-footer-bar">
+          <button type="button" class="button quiet pill full" data-open-modal="tracker">
+            <span>Open Weekly Habit Matrix ⤢</span>
+          </button>
         </div>
-
-        <button type="button" class="button soft pill full" data-open-modal="tracker">
-          <span>Open Habit & Consistency Matrix ⤢</span>
-        </button>
       </div>
 
-      <!-- CARD 4: ACADEMIC CALENDAR & DEADLINES -->
-      <div class="lumina-card dashboard-mod-card">
-        <div class="card-mod-header">
-          <div class="mod-title-group">
-            <span class="mod-icon">📅</span>
+    </div>
+
+
+    <!-- ====================================================================
+         COLUMN 3: DEADLINES & VAULT (Calendar + Document Study Lab + Files)
+         ==================================================================== -->
+    <div class="bento-column col-vault">
+      
+      <!-- CARD 3.1: UPCOMING ASSIGNMENT DEADLINES -->
+      <div class="bento-card deadlines-card">
+        <div class="card-header-clean">
+          <div class="header-title-group">
+            <span class="card-icon-badge">📅</span>
             <div>
-              <h3>Calendar & Deadlines</h3>
-              <small class="mod-subtitle">Upcoming Schedule</small>
+              <h2 class="card-main-title">Upcoming Deadlines</h2>
+              <p class="card-subtitle">Coursework & Exams</p>
             </div>
           </div>
-          <div class="header-action-group">
-            <button type="button" class="icon-expand-btn highlight" data-open-modal="calendar" title="Maximize Calendar">⤢ Full View</button>
-          </div>
+          <button type="button" class="action-text-btn" data-open-modal="calendar" title="Open Full Academic Calendar">
+            <span>Calendar ⤢</span>
+          </button>
         </div>
 
-        <div class="mini-cal-header-row">
-          <span class="mini-cal-month" id="dashCalMonthLabel">October 2026</span>
-          <span class="mini-cal-badge">Click date to inspect</span>
+        <!-- Mini Calendar Header -->
+        <div class="mini-cal-month-nav">
+          <span class="cal-month-text" id="dashCalMonthLabel">Academic Calendar</span>
+          <span class="cal-hint-badge">Click date to inspect</span>
         </div>
 
-        <div class="mini-cal-grid" id="dashCalGrid">
+        <!-- Mini 7-Column Grid -->
+        <div class="mini-calendar-days-grid" id="dashCalGrid">
           <!-- Populated by JS -->
         </div>
 
-        <div class="mini-upcoming-list" id="dashUpcomingList">
+        <!-- Upcoming Deadlines List Container -->
+        <div class="deadlines-list-container" id="dashUpcomingList">
           <!-- Populated by JS from stored events -->
         </div>
 
-        <button type="button" class="button soft pill full" data-open-modal="calendar">
-          <span>Open Full Calendar & Planner ⤢</span>
+        <!-- Clean Empty State Container -->
+        <div class="deadlines-empty-state" id="deadlinesEmptyState" style="display: none;">
+          <p class="empty-state-text">No upcoming deadlines scheduled.</p>
+        </div>
+
+        <button type="button" class="button quiet pill full add-event-prompt-btn" data-open-modal="calendar">
+          + Add Deadline / Block
         </button>
       </div>
 
-      <!-- CARD 5: ACTIVE RECALL QUIZ & FLASHCARDS -->
-      <div class="lumina-card dashboard-mod-card">
-        <div class="card-mod-header">
-          <div class="mod-title-group">
-            <span class="mod-icon">🧠</span>
+      <!-- CARD 3.2: ACTIVE STUDY LAB (DOCUMENT AI LAUNCHER) -->
+      <div class="bento-card study-lab-card">
+        <div class="card-header-clean">
+          <div class="header-title-group">
+            <span class="card-icon-badge">📄</span>
             <div>
-              <h3>Study Quiz & Recall</h3>
-              <small class="mod-subtitle">Spaced Repetition & Flashcards</small>
+              <h2 class="card-main-title">AI Study Lab</h2>
+              <p class="card-subtitle">Document Analysis & Quiz</p>
             </div>
           </div>
-          <div class="header-action-group">
-            <span class="mod-status-tag">Active Recall</span>
-            <button type="button" class="icon-expand-btn highlight" data-open-modal="quiz" title="Maximize Quiz">⤢ Full View</button>
-          </div>
+          <span class="status-pill-subtle">AI Powered</span>
         </div>
 
-        <div class="quiz-teaser-card">
-          <span class="quiz-eyebrow">TODAY'S FLASHCARD TOPIC</span>
-          <h4>Computer Science & Study Skills</h4>
-          <p>Reinforce key concepts with interactive flashcards and calibrated multiple-choice questions.</p>
-          <div class="quiz-stat-pill-row">
-            <span class="stat-pill green">✓ 20 Questions Ready</span>
-            <span class="stat-pill violet">🔥 +30 XP Bonus</span>
-          </div>
-        </div>
+        <div class="lab-launcher-content">
+          <p class="lab-desc-text">
+            Upload a lecture PDF, Word doc, or markdown syllabus to generate an active recall quiz and diagnostic exam breakdown.
+          </p>
 
-        <button type="button" class="button primary pill full glow-btn" data-open-modal="quiz">
-          <span>Launch Study Quiz 🧠</span>
-        </button>
+          <button type="button" class="button primary pill full large glow-btn" data-open-modal="quiz">
+            <span>Upload Document to Generate Quiz →</span>
+          </button>
+        </div>
       </div>
 
-      <!-- CARD 6: ZEN FOCUS TIMER & AMBIENT CHAMBER -->
-      <div class="lumina-card dashboard-mod-card">
-        <div class="card-mod-header">
-          <div class="mod-title-group">
-            <span class="mod-icon">⏳</span>
+      <!-- CARD 3.3: PRIVATE STORAGE VAULT & FILE LIBRARY STATUS -->
+      <div class="bento-card vault-card">
+        <div class="card-header-clean">
+          <div class="header-title-group">
+            <span class="card-icon-badge">📁</span>
             <div>
-              <h3>Zen Focus Timer</h3>
-              <small class="mod-subtitle">Deep Work & Pomodoro</small>
+              <h2 class="card-main-title">Storage Vault</h2>
+              <p class="card-subtitle">Encrypted File Library</p>
             </div>
           </div>
-          <div class="header-action-group">
-            <span class="mod-status-tag" id="dashTimerStatusTag">Pomodoro</span>
-            <button type="button" class="icon-expand-btn highlight" data-open-modal="timer" title="Maximize Timer">⤢ Full View</button>
-          </div>
-        </div>
-
-        <div class="mini-timer-center">
-          <div class="dash-timer-time" id="dashTimerDisplay">25:00</div>
-          <div class="timer-preset-pills">
-            <button type="button" class="preset-pill active" data-mins="25">25m Study</button>
-            <button type="button" class="preset-pill" data-mins="50">50m Deep</button>
-            <button type="button" class="preset-pill" data-mins="5">5m Break</button>
-          </div>
-          <div class="dash-timer-controls">
-            <button type="button" class="button primary pill small glow-btn" id="dashTimerStartBtn">Start Focus</button>
-            <button type="button" class="button quiet pill small" id="dashTimerResetBtn">Reset</button>
-          </div>
-        </div>
-
-        <button type="button" class="button soft pill full" data-open-modal="timer">
-          <span>Maximize Zen Full Screen ⤢</span>
-        </button>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- 3. WORKSPACE DATA & RECENT ACTIVITY (Neat 2-Column Section) -->
-  <section class="dashboard-bottom-grid">
-
-    <!-- LEFT: MY NOTES & WORKSPACE DATA -->
-    <div class="lumina-card workspace-resources-panel">
-      <div class="panel-header-row">
-        <div class="panel-title-group">
-          <span class="panel-icon">📚</span>
-          <div>
-            <h3>My Study Notes & Resources</h3>
-            <small>Personal notebooks and learning materials</small>
-          </div>
-        </div>
-        {% if cards %}
-          <a class="button primary pill small glow-btn" href="{{ url_for(cards[0].resource.key + '.create_page') }}">
-            + Add New {{ cards[0].resource.singular }}
+          <a class="action-text-btn" href="{{ url_for('files.index') }}">
+            Manage Files →
           </a>
-        {% endif %}
-      </div>
+        </div>
 
-      <div class="resource-kpi-cards">
-        {% for card in cards %}
-          <a class="resource-tile" href="{{ url_for(card.resource.key + '.index') }}">
-            <div class="tile-icon">📝</div>
-            <div class="tile-info">
-              <strong class="tile-number">{{ card.total }}</strong>
-              <span class="tile-label">{{ card.resource.label }}</span>
-            </div>
-            <span class="tile-arrow">→</span>
-          </a>
-        {% endfor %}
-
-        <a class="resource-tile" href="{{ url_for('files.index') }}">
-          <div class="tile-icon">🖼️</div>
-          <div class="tile-info">
-            <strong class="tile-number">{{ file_count }}</strong>
-            <span class="tile-label">Study Attachments</span>
+        <div class="vault-metrics-row">
+          <div class="vault-metric-item">
+            <span class="vault-metric-label">Uploaded Files</span>
+            <strong class="vault-metric-val">{{ file_count }}</strong>
           </div>
-          <span class="tile-arrow">→</span>
-        </a>
-
-        <a class="resource-tile" href="{{ url_for('account.profile') }}">
-          <div class="tile-icon">💾</div>
-          <div class="tile-info">
-            <strong class="tile-number">{{ '%.1f'|format(current_user.storage_bytes / 1048576) }} MB</strong>
-            <span class="tile-label">Vault Storage</span>
+          <div class="vault-metric-item">
+            <span class="vault-metric-label">Used Storage</span>
+            <strong class="vault-metric-val">{{ '%.1f'|format(current_user.storage_bytes / 1048576) }} MiB</strong>
           </div>
-          <span class="tile-arrow">⚙️</span>
+        </div>
+
+        <!-- Dynamic High-Contrast Quota Bar -->
+        {% set quota_percent = [((current_user.storage_bytes / 20971520) * 100)|round, 100]|min %}
+        <div class="quota-meter-wrap">
+          <div class="quota-label-split">
+            <span>Account Quota</span>
+            <span>{{ '%.1f'|format(current_user.storage_bytes / 1048576) }} / 20.0 MiB ({{ quota_percent }}%)</span>
+          </div>
+          <div class="quota-bar-track">
+            <div class="quota-bar-fill {{ 'danger' if quota_percent > 85 else ('warning' if quota_percent > 60 else 'normal') }}" 
+                 style="width: {{ quota_percent }}%;"></div>
+          </div>
+        </div>
+
+        <a class="button quiet pill full" href="{{ url_for('files.index') }}">
+          + Upload Lecture Document
         </a>
       </div>
 
-      <div class="storage-bar-compact">
-        <div class="storage-label-row">
-          <span>Storage Allocation</span>
-          <span>{{ '%.1f'|format(current_user.storage_bytes / 1048576) }} / 20.0 MiB</span>
-        </div>
-        <div class="stepped-bar">
-          <div class="stepped-fill" style="width: {{ [((current_user.storage_bytes / 20971520) * 100)|round, 100]|min }}%;"></div>
-        </div>
-      </div>
     </div>
 
-    <!-- RIGHT: RECENT ACTIVITY AUDIT TRAIL -->
-    <div class="lumina-card activity-panel">
-      <div class="panel-header-row">
-        <div class="panel-title-group">
-          <span class="panel-icon">🕒</span>
-          <div>
-            <h3>Recent Study Milestones</h3>
-            <small>Activity and note changes</small>
-          </div>
-        </div>
-        <a class="button quiet pill small" href="{{ url_for('dashboard.activity') }}">View All →</a>
-      </div>
+  </div>
 
-      {% if recent %}
-        <ul class="entry-list-lumina">
-          {% for event in recent %}
-            <li class="entry-row">
-              <span class="entry-dot"></span>
-              <div class="entry-info">
-                <span class="entry-action">{{ event.description or event.action }}</span>
-                <span class="entry-date">{{ event.created_at|date_label if event.created_at else '' }}</span>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <div class="empty-entry">
-          <p>No recent activity yet. Start by logging your study goals or adding a note!</p>
-        </div>
-      {% endif %}
-    </div>
-
-  </section>
 </div>
 {% endblock %}
