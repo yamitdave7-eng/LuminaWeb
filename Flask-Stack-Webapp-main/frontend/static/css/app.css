@@ -7638,3 +7638,34 @@ body {
   position: relative;
   z-index: 1;
 }
+
+
+/* Enhanced Vanta Halo High-Visibility Overrides */
+#vanta-bg {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+body {
+  background: transparent !important;
+}
+
+.ambient-backdrop {
+  display: none !important;
+}
+
+.app-shell, .app-frame, main, .bento-card, .container, .app-card, .app-canvas-container, .app-card-frame {
+  position: relative;
+  z-index: 1;
+}
+
+.bento-card, .vault-heading-card, .vault-table-section, .auth-bento-card {
+  background: rgba(255, 255, 255, 0.90) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
